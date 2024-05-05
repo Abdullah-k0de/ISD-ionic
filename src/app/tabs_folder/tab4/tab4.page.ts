@@ -4,7 +4,8 @@ import { collection } from 'firebase/firestore';
 import { Observable  } from 'rxjs';
 import { NotificationClass } from 'src/app/classes/notification-class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
+import { ImageModalPage } from 'src/app/pages/image-modal/image-modal.page';
 
 @Component({
   selector: 'app-tab4',
@@ -20,7 +21,8 @@ export class Tab4Page implements OnInit {
   constructor(
     private readonly firestore: Firestore,
     private toastController: ToastController,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private modalController: ModalController
   ) {
     this.notification$ = collectionData(collection(this.firestore, 'notifications')) as Observable<NotificationClass[]>;
   }
@@ -33,6 +35,18 @@ export class Tab4Page implements OnInit {
         this.loadURL$ = this.getNotificationImageUrl(nt.imgpath);        
       }
     });
+  }
+
+  //For image full screen
+  async openPreview(){
+    const modal = await this.modalController.create({
+      component: ImageModalPage,
+      componentProps: {
+        imageUrl: this.loadURL$
+      },
+      cssClass: 'transparent-modal'
+    });
+    modal.present();
   }
 
   async getNotificationImageUrl(imagePath: string): Promise<string | null> {

@@ -13,6 +13,10 @@ const routes: Routes = [
   {
     path: 'tab5',
     loadChildren: () => import('./tabs_folder/tab5/tab5.module').then( m => m.Tab5PageModule)
+  },
+  {
+    path: 'image-modal',
+    loadChildren: () => import('./pages/image-modal/image-modal.module').then( m => m.ImageModalPageModule)
   }
 ];
 @NgModule({

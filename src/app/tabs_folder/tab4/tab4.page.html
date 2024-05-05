@@ -24,7 +24,7 @@
     <ion-accordion-group value="first">
       <ion-accordion *ngIf="isAccordionOpen && nt.imgpath" value="first">
         <div slot="content">
-          <img *ngIf="(nt.imgpath && (loadURL$ | async))" alt="Notification Image" [src]="(loadURL$ | async) " />
+          <img *ngIf="(nt.imgpath && (loadURL$ | async))" alt="Notification Image" [src]="(loadURL$ | async) " (click)="openPreview()" />
         </div>
       </ion-accordion>
     </ion-accordion-group>

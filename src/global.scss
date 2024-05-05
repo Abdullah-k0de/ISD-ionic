@@ -25,6 +25,14 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+.transparent-modal{
+  --background: rgba(44, 39, 45, 0.2);
+
+  &::part(content){
+    backdrop-filter: blur(7px);
+  }
+}
+
 :root {
     /**
      * Setting the variables for DEMO purposes only.
