@@ -1,0 +1,76 @@
+ion-content {
+    --background: rgb(8, 50, 65);
+    // --background: rgb(63, 154, 182);
+    --color: #fff;
+}
+
+ion-content::part(scroll) {
+    padding-left: var(--ion-safe-area-left, 0);
+    padding-right: var(--ion-safe-area-right, 0);
+  }
+
+.title_of_page{
+    text-align: center;
+    font-weight: bolder;
+    font-variant: small-caps;
+}
+
+.donate_button{
+    margin: 1em;
+}
+
+ion-fab-button{
+    --border-radius: 15px;
+}
+
+h3{
+    margin-left: 0.65em;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+h6{
+    margin-left: 0.85em;
+    margin-right: 0.85em;
+}
+
+a{
+    color: cyan;
+    text-decoration: none;
+}
+
+img{
+    padding-left: 0.6em;
+    padding-right: 0.6em;
+    border-radius: 5%;
+}
+
+.page_titles{
+    text-align: center;
+    font-variant: small-caps;
+    // font-weight: bold;
+}
+
+.hadith_content{
+    margin: 0;
+}
+
+.hadith_attribution{
+    display: inline-block;
+}
+
+.hadith_grade{
+    float: right;
+}
+
+.hadith_margin{
+    margin-bottom: 4%;
+}
+
+.arabic_text{
+    text-align: right;
+}
+
+.hadith_heading{
+    font-weight: bold;
+}

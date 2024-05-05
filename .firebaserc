@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "isd-1-c39bc": {
+      "hosting": {
+        "app": [
+          "isd-1-c39bc"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "isd-1-c39bc"
+  }
+}

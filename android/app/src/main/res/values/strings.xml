@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Denton Masjid</string>
+    <string name="title_activity_main">Denton Masjid</string>
+    <string name="package_name">com.ISD.DentonMasjid</string>
+    <string name="custom_url_scheme">com.ISD.DentonMasjid</string>
+</resources>

@@ -1,0 +1,68 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Notifications
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  
+  <ion-list lines="none" *ngFor="let nt of notification$ | async">
+    <ion-card>
+    <ion-item (click)="toggleAccordion()" *ngIf="nt.imgpath">
+      <ion-label class="page_titles">{{nt.header}}</ion-label>
+      <ion-icon name="chevron-down" *ngIf="!isAccordionOpen"></ion-icon>
+      <ion-icon name="chevron-up" *ngIf="isAccordionOpen"></ion-icon>
+    </ion-item>
+
+    <ion-item *ngIf="!nt.imgpath">
+      <ion-label class="page_titles">{{nt.header}}</ion-label>
+    </ion-item>
+
+    <ion-accordion-group value="first">
+      <ion-accordion *ngIf="isAccordionOpen && nt.imgpath" value="first">
+        <div slot="content">
+          <img *ngIf="(nt.imgpath && (loadURL$ | async))" alt="Notification Image" [src]="(loadURL$ | async) " />
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+
+    <ion-card-content>
+      {{nt.description}}
+      <br>
+      <a [href]="nt.link">{{nt.link}}</a>
+      <br>
+      <div class="additional_details">
+        <ion-text>{{nt.date}}</ion-text>
+        <ion-text style="float: right;">{{nt.time}}</ion-text>
+      </div>
+    </ion-card-content>
+      </ion-card>
+
+      <!-- Previous Code -->
+      <!-- <ion-card>
+        <img *ngIf="(nt.imgpath && (loadURL$ | async))" alt="Notification Image" [src]="(loadURL$ | async) " />
+        <ion-button (click)="downloadImage(loadURL$)" fill="clear" *ngIf="nt.imgpath" aria-label="Download notification image">
+          <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+        </ion-button>
+
+        <ion-card-header>
+          <ion-card-title>{{nt.header}}</ion-card-title>
+        </ion-card-header>
+  
+        <ion-card-content>
+          {{nt.description}}
+          <br>
+          <a  [href]="nt.link">{{nt.link}}</a>
+          <br>
+          <ion-text>{{nt.date}}</ion-text>
+          <ion-text style="float: right;">{{nt.time}}</ion-text>
+        </ion-card-content>
+
+      </ion-card> -->
+    <!-- </ion-item> -->
+  </ion-list>
+
+</ion-content>

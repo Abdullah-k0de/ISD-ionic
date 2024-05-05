@@ -1,0 +1,63 @@
+.image-container{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.image-container img{
+    height: 100%;
+    width: 100%;
+}
+
+.transparent-container {
+    height: 80%;
+    width: 90%;
+    overflow: hidden;
+    position: absolute;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.4); /* Adjust the opacity as needed */
+    padding: 10px; /* Adjust padding as needed */
+}
+
+.transparent-container ion-grid{
+    height: 100%;
+    width: 100%;
+}
+
+ion-col{
+    text-align: left;
+    color: white;
+    padding: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    font-size: larger;
+}
+
+ion-row{
+    margin-bottom: 5%;
+    height: 5vh;
+}
+
+.time{
+    text-align: center;
+}
+
+.small_jummah{
+    font-size: x-small;
+    font-variant: small-caps;
+}
+
+a{
+    color: cyan;
+    text-decoration: none;
+    font-size: smaller;
+}
+
+@media (max-height: 739px) { /* Extra small devices (phones) */
+    ion-grid{
+        overflow: scroll;
+    }
+}

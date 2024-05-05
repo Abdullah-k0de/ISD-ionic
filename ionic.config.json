@@ -1,0 +1,7 @@
+{
+  "name": "Denton Masjid",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

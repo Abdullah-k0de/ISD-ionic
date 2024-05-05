@@ -1,0 +1,169 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="title_of_page">
+      Islamic Society of Denton
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true"> <!--class="ion-padding"-->  
+  <!-- Hadith at the beginning -->
+  <ion-card>
+    <!-- Header for Hadith of the Day, with accordion -->
+    <ion-item color="light" (click)="toggleAccordion()">
+      <ion-label class="page_titles">Hadith of the Day</ion-label>
+      <ion-icon name="chevron-down" *ngIf="!isAccordionOpen"></ion-icon>
+      <ion-icon name="chevron-up" *ngIf="isAccordionOpen"></ion-icon>
+    </ion-item>
+  
+    <!-- Content for Hadith of the Day -->
+    <div class="ion-padding">
+      <p class="hadith_heading">Hadith:</p>
+      <p class="hadith_content">
+        {{ this.httpService.hadiths.hadeeth }}
+      </p>
+    </div>
+  
+    <!-- Accordion Content (Explanation and Translation) -->
+  <ion-accordion-group value="first">
+    <ion-accordion *ngIf="isAccordionOpen" value="first">
+      <div class="ion-padding" slot="content">
+        <p class="hadith_heading">Explanation:</p>
+        <p class="hadith_content hadith_margin">
+          {{ this.httpService.hadiths.explanation }}
+        </p>
+        <p class="hadith_heading">Translation:</p>
+        <p class="hadith_content hadith_margin arabic_text">
+          {{ this.httpService.hadiths.hadeeth_ar }}
+        </p>
+        <p class="hadith_heading">Explanation:</p>
+        <p class="hadith_content arabic_text">
+          {{ this.httpService.hadiths.explanation_ar }}
+        </p>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+  </ion-card>
+  
+
+
+  <!-- Previous Code of Ion card Hadith -->
+  <!-- <ion-card>
+      <ion-accordion-group>
+        <ion-accordion value="first">
+          <ion-item slot="header" color="light">
+            <ion-label class="page_titles">Hadith of the Day</ion-label>
+          </ion-item>
+          
+          <div class="ion-padding" slot="content">
+            <p class="hadith_heading">Hadith:<br><br></p>
+            <p class="hadith_content">
+              {{this.httpService.hadiths.hadeeth}}</p>
+            <div>
+              <p class="hadith_attribution hadith_heading">{{this.httpService.hadiths.attribution}}</p>
+              <p class="hadith_grade hadith_heading">{{this.httpService.hadiths.grade}}</p>
+            </div>
+            <p class="hadith_heading">Explanation:<br><br></p>
+            <p class="hadith_content hadith_margin">
+              {{this.httpService.hadiths.explanation}}</p>
+              <p class="hadith_heading">Translation:<br><br></p>            <p class="hadith_content hadith_margin arabic_text">
+              {{this.httpService.hadiths.hadeeth_ar}}</p>
+              <p class="hadith_heading">Explanation:<br><br></p>            <p class="hadith_content arabic_text">
+              {{this.httpService.hadiths.explanation_ar}}
+            </p>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+  </ion-card> -->
+
+  <!-- The description of the masjid -->
+  <!-- I can have the image in the card, and the Welcome as h3 and the description as normal para. -->
+  <!-- <ion-card>
+    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+    <ion-card-header>
+      <ion-card-title>Welcome to Islamic Society of Denton!</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Here's a small text description for the card content. Nothing more, nothing less.
+    </ion-card-content>
+    <ion-button class="donate_button" href="https://www.dentonmosque.com/donate/" color="success" expand="block" fill="solid" shape="default">
+      DONATE
+    </ion-button>
+  </ion-card> -->
+
+  <!-- <ion-card> -->
+    <img alt="Picture of Denton Masjid" src="../../../assets/isd2.jpg" />
+  <!-- </ion-card> -->
+  <h3>Welcome to Islamic Society of Denton!</h3>
+  <h6>
+    The Islamic Society of Denton (ISD) is a non-profit
+    religious organization founded to serve the Greater
+    Denton area community. ISD is dedicated towards
+    worship, education and services according to
+    Islamic faith principles as dictated by the Quran
+    and the authentic sayings and traditions of Prophet
+    Mohammed, peace be upon him. The Masjid (Mosque)
+    was built, primarily, by residents of Denton, which
+    included students attending both the University of
+    North Texas and Texas Woman's University. Through
+    hard work and generous donations, the Islamic Society
+    of Denton opened in August of 1981 making it the
+    first Masjid built in the State of Texas. ISD is not
+    affiliated with any private, public or any other political
+    organizations and/or governments.  </h6>
+    <ion-button class="donate_button" href="https://www.dentonmosque.com/donate/" color="primary" expand="block" fill="solid" shape="default">
+      DONATE
+    </ion-button>
+
+  <h3>
+    Follow us!
+  </h3>
+  <div class="follow_us">
+    <ion-fab horizontal="left">
+      <ion-row>
+        <ion-col style="margin-left: 0.4rem;">
+          <ion-fab-button href="http://facebook.com/Islamic-Society-of-Denton-201875533168156/" color="primary">
+            <ion-icon size="large" name="logo-facebook"></ion-icon>
+          </ion-fab-button>
+        </ion-col>
+        <ion-col>
+          <ion-fab-button href="https://www.instagram.com/dentonmasjid/?img_index=1" color="primary">
+          <ion-icon size="large" name="logo-instagram"></ion-icon>
+          </ion-fab-button>
+        </ion-col>
+        <ion-col>
+          <ion-fab-button href="http://youtube.com/user/isd1105/featured" color="primary">
+            <ion-icon size="large" name="logo-youtube"></ion-icon>
+          </ion-fab-button> 
+        </ion-col>
+        <ion-col>
+          <ion-fab-button href="http://twitter.com/dentonmosque" color="primary">
+            <ion-icon size="large" name="logo-twitter"></ion-icon>
+          </ion-fab-button> 
+        </ion-col>
+      </ion-row>
+    </ion-fab>
+  </div>
+  <br><br><br>
+  <h3>
+    Contact us:
+  </h3>
+  <h6>
+    Address: <a (click)="openMapsApp()">1105 Greenlee St, Denton.</a>
+  </h6>
+  <h6>
+    Email: <a href="mailto: dentonmosque@gmail.com">dentonmosque&#64;gmail.com</a>
+  </h6>
+  <h6>
+    Phone: <a href="tel:+940-484-1871">(940) 484-1871</a>
+  </h6>
+
+
+<!-- Scroll to top button -->
+<!-- Have to make it at the end of the page -->
+<!-- <ion-fab> -->
+  <ion-button shape="default" size="small" (click)="scrollToTop()" style="float: right; margin: 2%;">
+    <ion-icon name="arrow-up-sharp"></ion-icon>
+  </ion-button>
+<!-- </ion-fab> -->
+</ion-content>
