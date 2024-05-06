@@ -5,10 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { getStorage, provideStorage } from '@angular/fire/storage';
-// import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
 import { Tab4PageRoutingModule } from './tab4-routing.module';
-
 import { Tab4Page } from './tab4.page';
 import { ExploreContainerComponentModule } from "../../explore-container/explore-container.module";
 
@@ -21,7 +19,7 @@ import { ExploreContainerComponentModule } from "../../explore-container/explore
         Tab4PageRoutingModule,
         ExploreContainerComponentModule,
         AngularFireStorageModule,
-        provideStorage(() => getStorage()),
+        provideStorage(() => getStorage())
     ]
 })
 export class Tab4PageModule {}
