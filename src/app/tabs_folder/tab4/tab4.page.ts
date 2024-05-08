@@ -15,6 +15,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 })
 export class Tab4Page implements OnInit {
   notification$: Observable<NotificationClass[]>
+  imageTitle: string;
   loadURL$: Promise<string | null>;
   isAccordionOpen: boolean = false;
   imageBase64: string | null = null;
@@ -35,6 +36,7 @@ export class Tab4Page implements OnInit {
     this.notification$.subscribe(async notificationsArray => {
       for (const nt of notificationsArray){
         this.loadURL$ = this.getNotificationImageUrl(nt.imgpath);
+        this.imageTitle = nt.header;
       }
     });
   }
@@ -69,38 +71,40 @@ export class Tab4Page implements OnInit {
 
 
   async shareImage(){
-    try {
-      if (this.imageBase64) {
-        const options = {
-          subject: 'Denton Masjid Event Image',
-          files: ['https://' + this.imageBase64],
-        };
-        await SocialSharing.shareWithOptions(options);
-      } else {
-        console.error('No image to share');
-        this.presentToast('No image to share');
-      }
-    } catch (error) {
-      console.error('Error sharing image:', error);
-      this.presentToast('Error sharing image');
-    }
+    // Base 64
+    // try {
+    //   if (this.imageBase64) {
+    //     const options = {
+    //       subject: 'Denton Masjid Event Image',
+    //       files: ['https://' + this.imageBase64],
+    //     };
+    //     await SocialSharing.shareWithOptions(options);
+    //   } else {
+    //     console.error('No image to share');
+    //     this.presentToast('No image to share');
+    //   }
+    // } catch (error) {
+    //   console.error('Error sharing image:', error);
+    //   this.presentToast('Error sharing image');
+    // }
 
     //-------
 
     // // Use try-catch block to handle any errors that may occur during sharing
-    // try {
-    //   const imgSrc: string | null = await this.loadURL$;
-    //   if(imgSrc){
-    //     const options = {
-    //       subject: "Denton Masjid Event Image",
-    //       files: [imgSrc]
-    //     };
-    //     await SocialSharing.shareWithOptions(options);
-    //   }
-    // } catch (error) {
-    //   console.error("Error sharing image:", error);
-    //   // Handle error gracefully, e.g., show a toast message to the user
-    // }
+    try {
+      const imgSrc: string | null = await this.loadURL$;
+      if(imgSrc){
+        const options = {
+          subject: "Denton Masjid Event Image",
+          files: [imgSrc]
+        };
+        await SocialSharing.shareWithOptions(options);
+      }
+    } catch (error) {
+      console.error("Error sharing image:", error);
+      // Handle error gracefully, e.g., show a toast message to the user
+      this.presentToast("Error sharing image.");
+    }
   }
 
   async downloadImageAsync() {
@@ -155,7 +159,7 @@ export class Tab4Page implements OnInit {
       const objectUrl = URL.createObjectURL(blob); // Create a URL for the Blob object
       const link = document.createElement('a');
       link.href = objectUrl;
-      link.setAttribute('download', 'event_image.jpg');
+      link.setAttribute('download', `${this.imageTitle}.jpg`);
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
