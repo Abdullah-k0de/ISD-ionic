@@ -6,6 +6,7 @@ import { NotificationClass } from 'src/app/classes/notification-class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { ModalController, ToastController } from '@ionic/angular';
 import { ImageModalPage } from 'src/app/pages/image-modal/image-modal.page';
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 @Component({
   selector: 'app-tab4',
@@ -16,13 +17,14 @@ export class Tab4Page implements OnInit {
   notification$: Observable<NotificationClass[]>
   loadURL$: Promise<string | null>;
   isAccordionOpen: boolean = false;
+  imageBase64: string | null = null;
 
 
   constructor(
     private readonly firestore: Firestore,
     private toastController: ToastController,
     private storage: AngularFireStorage,
-    private modalController: ModalController
+    private modalController: ModalController,
   ) {
     this.notification$ = collectionData(collection(this.firestore, 'notifications')) as Observable<NotificationClass[]>;
   }
@@ -30,9 +32,9 @@ export class Tab4Page implements OnInit {
   // message / download not working
 
   ngOnInit() {
-    this.notification$.subscribe(notificationsArray => {
+    this.notification$.subscribe(async notificationsArray => {
       for (const nt of notificationsArray){
-        this.loadURL$ = this.getNotificationImageUrl(nt.imgpath);        
+        this.loadURL$ = this.getNotificationImageUrl(nt.imgpath);
       }
     });
   }
@@ -53,6 +55,7 @@ export class Tab4Page implements OnInit {
     if (!imagePath || imagePath.length === 0) {
       return null; // Return null for notifications without an image path
     }
+
     const storageRef = this.storage.ref(imagePath); // Construct the storage reference    
     try{
       const downloadURL = await storageRef.getDownloadURL().toPromise();
@@ -64,23 +67,95 @@ export class Tab4Page implements OnInit {
     }
   }
 
+
+  async shareImage(){
+    try {
+      if (this.imageBase64) {
+        const options = {
+          subject: 'Denton Masjid Event Image',
+          files: ['https://' + this.imageBase64],
+        };
+        await SocialSharing.shareWithOptions(options);
+      } else {
+        console.error('No image to share');
+        this.presentToast('No image to share');
+      }
+    } catch (error) {
+      console.error('Error sharing image:', error);
+      this.presentToast('Error sharing image');
+    }
+
+    //-------
+
+    // // Use try-catch block to handle any errors that may occur during sharing
+    // try {
+    //   const imgSrc: string | null = await this.loadURL$;
+    //   if(imgSrc){
+    //     const options = {
+    //       subject: "Denton Masjid Event Image",
+    //       files: [imgSrc]
+    //     };
+    //     await SocialSharing.shareWithOptions(options);
+    //   }
+    // } catch (error) {
+    //   console.error("Error sharing image:", error);
+    //   // Handle error gracefully, e.g., show a toast message to the user
+    // }
+  }
+
+  async downloadImageAsync() {
+    const url = await this.loadURL$;
+    await this.downloadImage(url);
+  }
+
   //download not working for firebase storage
-  async downloadImage(urlPromise: Promise<string | null>){
+  async downloadImage(urlPromise: string | null){
+    // const firebaseStorage = getStorage();
+    // const storageRef = this.storage.ref(imagePath);
+    // getDownloadURL(ref(firebaseStorage, imagePath))
+    //   .then((url) => {
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.responseType = 'blob';
+    //     xhr.onload = (event) => {
+    //       const blob = xhr.response;
+    //     };
+    //     xhr.open('GET', url);
+    //     xhr.send();
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error from download Image: ", error);
+    //   })
+
+    // =-------------
+
+    // try {
+    //   const url = await urlPromise;
+    //   if(url){
+    //     const filePath = this.file.externalCacheDirectory + 'image.jpg'; // File path where the image will be saved
+    //     const blob = await this.http.get(url, { responseType: 'blob' }).toPromise(); // Download the image
+    //     await this.file.writeFile(filePath, blob, { replace: true }); // Write the downloaded image to file
+    //     console.log('Image downloaded successfully:', filePath);
+    //   }
+    // } catch (error) {
+    //   console.error('Error downloading image:', error);
+    // }
+
+    //Works on web
+    //=---------
     try {
       const url = await urlPromise;
-      console.log("URL = " + url);
-      
+  
       if(!url){
         console.error('Image URL is null or empty!');
         return;        
       }
-
+      console.log("Downloading the image...");
       const response = await fetch(url); // Fetch the image data
       const blob = await response.blob(); // Convert the response to a Blob object
       const objectUrl = URL.createObjectURL(blob); // Create a URL for the Blob object
       const link = document.createElement('a');
       link.href = objectUrl;
-      link.setAttribute('download', 'notification_image.jpg');
+      link.setAttribute('download', 'event_image.jpg');
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
@@ -101,7 +176,7 @@ export class Tab4Page implements OnInit {
   //     const objectUrl = URL.createObjectURL(blob); // Create a URL for the Blob object
   //     const link = document.createElement('a');
   //     link.href = objectUrl;
-  //     link.setAttribute('download', 'notification_image.jpg');
+  //     link.setAttribute('download', 'notification_image.jpeg');
   //     link.style.display = 'none';
   //     document.body.appendChild(link);
   //     link.click();

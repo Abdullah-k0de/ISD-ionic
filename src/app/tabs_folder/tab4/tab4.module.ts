@@ -19,7 +19,7 @@ import { ExploreContainerComponentModule } from "../../explore-container/explore
         Tab4PageRoutingModule,
         ExploreContainerComponentModule,
         AngularFireStorageModule,
-        provideStorage(() => getStorage())
+        provideStorage(() => getStorage()),
     ]
 })
 export class Tab4PageModule {}

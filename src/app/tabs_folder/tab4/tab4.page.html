@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
+    <ion-title class="title_of_page">
       Notifications
     </ion-title>
   </ion-toolbar>
@@ -25,10 +25,19 @@
       <ion-accordion *ngIf="isAccordionOpen && nt.imgpath" value="first">
         <div slot="content">
           <img *ngIf="(nt.imgpath && (loadURL$ | async))" alt="Notification Image" [src]="(loadURL$ | async) " (click)="openPreview()" />
+          <!-- Image Download and Share Options -->
+          <!-- <ion-button (click)="downloadImageAsync()" fill="clear" *ngIf="nt.imgpath && isAccordionOpen" aria-label="Download notification image">
+            <ion-icon slot="icon-only" name="download"></ion-icon>
+              Download
+          </ion-button>
+          <ion-button style="float: left;" (click)="shareImage()" fill="clear" *ngIf="nt.imgpath && isAccordionOpen" aria-label="Download notification image">
+            <ion-icon slot="icon-only" name="share-social"></ion-icon>
+              Share
+          </ion-button> -->
         </div>
       </ion-accordion>
     </ion-accordion-group>
-
+    
     <ion-card-content>
       {{nt.description}}
       <br>

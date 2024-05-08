@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
+    <ion-title class="title_of_page">
       Denton Masjid Prayer Times
     </ion-title>
   </ion-toolbar>
@@ -34,7 +34,7 @@
       <ion-row>
         <ion-col size="4">Fajr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Fajr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.fajr)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.fajr}}</ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="5">Sunrise</ion-col>
@@ -43,12 +43,12 @@
       <ion-row>
         <ion-col size="4">Zuhr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.duhr)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.duhr}}</ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="4">Asr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.asr)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="4">Maghrib</ion-col>
@@ -58,7 +58,7 @@
       <ion-row>
         <ion-col size="4">Isha</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.isha)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="8">Jummah (ISD)</ion-col>

@@ -18,18 +18,18 @@ export class Tab2Page {
   constructor(public httpService: HttpService, private readonly firestore: Firestore) {
     this.updateImageBasedOnTime();
     this.httpService.getAdhanTimes();
-    this.iqama$ = collectionData(collection(this.firestore, 'iqama_time_period')) as Observable<Iqama[]>;
+    this.iqama$ = collectionData(collection(this.firestore, 'iqama_time')) as Observable<Iqama[]>;
     this.loadTimings();
   }
 
   loadTimings(){    
     this.iqama$.subscribe(iqamaArray => {
       iqamaArray.forEach(iq => {
-        this.IqamaTimes.fajr = this.addTimes(this.httpService.adhans.data.timings.Fajr, iq.fajr);
-        this.IqamaTimes.duhr = this.addTimes(this.httpService.adhans.data.timings.Dhuhr, iq.duhr);
-        this.IqamaTimes.asr = this.addTimes(this.httpService.adhans.data.timings.Asr, iq.asr);
+        this.IqamaTimes.fajr = iq.fajr;
+        this.IqamaTimes.duhr = iq.duhr;
+        this.IqamaTimes.asr = iq.asr;
         this.IqamaTimes.maghrib = this.addTimes(this.httpService.adhans.data.timings.Maghrib, iq.maghrib);
-        this.IqamaTimes.isha = this.addTimes(this.httpService.adhans.data.timings.Isha, iq.isha);
+        this.IqamaTimes.isha = iq.isha;
         this.IqamaTimes.jummah = iq.jummah;
         this.IqamaTimes.jummahUNT = iq.jummahUNT;        
       });
@@ -38,6 +38,8 @@ export class Tab2Page {
 
   handleRefresh(event: any) {
     setTimeout(() => {
+      this.updateImageBasedOnTime();
+      this.httpService.getAdhanTimes();
       this.loadTimings();
       event.target.complete();
     }, 1000);

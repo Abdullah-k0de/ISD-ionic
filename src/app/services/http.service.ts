@@ -32,6 +32,11 @@ export class HttpService {
       const apiUrl = `https://hadeethenc.com/api/v1/hadeeths/one/?language=en&id=${id}`;
       this.http.get<HadithClass>(apiUrl).subscribe((res) => {
           this.hadiths = res;
+          if(this.hadiths.hadeeth == null){
+            id++;
+            attempts++;
+            makeAPICall(id);
+          }
           console.log(res);
           console.log("Satisfactory response received from Hadiths.");
         },
