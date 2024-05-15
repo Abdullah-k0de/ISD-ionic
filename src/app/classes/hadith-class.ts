@@ -1,23 +1,29 @@
 export class HadithClass {
     id: string
     title: string
-    hadeeth: string = "Default Hadith...Plz work";
+    hadeeth: string;
     attribution: string
     grade: string
-    explanation: string = "Default Explanation";
+    explanation: string;
     hints: any[]
     categories: string[]
     translations: string[]
-    hadeeth_ar: string = "Default arabic hadith";
-    explanation_ar: string = "Default arabic explanation"
+    hadeeth_ar: string;
+    explanation_ar: string
     hints_ar: string[]
     words_meanings_ar: WordsMeaningsAr[]
     attribution_ar: string
     grade_ar: string
+
+    constructor(userHadeeth: string, userExplanation: string, userHadeeth_ar: string, userExplanation_ar: string){
+        this.hadeeth = userHadeeth;
+        this.explanation = userExplanation;
+        this.hadeeth_ar = userHadeeth_ar;
+        this.explanation_ar = userExplanation_ar;
+    }
 }
 
 export interface WordsMeaningsAr {
     word: string
     meaning: string
 }
-  

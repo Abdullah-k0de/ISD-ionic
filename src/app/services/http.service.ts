@@ -10,7 +10,7 @@ import { delay } from 'rxjs';
 })
 export class HttpService {
 
-  hadiths: HadithClass = new HadithClass;
+  hadiths: HadithClass = new HadithClass("","","","");
   adhans: AdhanClass = new AdhanClass;
 
   constructor(private http: HttpClient) {  }
@@ -53,7 +53,7 @@ export class HttpService {
             } else {
               // Show default values after 5 attempts of API call
               console.log("Maximum attempts reached. Showing default values.");
-              this.hadiths = new HadithClass();
+              this.hadiths = new HadithClass("Default Hadith...Plz work", "Default Explanation", "Default arabic hadith", "Default arabic explanation");    //Default Hadiths
             }
           } else {
             // Handle other errors if needed
@@ -62,7 +62,6 @@ export class HttpService {
         }
       );
     };
-  
     // Call the API for the first time
     makeAPICall(id_hadith);
   }
