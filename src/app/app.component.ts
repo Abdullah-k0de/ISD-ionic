@@ -7,6 +7,7 @@ import 'firebase/messaging';
 import { environment } from 'src/environments/environment.prod';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { AngularFireModule } from '@angular/fire/compat';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,8 @@ export class AppComponent {
   @ViewChild(IonRouterOutlet) outlet: any;
 
   constructor(private platform: Platform, private fcmService: FcmService) {
+    this.appRun();
+    this.hideSplash();
 
     // Back and exit with hardware back button
     this.platform.backButton.subscribeWithPriority(-1, () => {
@@ -46,5 +49,18 @@ export class AppComponent {
         console.error("Error initializing Firebase:", error);
       }
     });
+  }
+
+  async appRun() {
+    await SplashScreen.hide();
+
+    await SplashScreen.show({
+      showDuration: 2000,
+      autoHide: true,
+    });
+  }
+
+  async hideSplash() {
+    await SplashScreen.hide();
   }
 }

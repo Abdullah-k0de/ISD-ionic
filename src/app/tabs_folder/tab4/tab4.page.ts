@@ -18,7 +18,8 @@ export class Tab4Page implements OnInit {
   imageTitle: string;
   loadURL$: Promise<string | null>;
   isAccordionOpen: boolean = false;
-  imageBase64: string | null = null;
+  imageUrls: { [header: string]: Promise<string | null> } = {}; // Store image URLs by notification header
+  openAccordions: { [header: string]: boolean } = {}; // Track open state of each accordion
 
 
   constructor(
@@ -33,20 +34,29 @@ export class Tab4Page implements OnInit {
   // message / download not working
 
   ngOnInit() {
+    this.loadEvents();
+  }
+
+  loadEvents() {
     this.notification$.subscribe(async notificationsArray => {
       for (const nt of notificationsArray){
-        this.loadURL$ = this.getNotificationImageUrl(nt.imgpath);
         this.imageTitle = nt.header;
+
+        this.loadURL$ = this.getNotificationImageUrl(nt.imgpath);
+                
+        const imageUrl = this.getNotificationImageUrl(nt.imgpath);
+        this.imageUrls[nt.header] = imageUrl; // Store the URL with the header as key
+        this.openAccordions[nt.header] = false; // Initialize all accordions to be closed
       }
     });
   }
 
   //For image full screen
-  async openPreview(){
+  async openPreview(imageUrl: Promise<string | null>){
     const modal = await this.modalController.create({
       component: ImageModalPage,
       componentProps: {
-        imageUrl: this.loadURL$
+        imageUrl: imageUrl
       },
       cssClass: 'transparent-modal'
     });
@@ -201,7 +211,7 @@ export class Tab4Page implements OnInit {
     toast.present();
   }
 
-  toggleAccordion() {
-    this.isAccordionOpen = !this.isAccordionOpen;    
+  toggleAccordion(header: string) {
+    this.openAccordions[header] = !this.openAccordions[header];
   }
 }

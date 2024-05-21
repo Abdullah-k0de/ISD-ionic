@@ -25,8 +25,14 @@ export class Tab1Page {
 
   scrollToTop() {
     // Passing a duration to the method makes it so the scroll slowly
-    // goes to the top instead of instantly
     this.content.scrollToTop(500);
+  }
+
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      this.httpService.getHadith();
+      event.target.complete();
+    }, 1000);
   }
 
   toggleAccordion() {

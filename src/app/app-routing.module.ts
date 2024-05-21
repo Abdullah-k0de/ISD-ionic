@@ -17,6 +17,11 @@ const routes: Routes = [
   {
     path: 'image-modal',
     loadChildren: () => import('./pages/image-modal/image-modal.module').then( m => m.ImageModalPageModule)
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 @NgModule({

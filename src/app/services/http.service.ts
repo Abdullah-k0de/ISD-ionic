@@ -20,7 +20,7 @@ export class HttpService {
     const seed = now.getDate() + now.getMonth() + now.getFullYear();
     const random = new Random(seed);
     return random.nextInt(2962, 3100);
-    // return 3050;
+    // return 3057;
   }
 
   getHadith() {
@@ -32,7 +32,7 @@ export class HttpService {
       const apiUrl = `https://hadeethenc.com/api/v1/hadeeths/one/?language=en&id=${id}`;
       this.http.get<HadithClass>(apiUrl).subscribe((res) => {
           this.hadiths = res;
-          if(this.hadiths.hadeeth == null){
+          if(this.hadiths.hadeeth == ""){
             id++;
             attempts++;
             makeAPICall(id);

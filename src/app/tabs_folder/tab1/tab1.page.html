@@ -6,7 +6,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true"> <!--class="ion-padding"-->  
+<ion-content [fullscreen]="true"> <!--class="ion-padding"-->
+
   <!-- Hadith at the beginning -->
   <ion-card>
     <!-- Header for Hadith of the Day, with accordion -->
@@ -19,6 +20,14 @@
     <!-- Content for Hadith of the Day -->
     <div class="ion-padding">
       <p class="hadith_heading">Hadith:</p>
+      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="margin-top: 13%;">
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          pullingText="إِنَّ اللّهَ مَعَ الصَّابِرِينَ"
+          refreshingSpinner="crescent"
+        >
+        </ion-refresher-content>
+      </ion-refresher>
       <p class="hadith_content">
         {{ this.httpService.hadiths.hadeeth }}
       </p>
@@ -44,8 +53,6 @@
     </ion-accordion>
   </ion-accordion-group>
   </ion-card>
-  
-
 
   <!-- Previous Code of Ion card Hadith -->
   <!-- <ion-card>
@@ -123,22 +130,22 @@
       <ion-row>
         <ion-col style="margin-left: 0.4rem;">
           <ion-fab-button href="http://facebook.com/Islamic-Society-of-Denton-201875533168156/" color="primary">
-            <ion-icon size="large" name="logo-facebook"></ion-icon>
+            <ion-icon name="logo-facebook"></ion-icon>
           </ion-fab-button>
         </ion-col>
         <ion-col>
           <ion-fab-button href="https://www.instagram.com/dentonmasjid/?img_index=1" color="primary">
-          <ion-icon size="large" name="logo-instagram"></ion-icon>
+          <ion-icon name="logo-instagram"></ion-icon>
           </ion-fab-button>
         </ion-col>
         <ion-col>
           <ion-fab-button href="http://youtube.com/user/isd1105/featured" color="primary">
-            <ion-icon size="large" name="logo-youtube"></ion-icon>
+            <ion-icon name="logo-youtube"></ion-icon>
           </ion-fab-button> 
         </ion-col>
         <ion-col>
           <ion-fab-button href="http://twitter.com/dentonmosque" color="primary">
-            <ion-icon size="large" name="logo-twitter"></ion-icon>
+            <ion-icon name="logo-twitter"></ion-icon>
           </ion-fab-button> 
         </ion-col>
       </ion-row>

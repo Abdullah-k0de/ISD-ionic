@@ -9,12 +9,11 @@
 <ion-content [fullscreen]="true">
   
   <div class="image-container">
-    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher slot="fixed" [pullMin]="100" (ionRefresh)="handleRefresh($event)">
       <ion-refresher-content
         pullingIcon="chevron-down-circle-outline"
-        pullingText="إِنَّ اللّهَ مَعَ الصَّابِرِينَ"
-        refreshingSpinner="circles"
-        refreshingText="Refreshing..."
+        pullingText="اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى سَيِّدِنَا مُحَمَّدٍ"
+        refreshingSpinner="crescent"
       >
       </ion-refresher-content>
     </ion-refresher>
