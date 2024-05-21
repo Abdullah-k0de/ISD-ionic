@@ -1,8 +1,7 @@
 To run the code, please follow the steps after downloading the zip file (Node.js must be downloaded):
   1. Extract the zip file and open the folder in visual studio code.
   2. Change the directory to the folder inside from the terminal.
-  3. Run the command: "npm uninstall @angular-devkit/build-angular --force".
-  4. Run the command: "npm install --save-dev @angular-devkit/build-angular --force".
+  3. Run the command: "npm install --save-dev @angular-devkit/build-angular --force".
 - Now, you can run the code on the browser, using the command: "ionic serve".
 
 To test on an emulator or simulator:
