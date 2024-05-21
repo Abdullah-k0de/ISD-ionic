@@ -15,11 +15,13 @@ export class HadithClass {
     attribution_ar: string
     grade_ar: string
 
-    constructor(userHadeeth: string, userExplanation: string, userHadeeth_ar: string, userExplanation_ar: string){
+    constructor(userHadeeth: string, userExplanation: string, userHadeeth_ar: string, userExplanation_ar: string, userGrade: string, userAttribute: string){
         this.hadeeth = userHadeeth;
         this.explanation = userExplanation;
         this.hadeeth_ar = userHadeeth_ar;
         this.explanation_ar = userExplanation_ar;
+        this.attribution = userAttribute;
+        this.grade = userGrade;
     }
 }
 

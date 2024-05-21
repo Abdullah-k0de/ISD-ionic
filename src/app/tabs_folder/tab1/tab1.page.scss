@@ -68,3 +68,14 @@ img{
 .hadith_heading{
     font-weight: bold;
 }
+
+.attribution-grade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .attribution-grade p {
+    margin: 0;
+    font-size: smaller;
+  }

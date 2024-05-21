@@ -20,10 +20,10 @@
     <!-- Content for Hadith of the Day -->
     <div class="ion-padding">
       <p class="hadith_heading">Hadith:</p>
-      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" style="margin-top: 13%;">
+      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" [pullMin]="150" style="margin-top: 13%;">
         <ion-refresher-content
           pullingIcon="chevron-down-circle-outline"
-          pullingText="إِنَّ اللّهَ مَعَ الصَّابِرِينَ"
+          pullingText="اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى سَيِّدِنَا مُحَمَّدٍ"
           refreshingSpinner="crescent"
         >
         </ion-refresher-content>
@@ -37,6 +37,11 @@
   <ion-accordion-group value="first">
     <ion-accordion *ngIf="isAccordionOpen" value="first">
       <div class="ion-padding" slot="content">
+        <div class="attribution-grade">
+          <p>{{ this.httpService.hadiths.attribution }}</p>
+          <p>{{ this.httpService.hadiths.grade }}</p>
+        </div>
+
         <p class="hadith_heading">Explanation:</p>
         <p class="hadith_content hadith_margin">
           {{ this.httpService.hadiths.explanation }}

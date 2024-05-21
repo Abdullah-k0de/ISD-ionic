@@ -10,7 +10,7 @@ import { delay } from 'rxjs';
 })
 export class HttpService {
 
-  hadiths: HadithClass = new HadithClass("","","","");
+  hadiths: HadithClass = new HadithClass("","","","","","");
   adhans: AdhanClass = new AdhanClass;
 
   constructor(private http: HttpClient) {  }
@@ -53,7 +53,14 @@ export class HttpService {
             } else {
               // Show default values after 5 attempts of API call
               console.log("Maximum attempts reached. Showing default values.");
-              this.hadiths = new HadithClass("Default Hadith...Plz work", "Default Explanation", "Default arabic hadith", "Default arabic explanation");    //Default Hadiths
+              this.hadiths = new HadithClass(
+                `The first thing among their deeds for which the people will be brought to account on the Day of Resurrection will be prayer. Our Lord will say to His angels, although He knows best, "Look at My slave’s prayer, is it complete or lacking?" If it is complete, it will be recorded as complete, but if it is lacking, He will say, "Look and see whether my slave did any optional prayers." If he had done voluntary prayers, He will say, "Complete the obligatory prayers of My slave from his voluntary prayers." Then the rest of his deeds will be examined in a similar manner.`,
+                `On the Day of Resurrection each person will be brought to account for every major and minor action, even though he has already been brought to account for that in the grave. The first thing for which he will be brought to account for then will be his prayer. On the Day of Resurrection, people will be asked about other matters, including the following: It was narrated from Ibn Mas'ud (may Allah be pleased with him) that the Prophet (peace and blessings of Allah be upon him) said: "The son of Adam will not be dismissed from before his Lord on the Day of Resurrection until he has been questioned about five things: his life and how he spent it, his youth and how he used it, his wealth and how he earned it and how he disposed of it, and how he acted upon what he acquired of knowledge." (Narrated by At-Tirmidhi, 2422; classed as sound by Al-Albani in Sahih At-Tirmidhi, 1969) And the nations will be asked on the Day of Resurrection: "What answer gave you to the Messengers?" [Al-Qasas 28:65 – interpretation of the meaning] These are some of the things about which people will be asked on the Day of Resurrection. So the wise person who is keen to save himself should prepare answers to these questions. We ask Allah to guide us to the straight path.`,
+                `إن أول ما يُحاسب به الناس من أعمالهم يوم القيامة هو الصلاة. يقول ربنا لملائكته، وهو أعلم، "انظروا إلى صلاة عبدي، هل هي كاملة أم ناقصة؟" فإذا كانت كاملة تُكتب له كاملة، وإن كانت ناقصة يقول، "انظروا هل لعبدي من تطوع؟" فإن كان له تطوع، يقول، "أكملوا لعبدي فريضته من تطوعه." ثم يُنظر في سائر أعماله على نحو ذلك.`,
+                `في يوم القيامة سيحاسب كل شخص على كل عمل كبير وصغير، حتى وإن كان قد حُوسب على ذلك في القبر. وأول ما سيُحاسب عليه حينها هو صلاته. في يوم القيامة، سيُسأل الناس عن أمور أخرى، ومنها ما روي عن ابن مسعود (رضي الله عنه) أن النبي (صلى الله عليه وسلم) قال: "لا تزول قدما ابن آدم يوم القيامة من عند ربه حتى يُسأل عن خمس: عن عمره فيم أفناه، وعن شبابه فيم أبلاه، وماله من أين اكتسبه وفيم أنفقه، وماذا عمل فيما علم." (رواه الترمذي، 2422؛ وصححه الألباني في صحيح الترمذي، 1969) وستُسأل الأمم يوم القيامة: "ماذا أجبتم المرسلين؟" [القصص 28:65 - تفسير المعنى] هذه بعض الأمور التي سيُسأل عنها الناس يوم القيامة. لذلك ينبغي للإنسان الحكيم الذي يحرص على إنقاذ نفسه أن يُعد إجابات لهذه الأسئلة. نسأل الله أن يهدينا إلى الصراط المستقيم.`,
+                `Sahih/Authentic`,
+                `Narrated by Abu Dawud, 864; classed as authentic by Al-Albani in Sahih Abu Dawud, 770`
+            ); // Default Hadiths
             }
           } else {
             // Handle other errors if needed
