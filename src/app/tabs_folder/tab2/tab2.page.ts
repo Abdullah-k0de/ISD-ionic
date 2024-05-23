@@ -14,6 +14,7 @@ export class Tab2Page {
   iqama$ : Observable<Iqama[]>;
   hourOfDay: string = "day";
   IqamaTimes: IqamaClass = new IqamaClass;
+  isLoading: boolean = true;
 
   constructor(public httpService: HttpService, private readonly firestore: Firestore) {
     this.updateImageBasedOnTime();
@@ -28,11 +29,14 @@ export class Tab2Page {
         this.IqamaTimes.fajr = iq.fajr;
         this.IqamaTimes.duhr = iq.duhr;
         this.IqamaTimes.asr = iq.asr;
-        this.IqamaTimes.maghrib = this.addTimes(this.httpService.adhans.data.timings.Maghrib, iq.maghrib);
         this.IqamaTimes.isha = iq.isha;
         this.IqamaTimes.jummah = iq.jummah;
-        this.IqamaTimes.jummahUNT = iq.jummahUNT;        
+        this.IqamaTimes.jummahUNT = iq.jummahUNT;
+        this.IqamaTimes.maghrib = this.addTimes(this.httpService.adhans.data.timings.Maghrib, iq.maghrib);   
       });
+      this.isLoading = false; //Data is loaded
+      console.log("Is Loading = " + this.isLoading);
+      
     });
   }
 

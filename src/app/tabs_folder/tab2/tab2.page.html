@@ -30,68 +30,169 @@
         <ion-col size="4" class="time">Adhan</ion-col>
         <ion-col size="4" class="time">Iqama</ion-col>
       </ion-row>
-      <ion-row>
+      <!-- <ion-row>
         <ion-col size="4">Fajr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Fajr)}}</ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.fajr}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
+        <ion-col size="4">Fajr</ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(httpService.adhans.data.timings.Fajr)}}
+          </ng-container>
+          <ng-template #loadingSkeleton>
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ng-template>
+        </ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{IqamaTimes.fajr}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="5">Sunrise</ion-col>
         <ion-col size="7" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Sunrise)}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
+        <ion-col size="5">Sunrise</ion-col>
+        <ion-col size="7" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(httpService.adhans.data.timings.Sunrise)}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Zuhr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.duhr}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
+        <ion-col size="4">Zuhr</ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(httpService.adhans.data.timings.Dhuhr)}}
+          </ng-container>
+        </ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{IqamaTimes.duhr}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Asr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
+        <ion-col size="4">Asr</ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(httpService.adhans.data.timings.Asr)}}
+          </ng-container>
+        </ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{IqamaTimes.asr}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Maghrib</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Maghrib)}}</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.maghrib)}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
+        <ion-col size="4">Maghrib</ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(httpService.adhans.data.timings.Maghrib)}}
+          </ng-container>
+        </ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(IqamaTimes.maghrib)}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Isha</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
-        <ion-col size="8">Jummah (ISD)</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12"><a (click)="openMapsApp('1105 Greenlee St, Denton')">1105 Greenlee St, Denton.</a>
+        <ion-col size="4">Isha</ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{this.formatTime(httpService.adhans.data.timings.Isha)}}
+          </ng-container>
+        </ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{IqamaTimes.isha}}
+          </ng-container>
         </ion-col>
       </ion-row>
+
+      <!-- <ion-row>
+        <ion-col size="8">Jummah (ISD)</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col>
+      </ion-row> -->
+      
       <ion-row>
+        <ion-col size="8">Jummah (ISD)</ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{IqamaTimes.jummah}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12"><a (click)="openMapsApp('1105 Greenlee St, Denton')"><u>1105 Greenlee St, Denton</u></a>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col>
-      </ion-row>
+      </ion-row> -->
+
       <ion-row>
-        <ion-col size="12"><a (click)="openMapsApp('Goolsby Chalpel, 1622 Maple St, Denton')">Goolsby Chalpel, 1622 Maple St, Denton</a></ion-col>
+        <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
+        <ion-col size="4" class="time">
+          <ng-container *ngIf="!isLoading; else loadingSkeleton">
+            {{IqamaTimes.jummahUNT}}
+          </ng-container>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12"><a (click)="openMapsApp('Goolsby Chalpel, 1622 Maple St, Denton')"><u>Goolsby Chalpel, 1622 Maple St, Denton</u></a></ion-col>
       </ion-row>
     </ion-grid>
-
-
-    <!-- <div class="table-row">
-      <div class="table-cell">Row 1, Col 1</div>
-      <div class="table-cell">Row 1, Col 2</div>
-      <div class="table-cell">Row 1, Col 3</div>
-    </div>
-    <div class="table-row">
-      <div class="table-cell">Row 2, Col 1</div>
-      <div class="table-cell">Row 2, Col 2</div>
-      <div class="table-cell">Row 2, Col 3</div>
-    </div>
-
-    <div class="bottom-text">
-      <div class="left-text">Left Text</div>
-      <div class="right-text">Right Text</div>
-    </div> -->
   </div>
+
+  <!-- <div *ngIf="isLoading">
+    <ion-spinner name="crescent" color="tertiary"></ion-spinner>
+    <p>Loading prayer times...</p>
+  </div> -->
+
+  <ng-template #loadingSkeleton>
+    <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
+  </ng-template>
 
 </ion-content>
