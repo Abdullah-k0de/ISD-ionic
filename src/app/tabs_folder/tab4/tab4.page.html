@@ -26,14 +26,14 @@
         <div slot="content">
           <img *ngIf="(nt.imgpath && (imageUrls[nt.header] | async))" alt="Notification Image" [src]="(imageUrls[nt.header] | async)" (click)="openPreview(imageUrls[nt.header])" />
           <!-- Image Download and Share Options -->
-          <!-- <ion-button (click)="downloadImageAsync()" fill="clear" *ngIf="nt.imgpath && isAccordionOpen" aria-label="Download notification image">
+          <!-- <ion-button (click)="downloadImage(nt.header, nt.imgpath)" fill="clear" *ngIf="nt.imgpath && openAccordions[nt.header]" aria-label="Download notification image">
             <ion-icon slot="icon-only" name="download"></ion-icon>
               Download
-          </ion-button>
-          <ion-button style="float: left;" (click)="shareImage()" fill="clear" *ngIf="nt.imgpath && isAccordionOpen" aria-label="Download notification image">
+          </ion-button> -->
+          <ion-button style="float: left;" (click)="shareImage(nt.header, nt.imgpath)" fill="clear" *ngIf="nt.imgpath && openAccordions[nt.header]" aria-label="Share notification image">
             <ion-icon slot="icon-only" name="share-social"></ion-icon>
               Share
-          </ion-button> -->
+          </ion-button>
         </div>
       </ion-accordion>
     </ion-accordion-group>

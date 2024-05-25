@@ -9,6 +9,8 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { Tab4PageRoutingModule } from './tab4-routing.module';
 import { Tab4Page } from './tab4.page';
 import { ExploreContainerComponentModule } from "../../explore-container/explore-container.module";
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 @NgModule({
     declarations: [Tab4Page],
@@ -20,6 +22,10 @@ import { ExploreContainerComponentModule } from "../../explore-container/explore
         ExploreContainerComponentModule,
         AngularFireStorageModule,
         provideStorage(() => getStorage()),
+    ],
+    providers: [
+        SocialSharing,
+        File
     ]
 })
 export class Tab4PageModule {}

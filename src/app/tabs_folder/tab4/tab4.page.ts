@@ -6,7 +6,8 @@ import { NotificationClass } from 'src/app/classes/notification-class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { ModalController, ToastController } from '@ionic/angular';
 import { ImageModalPage } from 'src/app/pages/image-modal/image-modal.page';
-import { SocialSharing } from '@ionic-native/social-sharing';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx'
 
 @Component({
   selector: 'app-tab4',
@@ -16,9 +17,9 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 export class Tab4Page implements OnInit {
   notification$: Observable<NotificationClass[]>
   imageTitle: string;
-  loadURL$: Promise<string | null>;
+  loadURL$: Promise<string | undefined>;
   isAccordionOpen: boolean = false;
-  imageUrls: { [header: string]: Promise<string | null> } = {}; // Store image URLs by notification header
+  imageUrls: { [header: string]: Promise<string | undefined> } = {}; // Store image URLs by notification header
   openAccordions: { [header: string]: boolean } = {}; // Track open state of each accordion
 
 
@@ -27,6 +28,8 @@ export class Tab4Page implements OnInit {
     private toastController: ToastController,
     private storage: AngularFireStorage,
     private modalController: ModalController,
+    private socialSharing: SocialSharing,
+    private file: File
   ) {
     this.notification$ = collectionData(collection(this.firestore, 'notifications')) as Observable<NotificationClass[]>;
   }
@@ -52,7 +55,7 @@ export class Tab4Page implements OnInit {
   }
 
   //For image full screen
-  async openPreview(imageUrl: Promise<string | null>){
+  async openPreview(imageUrl: Promise<string | undefined>){
     const modal = await this.modalController.create({
       component: ImageModalPage,
       componentProps: {
@@ -63,9 +66,9 @@ export class Tab4Page implements OnInit {
     modal.present();
   }
 
-  async getNotificationImageUrl(imagePath: string): Promise<string | null> {
+  async getNotificationImageUrl(imagePath: string): Promise<string | undefined> {
     if (!imagePath || imagePath.length === 0) {
-      return null; // Return null for notifications without an image path
+      return undefined; // Return null for notifications without an image path
     }
 
     const storageRef = this.storage.ref(imagePath); // Construct the storage reference    
@@ -75,55 +78,46 @@ export class Tab4Page implements OnInit {
     } catch (error) {
       console.error('Error getting image download URL:', error);
       this.presentToast('Error loading image');
-      return null;
+      return undefined;
     }
   }
 
+  async shareImage(imageHeader: string, imagePath: string){
+    const imgSrc = await this.getNotificationImageUrl(imagePath);
 
-  async shareImage(){
-    // Base 64
-    // try {
-    //   if (this.imageBase64) {
-    //     const options = {
-    //       subject: 'Denton Masjid Event Image',
-    //       files: ['https://' + this.imageBase64],
-    //     };
-    //     await SocialSharing.shareWithOptions(options);
-    //   } else {
-    //     console.error('No image to share');
-    //     this.presentToast('No image to share');
-    //   }
-    // } catch (error) {
-    //   console.error('Error sharing image:', error);
-    //   this.presentToast('Error sharing image');
-    // }
+    if(imgSrc){
+      const fileName = imageHeader + '.png';
+      const filePath = this.file.externalDataDirectory + fileName;
 
-    //-------
+      const response = await fetch(imgSrc);
+      const blob = await response.blob();
+      await this.file.writeFile(this.file.externalDataDirectory, fileName, blob, { replace: true });
 
-    // // Use try-catch block to handle any errors that may occur during sharing
-    try {
-      const imgSrc: string | null = await this.loadURL$;
-      if(imgSrc){
-        const options = {
-          subject: "Denton Masjid Event Image",
-          files: [imgSrc]
-        };
-        await SocialSharing.shareWithOptions(options);
-      }
-    } catch (error) {
-      console.error("Error sharing image:", error);
-      // Handle error gracefully, e.g., show a toast message to the user
-      this.presentToast("Error sharing image.");
+      const resolvedUri = await this.file.resolveLocalFilesystemUrl(filePath);
+      console.log("Resolved URI:", resolvedUri.nativeURL);
+      const options = {
+        message: imageHeader,
+        subject: "Denton Masjid Event Image",
+        files: [resolvedUri.nativeURL],
+      };
+      console.log("Image Src = " + imgSrc);
+      this.socialSharing.shareWithOptions(options)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(e => {
+        console.log(e);
+      })
     }
-  }
+}
 
-  async downloadImageAsync() {
-    const url = await this.loadURL$;
-    await this.downloadImage(url);
-  }
+  // async downloadImageAsync() {
+  //   const url = await this.loadURL$;
+  //   await this.downloadImage(url);
+  // }
 
   //download not working for firebase storage
-  async downloadImage(urlPromise: string | null){
+  async downloadImage(imageHeader: string, imagePath: string){
     // const firebaseStorage = getStorage();
     // const storageRef = this.storage.ref(imagePath);
     // getDownloadURL(ref(firebaseStorage, imagePath))
@@ -157,7 +151,7 @@ export class Tab4Page implements OnInit {
     //Works on web
     //=---------
     try {
-      const url = await urlPromise;
+      const url = await this.getNotificationImageUrl(imagePath);
   
       if(!url){
         console.error('Image URL is null or empty!');
@@ -169,7 +163,7 @@ export class Tab4Page implements OnInit {
       const objectUrl = URL.createObjectURL(blob); // Create a URL for the Blob object
       const link = document.createElement('a');
       link.href = objectUrl;
-      link.setAttribute('download', `${this.imageTitle}.jpg`);
+      link.setAttribute('download', `${imageHeader}.jpg`);
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
@@ -180,33 +174,69 @@ export class Tab4Page implements OnInit {
       console.error("Error downloading image: ", error);
       this.presentToast('Error downloading image');
     }
+
+    // try {
+    //   const imgSrc = await this.getNotificationImageUrl(imagePath);
+    //   if (imgSrc) {
+    //     console.log("imgSrc = "+imgSrc);
+        
+    //     const response = await fetch(imgSrc);
+    //     console.log("Response" + response);
+        
+    //     const blob = await response.blob();
+    //     console.log("blob = " + blob);
+        
+    //     const fileName = imageHeader.replace(/\s/g, '%20') + '.png';
+    //     console.log("FileName = " + fileName);
+        
+    //     const filePath = this.file.externalDataDirectory + fileName;
+    //     console.log("filePath = " + filePath);
+        
+  
+    //     await this.file.writeFile(this.file.externalDataDirectory, fileName, blob, { replace: true });
+  
+    //     // Optionally notify the user that the download is complete
+    //     console.log('Image downloaded successfully:', filePath);
+    //     this.presentToast('Image download initiated');
+    //   }
+    // } catch (error) {
+    //   console.error("Error downloading image: ", error);
+    //   this.presentToast('Error downloading image');
+    // }
   }
 
   // // WORKING ONE
-  // async downloadImage(url: string){
-  //   try {
-  //     const response = await fetch(url); // Fetch the image data
-  //     const blob = await response.blob(); // Convert the response to a Blob object
-  //     const objectUrl = URL.createObjectURL(blob); // Create a URL for the Blob object
-  //     const link = document.createElement('a');
-  //     link.href = objectUrl;
-  //     link.setAttribute('download', 'notification_image.jpeg');
-  //     link.style.display = 'none';
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //     URL.revokeObjectURL(objectUrl); // Release the object URL
-  //     this.presentToast('Image download initiated');
-  //   } catch (error) {
-  //     console.error("Error downloading image: ", error);
-  //     this.presentToast('Error downloading image');
+  // async downloadImage(imageHeader: string, imagePath: string){
+  //   const url = await this.getNotificationImageUrl(imagePath);
+  //   if(url){
+  //     try {
+  //       const response = await fetch(url); // Fetch the image data
+  //       const blob = await response.blob(); // Convert the response to a Blob object
+  //       const objectUrl = URL.createObjectURL(blob); // Create a URL for the Blob object
+  //       const link = document.createElement('a');
+  //       link.href = objectUrl;
+  //       link.setAttribute('download', imageHeader+'.jpeg');
+  //       link.style.display = 'none';
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //       URL.revokeObjectURL(objectUrl); // Release the object URL
+  //       this.presentToast('Image download initiated');
+  //     } catch (error) {
+  //       console.error("Error downloading image: ", error);
+  //       this.presentToast('Error downloading image');
+  //     }
   //   }
   // }
 
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000
+      duration: 2000,
+      buttons: [{
+        text: 'X',
+        role: 'cancel'
+      }]
     });
     toast.present();
   }
