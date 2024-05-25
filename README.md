@@ -1,3 +1,9 @@
+If the project isn't edited:
+1. Run the "android" folder in Android Studio emulator. 
+2. Run the "ios" folder in xcode simulator. 
+
+
+If the project is edited. Follow these steps:
 To run the code, please follow the steps after downloading the zip file (Node.js must be downloaded):
   1. Extract the zip file and open the folder in visual studio code.
   2. Change the directory to the folder inside from the terminal.
