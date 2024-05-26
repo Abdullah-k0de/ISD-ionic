@@ -20,6 +20,7 @@
     <img alt="Background Picture for Prayer times" [src]="'../../../assets/times-' + hourOfDay + '.jpg'">
   </div>
 
+  <ng-container *ngIf="!isLoading; else loadingOutsideSkeleton">
   <!-- Transparent container with table-like structure -->
   <div class="transparent-container">
 
@@ -195,5 +196,12 @@
   <!-- <ng-template #loadingSkeleton>
     <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
   </ng-template> -->
+    
+  </ng-container>
+  <ng-template #loadingOutsideSkeleton>
+    <div class="transparent-container">
+      <ion-skeleton-text animated class="outside-skeletion-text"></ion-skeleton-text>
+    </div>
+  </ng-template>
 
 </ion-content>
