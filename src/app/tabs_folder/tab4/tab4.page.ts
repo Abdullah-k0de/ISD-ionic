@@ -82,7 +82,7 @@ export class Tab4Page implements OnInit {
     }
   }
 
-  async shareImage(imageHeader: string, imagePath: string){
+  async shareImage(imageHeader: string, imagePath: string, imageDesc: string){
     const imgSrc = await this.getNotificationImageUrl(imagePath);
 
     if(imgSrc){
@@ -96,7 +96,7 @@ export class Tab4Page implements OnInit {
       const resolvedUri = await this.file.resolveLocalFilesystemUrl(filePath);
       console.log("Resolved URI:", resolvedUri.nativeURL);
       const options = {
-        message: imageHeader,
+        message: imageHeader + "\n" + imageDesc,
         subject: "Denton Masjid Event Image",
         files: [resolvedUri.nativeURL],
       };
