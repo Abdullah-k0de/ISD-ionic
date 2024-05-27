@@ -31,13 +31,13 @@
         <ion-col size="4" class="time">Adhan</ion-col>
         <ion-col size="4" class="time">Iqama</ion-col>
       </ion-row>
-      <!-- <ion-row>
+      <ion-row>
         <ion-col size="4">Fajr</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Fajr)}}</ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.fajr}}</ion-col>
-      </ion-row> -->
+      </ion-row>
 
-      <ion-row>
+      <!-- <ion-row>
         <ion-col size="4">Fajr</ion-col>
         <ion-col size="4" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
@@ -52,29 +52,29 @@
             {{IqamaTimes.fajr}}
           </ng-container>
         </ion-col>
-      </ion-row>
-
-      <!-- <ion-row>
-        <ion-col size="5">Sunrise</ion-col>
-        <ion-col size="7" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Sunrise)}}</ion-col>
       </ion-row> -->
 
       <ion-row>
+        <ion-col size="5">Sunrise</ion-col>
+        <ion-col size="7" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Sunrise)}}</ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="5">Sunrise</ion-col>
         <ion-col size="7" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
             {{this.formatTime(httpService.adhans.data.timings.Sunrise)}}
           </ng-container>
         </ion-col>
-      </ion-row>
-
-      <!-- <ion-row>
-        <ion-col size="4">Zuhr</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.duhr}}</ion-col>
       </ion-row> -->
 
       <ion-row>
+        <ion-col size="4">Zuhr</ion-col>
+        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.duhr}}</ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Zuhr</ion-col>
         <ion-col size="4" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
@@ -86,15 +86,15 @@
             {{IqamaTimes.duhr}}
           </ng-container>
         </ion-col>
-      </ion-row>
-
-      <!-- <ion-row>
-        <ion-col size="4">Asr</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col>
       </ion-row> -->
 
       <ion-row>
+        <ion-col size="4">Asr</ion-col>
+        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Asr</ion-col>
         <ion-col size="4" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
@@ -106,14 +106,14 @@
             {{IqamaTimes.asr}}
           </ng-container>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
-      <!-- <ion-row>
+      <ion-row>
         <ion-col size="4">Maghrib</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Maghrib)}}</ion-col>
         <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.maghrib)}}</ion-col>
-      </ion-row> -->
-
+      </ion-row>
+<!-- 
       <ion-row>
         <ion-col size="4">Maghrib</ion-col>
         <ion-col size="4" class="time">
@@ -126,15 +126,15 @@
             {{this.formatTime(IqamaTimes.maghrib)}}
           </ng-container>
         </ion-col>
-      </ion-row>
-
-      <!-- <ion-row>
-        <ion-col size="4">Isha</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col>
       </ion-row> -->
 
       <ion-row>
+        <ion-col size="4">Isha</ion-col>
+        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col>
+        <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col>
+      </ion-row>
+
+      <!-- <ion-row>
         <ion-col size="4">Isha</ion-col>
         <ion-col size="4" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
@@ -146,40 +146,40 @@
             {{IqamaTimes.isha}}
           </ng-container>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
-      <!-- <ion-row>
+      <ion-row>
         <ion-col size="8">Jummah (ISD)</ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col>
-      </ion-row> -->
+      </ion-row>
       
-      <ion-row>
+      <!-- <ion-row>
         <ion-col size="8">Jummah (ISD)</ion-col>
         <ion-col size="4" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
             {{IqamaTimes.jummah}}
           </ng-container>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
       <ion-row>
         <ion-col size="12"><a (click)="openMapsApp('1105 Greenlee St, Denton')"><u>1105 Greenlee St, Denton</u></a>
         </ion-col>
       </ion-row>
 
-      <!-- <ion-row>
+      <ion-row>
         <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
         <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col>
-      </ion-row> -->
+      </ion-row>
 
-      <ion-row>
+      <!-- <ion-row>
         <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
         <ion-col size="4" class="time">
           <ng-container *ngIf="!isLoading; else loadingSkeleton">
             {{IqamaTimes.jummahUNT}}
           </ng-container>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
       <ion-row>
         <ion-col size="12"><a (click)="openMapsApp('Goolsby Chalpel, 1622 Maple St, Denton')"><u>Goolsby Chalpel, 1622 Maple St, Denton</u></a></ion-col>
