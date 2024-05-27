@@ -30,16 +30,19 @@
             <ion-icon slot="icon-only" name="download"></ion-icon>
               Download
           </ion-button> -->
-          <ion-button expand="block" (click)="shareImage(nt.header, nt.imgpath, nt.description)" fill="outline" *ngIf="nt.imgpath && openAccordions[nt.header]" aria-label="Share notification image">
+          <!-- <ion-button expand="block" (click)="shareImage(nt.header, nt.imgpath, nt.description, nt.link)" fill="outline" *ngIf="nt.imgpath && openAccordions[nt.header]" aria-label="Share notification image">
             <ion-icon slot="icon-only" name="share-social"></ion-icon>
               Share
-          </ion-button>
+          </ion-button> -->
         </div>
       </ion-accordion>
     </ion-accordion-group>
     
     <ion-card-content>
       {{nt.description}}
+      <ion-button (click)="shareImage(nt.header, nt.imgpath, nt.description, nt.link)" style="float: right;" slot="end" fill="clear" aria-label="Share notification image">
+        <ion-icon slot="icon-only" name="share-social" color="primary" size="small"></ion-icon>
+      </ion-button>
       <br>
       <a [href]="nt.link">{{nt.link}}</a>
       <br>

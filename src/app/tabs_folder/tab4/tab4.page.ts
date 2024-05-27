@@ -82,7 +82,7 @@ export class Tab4Page implements OnInit {
     }
   }
 
-  async shareImage(imageHeader: string, imagePath: string, imageDesc: string){
+  async shareImage(imageHeader: string, imagePath: string, imageDesc: string, imageLink: string){
     const imgSrc = await this.getNotificationImageUrl(imagePath);
 
     if(imgSrc){
@@ -96,11 +96,25 @@ export class Tab4Page implements OnInit {
       const resolvedUri = await this.file.resolveLocalFilesystemUrl(filePath);
       console.log("Resolved URI:", resolvedUri.nativeURL);
       const options = {
-        message: imageHeader + "\n" + imageDesc,
-        subject: "Denton Masjid Event Image",
+        message: imageHeader + "\n" + imageDesc + "\n",
+        subject: "Denton Masjid Event",
         files: [resolvedUri.nativeURL],
+        url: imageLink,
       };
       console.log("Image Src = " + imgSrc);
+      this.socialSharing.shareWithOptions(options)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    } else {
+      const options = {
+        message: imageHeader + "\n" + imageDesc + "\n",
+        subject: "Denton Masjid Event",
+        url: imageLink,
+      };
       this.socialSharing.shareWithOptions(options)
       .then(response => {
         console.log(response);
