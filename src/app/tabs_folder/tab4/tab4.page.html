@@ -9,7 +9,7 @@
 <ion-content [fullscreen]="true">
 
   
-  <ion-list lines="none" *ngFor="let nt of notification$ | async">
+  <ion-list lines="none" *ngFor="let nt of notification$ | async" lines="none">
     <ion-card>
     <ion-item (click)="toggleAccordion(nt.header)" *ngIf="nt.imgpath">
       <ion-label class="page_titles">{{nt.header}}</ion-label>

@@ -3,10 +3,10 @@ plugins {
 }
 
 android {
-    namespace "com.ISD.DentonMasjid"
+    namespace "com.isd.DentonMasjid"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.ISD.DentonMasjid"
+        applicationId "com.isd.DentonMasjid"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

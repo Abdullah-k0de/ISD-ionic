@@ -1,4 +1,4 @@
-package com.ISD.DentonMasjid;
+package com.isd.DentonMasjid;
 
 import com.getcapacitor.BridgeActivity;
 

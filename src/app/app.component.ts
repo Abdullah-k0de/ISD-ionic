@@ -55,7 +55,7 @@ export class AppComponent {
     await SplashScreen.hide();
 
     await SplashScreen.show({
-      showDuration: 750,
+      showDuration: 850,
       autoHide: true,
     });
   }

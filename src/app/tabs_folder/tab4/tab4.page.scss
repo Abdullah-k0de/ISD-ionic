@@ -1,9 +1,25 @@
+ion-content{
+    background-color: #f1eee5;
+}
+
+
 ion-list{
     padding-right: 5%;
+    background-color: #f1eee5;
 }
 
 ion-card{
     width: 100%;
+    --background: #faf9f6;
+    
+}
+
+ion-item{
+    --background: #c0d8c8;
+}
+
+ion-accordion{
+    background-color: #faf9f6;
 }
 
 // ion-button{
