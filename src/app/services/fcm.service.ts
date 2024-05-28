@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Capacitor, Plugins } from '@capacitor/core';
 // import { PushNotification, PushNotificationToken, PushNotificationActionPerformed } from '@capacitor/core';
 import {  PushNotifications, Token, ActionPerformed, PermissionStatus } from '@capacitor/push-notifications';
+import { HttpService } from './http.service';
 
 // const  { PushNs } = Plugins;
 
@@ -11,7 +12,7 @@ import {  PushNotifications, Token, ActionPerformed, PermissionStatus } from '@c
 })
 export class FcmService {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private httpService: HttpService) { }
 
   public initPush() {
     console.log("Inside initPush()");
@@ -75,6 +76,7 @@ export class FcmService {
       async (notification: ActionPerformed) => {
         const data = notification.notification.data;
         console.log('Action Performed: ' + JSON.stringify(notification.notification));
+        this.httpService.getHadith();
         this.router.navigateByUrl(`../tabs_folder/tab1/tab1.module`);        
       }
     );
