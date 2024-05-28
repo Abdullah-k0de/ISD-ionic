@@ -76,7 +76,6 @@ export class FcmService {
       async (notification: ActionPerformed) => {
         const data = notification.notification.data;
         console.log('Action Performed: ' + JSON.stringify(notification.notification));
-        this.httpService.getHadith();
         this.router.navigateByUrl(`../tabs_folder/tab1/tab1.module`);        
       }
     );

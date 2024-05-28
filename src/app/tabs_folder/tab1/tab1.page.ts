@@ -15,12 +15,13 @@ export class Tab1Page {
   isAccordionOpen: boolean = false;
 
   constructor(public httpService: HttpService) {
-    this.httpService.getHadith();
+    // this.httpService.getHadith();
   }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.httpService.getHadith();
   }
 
   scrollToTop() {
