@@ -8,10 +8,6 @@ ion-content::part(scroll) {
     padding-right: var(--ion-safe-area-right, 0);
   }
 
-.donate_button{
-    margin: 1em;
-}
-
 ion-fab-button{
     --border-radius: 15px;
 }
@@ -36,6 +32,10 @@ img{
     padding-left: 0.6em;
     padding-right: 0.6em;
     border-radius: 5%;
+}
+
+.donate_button{
+    margin: 1em;
 }
 
 .page_titles{
