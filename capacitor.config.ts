@@ -11,11 +11,16 @@ const config: CapacitorConfig = {
     "SplashScreen": {
       "launchShowDuration": 0
     },
+
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    },
+
     CapacitorFirebaseMessaging: {
       alias: 'fcm',
       projectId: 'isd-1-c39bc',
       apiKey: 'AIzaSyCm91XlFbcTSUVNqbWws7lMhVrzsmguTtU'
-    }
+    },
   }
 };
 
