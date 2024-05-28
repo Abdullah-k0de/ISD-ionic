@@ -44,7 +44,7 @@ export class AppComponent {
         AngularFireModule.initializeApp(environment.firebase);
         console.log("Angular init");
         console.log("Firebase initialized successfully && Before initPush()");
-        // this.fcmService.initPush();
+        this.fcmService.initPush();
       } catch (error) {
         console.error("Error initializing Firebase:", error);
       }
