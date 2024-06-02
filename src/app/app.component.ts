@@ -29,14 +29,6 @@ export class AppComponent {
       }
     });
 
-    //Initializing Firebase
-    // FirebaseApp.initializeApp(environment.firebase);
-    // initializeApp(environment.firebase);
-    // AngularFireModule.initializeApp(environment.firebase);
-
-    // console.log("Before initPush()");
-    // this.fcmService.initPush();
-
     this.platform.ready().then(async () => {
       try {
         initializeApp(environment.firebase);

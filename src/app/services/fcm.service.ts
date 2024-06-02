@@ -1,18 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Capacitor, Plugins } from '@capacitor/core';
-// import { PushNotification, PushNotificationToken, PushNotificationActionPerformed } from '@capacitor/core';
 import {  PushNotifications, Token, ActionPerformed, PermissionStatus } from '@capacitor/push-notifications';
-import { HttpService } from './http.service';
-
-// const  { PushNs } = Plugins;
-
 @Injectable({
   providedIn: 'root'
 })
 export class FcmService {
 
-  constructor(private router: Router, private httpService: HttpService) { }
+  constructor(private router: Router) { }
 
   public initPush() {
     console.log("Inside initPush()");
@@ -33,21 +28,10 @@ export class FcmService {
           console.log("Permission granted!");
           console.log("Before registerring");
           PushNotifications.register();
-          console.log("After registerring!");
-          
+          console.log("After registerring!"); 
         } else {
           console.log("Permission was not granted.");
         }
-        
-      // if(ps.granted) {
-      //   console.log("Before registerring");
-        
-      //   PushNotifications.register();
-      //   console.log("After registerring!");
-        
-      // } else {
-      //   console.log("Permission was not granted.");
-      // }
       });
     }).catch(error => {
       console.error('Error requesting push notification permissions: ', error);
@@ -79,6 +63,5 @@ export class FcmService {
         this.router.navigateByUrl(`../tabs_folder/tab1/tab1.module`);        
       }
     );
-
   }
 }
