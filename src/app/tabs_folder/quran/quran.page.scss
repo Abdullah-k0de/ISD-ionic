@@ -1,0 +1,64 @@
+ion-content, ion-list, ion-item {
+    background-color: #e5f1e5;
+    --background: #e5f1e5;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2); /* Adds a slight background color for better visibility */
+  }
+
+  .footer-button {
+    flex: 1;
+    margin: 0 5px; /* Adds space between the buttons */
+    background-color: #c5f4c5; /* Button background color */
+    color: black; /* Button text/icon color */
+    border-radius: 4px;
+  }
+
+  .footer-button ion-icon {
+    font-size: 20px;
+  }
+
+.surah-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #c0d8c8;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 2px;
+}
+  
+.surah-number-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #c7f3aa; /* Light background color for the circle */
+    background-image: url('../../../assets/circle-border.png');
+    background-size: cover;
+    border: 2px solid #021b05; /* Decorative border */
+    font-weight: bold;
+    color: #021901;
+    margin-right: 10px;
+}
+  
+.surah-info {
+    flex: 1;
+}
+
+.surah-info h1, .surah-info h2, .surah-info p {
+    margin: 0;
+}
+  
+.surah-revelation {
+    margin-left: 10px;
+    font-size: small;
+}

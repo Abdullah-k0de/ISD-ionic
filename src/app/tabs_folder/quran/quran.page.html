@@ -1,0 +1,48 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="title_of_page">
+      Quran
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-list lines="none">
+    <ion-item *ngFor="let surah of surahs" (click)="openSurahPage(surah.name, surah.number)">
+      <ion-label>
+        <div class="surah-container">
+          <div class="surah-number-circle">
+            <ion-text>{{ surah.number }}</ion-text>
+          </div>
+          <div class="surah-info">
+            <h1>{{ surah.name }}</h1>
+            <h2>{{ surah.englishName }}</h2>
+            <p>{{ surah.englishNameTranslation }} ({{ surah.numberOfAyahs }})</p>
+          </div>
+          <div class="surah-revelation">
+            <ion-buttons>
+              <ion-button (click)="togglePlayPause($event, surah.number)">
+                <ion-icon
+                [name]="isSurahPlaying(surah.number) ? 'pause' : 'play'" size="medium">
+              </ion-icon><br>
+              </ion-button>
+            </ion-buttons>
+            <ion-text>{{ surah.revelationType }}</ion-text>
+          </div>
+        </div>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-buttons class="footer-buttons">
+    <ion-button size="small" (click)="scrollToTop()" class="footer-button">
+      TOP <ion-icon name="arrow-up-sharp"></ion-icon>
+    </ion-button>
+    <ion-button size="small" (click)="scrollToDown()" class="footer-button">
+      BOTTOM <ion-icon name="arrow-down-sharp"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-footer>

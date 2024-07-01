@@ -4,7 +4,7 @@ import { collection } from 'firebase/firestore';
 import { Observable  } from 'rxjs';
 import { NotificationClass } from 'src/app/classes/notification-class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { ModalController, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ImageModalPage } from 'src/app/pages/image-modal/image-modal.page';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx'
@@ -29,15 +29,19 @@ export class Tab4Page implements OnInit {
     private storage: AngularFireStorage,
     private modalController: ModalController,
     private socialSharing: SocialSharing,
-    private file: File
+    private file: File,
+    private loadingController: LoadingController
   ) {
     this.notification$ = collectionData(collection(this.firestore, 'notifications')) as Observable<NotificationClass[]>;
   }
 
   // message / download not working
 
-  ngOnInit() {
+  async ngOnInit() {
+    const loading = this.loadingController.create();
+    (await loading).present();
     this.loadEvents();
+    (await loading).dismiss();
   }
 
   loadEvents() {

@@ -1,5 +1,5 @@
 export class AdhanClass {
-    code: number
+  code: number
   status: string
   data: Data
 }

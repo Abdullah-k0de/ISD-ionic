@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="icon-only" (click)="close()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="title_of_page center-title">{{ surahName }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item *ngFor="let ayah of surahText">
+      <ion-label>
+        <ion-text>
+          {{ ayah.text }} - {{ ayah.numberInSurah }}
+        </ion-text>
+        <ion-icon
+          [name]="currentAyahNumber === ayah.number && !audioPlayer.paused ? 'pause' : 'play'"
+          (click)="playAudio(ayah.number, ayah.audio)">
+        </ion-icon>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<audio #audioPlayer></audio>

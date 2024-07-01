@@ -22,7 +22,16 @@ const routes: Routes = [
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
+  },
+  {
+    path: 'quran',
+    loadChildren: () => import('./tabs_folder/quran/quran.module').then( m => m.QuranPageModule)
+  },
+  {
+    path: 'surah/:id',
+    loadChildren: () => import('./pages/surah/surah.module').then( m => m.SurahPageModule)
   }
+
 ];
 @NgModule({
   imports: [
