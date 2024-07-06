@@ -11,7 +11,7 @@
   <!-- Hadith at the beginning -->
   <ion-card>
     <!-- Header for Hadith of the Day, with accordion -->
-    <ion-item color="light" (click)="toggleAccordion()">
+    <ion-item class="hadith-title-clickable" (click)="toggleAccordion()" lines="full">
       <ion-label class="page_titles">Hadith of the Day</ion-label>
       <ion-icon name="chevron-down" *ngIf="!isAccordionOpen"></ion-icon>
       <ion-icon name="chevron-up" *ngIf="isAccordionOpen"></ion-icon>
@@ -107,22 +107,7 @@
     <img alt="Picture of Denton Masjid" src="../../../assets/isd2.jpg" />
   <!-- </ion-card> -->
   <h3>Welcome to Islamic Society of Denton!</h3>
-  <h6>
-    The Islamic Society of Denton (ISD) is a non-profit
-    religious organization founded to serve the Greater
-    Denton area community. ISD is dedicated towards
-    worship, education and services according to
-    Islamic faith principles as dictated by the Quran
-    and the authentic sayings and traditions of Prophet
-    Mohammed, peace be upon him. The Masjid (Mosque)
-    was built, primarily, by residents of Denton, which
-    included students attending both the University of
-    North Texas and Texas Woman's University. Through
-    hard work and generous donations, the Islamic Society
-    of Denton opened in August of 1981 making it the
-    first Masjid built in the State of Texas. ISD is not
-    affiliated with any private, public or any other political
-    organizations and/or governments.  </h6>
+  <h6> {{introductionText}} </h6>
     <ion-button class="donate_button" href="https://www.dentonmosque.com/donate/" color="primary" expand="block" fill="solid" shape="default">
       DONATE
     </ion-button>
@@ -148,11 +133,11 @@
             <ion-icon name="logo-youtube"></ion-icon>
           </ion-fab-button> 
         </ion-col>
-        <ion-col>
+        <!-- <ion-col>
           <ion-fab-button href="http://twitter.com/dentonmosque" color="primary">
             <ion-icon name="logo-twitter"></ion-icon>
           </ion-fab-button> 
-        </ion-col>
+        </ion-col> -->
       </ion-row>
     </ion-fab>
   </div>
@@ -164,7 +149,7 @@
     Address: <a (click)="openMapsApp()"><u>1105 Greenlee St, Denton</u></a>
   </h6>
   <h6>
-    Email: <a href="mailto: dentonmosque@gmail.com">dentonmosque&#64;gmail.com</a>
+    Email: <a href="mailto: info@dentonmasjid.com">info&#64;dentonmasjid.com</a>
   </h6>
   <h6>
     Phone: <a href="tel:+940-484-1871">(940) 484-1871</a>

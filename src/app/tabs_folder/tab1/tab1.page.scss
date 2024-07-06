@@ -21,6 +21,7 @@ h3{
 h6{
     margin-left: 0.85em;
     margin-right: 0.85em;
+    line-height: 1.5;
 }
 
 a{
@@ -32,6 +33,10 @@ img{
     padding-left: 0.6em;
     padding-right: 0.6em;
     border-radius: 5%;
+}
+
+ion-card {
+    background: #fefcf0;
 }
 
 .donate_button{
@@ -46,6 +51,12 @@ img{
 
 .hadith_content{
     margin: 0;
+    color: black;
+    line-height: 1.5;
+}
+
+.hadith-title-clickable {
+    --background: #fefcf0;
 }
 
 .hadith_attribution{

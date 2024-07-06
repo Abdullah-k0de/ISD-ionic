@@ -7,6 +7,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-segment value="surahs">
+    <ion-segment-button value="surahs">
+      <ion-label>Surahs</ion-label>
+    </ion-segment-button>
+    <!-- <ion-segment-button value="Juz">
+      <ion-label>Juz</ion-label>
+    </ion-segment-button> -->
+  </ion-segment>
 
   <ion-list lines="none">
     <ion-item *ngFor="let surah of surahs" (click)="openSurahPage(surah.name, surah.number)">

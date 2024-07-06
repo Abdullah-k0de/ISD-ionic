@@ -81,7 +81,7 @@ export class QuranPage implements OnInit {
   }
 
   playSurah(surahNumber: number) {
-    const apiUrl = `http://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`;
+    const apiUrl = `https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`;
     this.httpService.getSurahList(apiUrl).subscribe(
       (res: any) => {
         console.log("currentSurahAyahs: ", this.currentAyahIndex);

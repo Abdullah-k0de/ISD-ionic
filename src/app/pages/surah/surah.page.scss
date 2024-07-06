@@ -1,5 +1,150 @@
+ion-item, ion-content, ion-list {
+    background-color: #fefcf0;
+    --background: #fefcf0;
+  }
+
+  ion-button {
+    margin-left: auto;
+  }
+
+  ion-button:not(:last-child) {
+    margin-right: -1.5rem; /* Adjust spacing between tab buttons */
+  }
+
+  ion-list {
+    padding-bottom: 0;
+  }
+
+  ion-range {
+    --bar-background: #a2ffae;
+    --bar-background-active: #c0febd;
+    --bar-height: 8px;
+    --bar-border-radius: 8px;
+    --knob-background: #093205;
+    --knob-size: 40px;
+    --pin-background: #093205;
+    --pin-color: #fff;
+  }
+  
 .center-title {
     position: absolute;
     left: 50%;
     transform: translate(-50%);
+}
+
+.ayah-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .arabic-text {
+    line-height: 1.7;
+    color: #1f5a37;
+    font-size: 1.7em;
+    text-align: right;
+    direction: rtl;
+    margin-bottom: 20px;
+    align-self: flex-end; /* Ensures the Arabic text is aligned to the right */
+  }
+  
+  .translation-text {
+    line-height: 1.7;
+    font-size: 1.1em;
+    text-align: left;
+    direction: ltr;
+    color: black;
+    align-self: flex-start; /* Ensures the translation text is aligned to the left */
+    padding-top: 2px;
+  }
+
+  .surah-number-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-size: cover;
+    border: 2px solid #1f5a37; /* Decorative border */
+    color: #1f5a37;
+  }  
+
+  .transparent {
+    --background: #f8fdf7;
+  }
+
+/* Dark mode styles */
+#main-content.dark-mode ion-item,
+#main-content.dark-mode ion-content,
+#main-content.dark-mode ion-list {
+    background-color: #121212;
+    --background: #121212;
+}
+
+#main-content.dark-mode ion-button,
+#main-content.dark-mode ion-label {
+    margin-left: auto;
+    color: #ffffff; /* Adjust the button text color for better contrast in dark mode */
+}
+
+#main-content.dark-mode ion-range {
+    --bar-background: #505050;
+    --bar-background-active: #707070;
+    --bar-height: 8px;
+    --bar-border-radius: 8px;
+    --knob-background: #ffffff;
+    --knob-size: 40px;
+    --pin-background: #ffffff;
+    --pin-color: #000000; /* Ensure the pin text is visible */
+}
+
+#main-content.dark-mode .center-title {
+    color: #ffffff; /* Adjust title color for dark mode */
+}
+
+#main-content.dark-mode .ayah-text {
+    color: #ffffff; /* Adjust ayah text color for dark mode */
+}
+
+#main-content.dark-mode .arabic-text {
+    color: #e0e0e0; /* Adjust Arabic text color for dark mode */
+}
+
+#main-content.dark-mode .translation-text {
+    color: #cccccc; /* Adjust translation text color for dark mode */
+}
+
+#main-content.dark-mode .surah-number-circle {
+    border: 2px solid #e0e0e0; /* Adjust border color for dark mode */
+    color: #e0e0e0; /* Adjust text color for dark mode */
+}
+
+#main-content.dark-mode .transparent {
+    --background: #303030;
+}
+
+#main-content.dark-mode ion-toggle {
+    --handle-background: #ffffff;
+    --handle-width: 25px;
+    --handle-height: 27px;
+    --handle-max-height: auto;
+    --handle-spacing: 0px;
+}
+
+#main-content.dark-mode ion-toggle::part(track),
+#main-content.dark-mode ion-toggle.toggle-checked::part(track) {
+    height: 10px;
+    width: 65px;
+    background: #707070;
+}
+
+#main-content.dark-mode ion-toggle::part(handle) {
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+#main-content.dark-mode ion-toggle.toggle-checked::part(handle) {
+    background: #505050;
 }
