@@ -52,7 +52,6 @@ export class QuranPage implements OnInit {
     this.httpService.getSurahList().subscribe(
       (res: any) => {
         this.surahs = res.data; // response has data property containing array of surahs
-        console.log("Surahs received:", this.surahs);
       },
       (error: any) => {
         console.error("API Error:", error);

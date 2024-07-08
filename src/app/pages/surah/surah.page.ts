@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
-import { IonContent, IonMenu, LoadingController, MenuController, ModalController } from '@ionic/angular';
+import { IonContent, IonMenu, LoadingController, MenuController, ModalController, ToastController } from '@ionic/angular';
 import { Observable, map, subscribeOn } from 'rxjs';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -22,6 +22,7 @@ export class SurahPage implements OnInit {
   fontSize: number = 18; // Default font size
   darkMode: boolean = false; // Track the dark mode state
   translationMode: boolean= false;
+  ayahNumber: number; // go to ayah feature
 
 
   @ViewChild('audioPlayer', { static: true }) set content(content: any) {
@@ -38,7 +39,8 @@ export class SurahPage implements OnInit {
     private httpService: HttpService,
     private loadingController: LoadingController,
     private menuController: MenuController,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private toastController: ToastController
   ) { }
 
   async ngOnInit() {
@@ -141,6 +143,33 @@ export class SurahPage implements OnInit {
       audio.oncanplaythrough = () => {
         audio.play();
       };
+    }
+  }
+
+  async onSearchAyah(event: any) {
+    const ayahNumber = event.target.value;
+    // Check if the input is empty
+    if (!ayahNumber) {
+      return; // Do nothing if input is empty
+    }
+    
+    const element = document.getElementById(`ayah-${ayahNumber}`);
+    if (element) {
+      this.contents.scrollToPoint(0, element.offsetTop, 700);
+    } else {
+      // Show toast message when Ayah number is out of range
+      const toast = await this.toastController.create({
+        message: `Ayah number ${ayahNumber} out of range!`,
+        duration: 1500,
+        color: 'danger',
+        buttons: [
+          {
+            role: 'cancel',
+            text: 'X'
+          }
+        ],
+      });
+      toast.present();
     }
   }
 
