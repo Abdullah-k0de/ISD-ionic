@@ -1,1 +1,10 @@
-
+.custom-tab-bar {
+    ion-tab-button {
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+    }
+  
+    ion-tab-button:not(:last-child) {
+      margin-right: -0.7rem; /* Adjust spacing between tab buttons */
+    }
+  }

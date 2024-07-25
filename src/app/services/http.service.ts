@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Random } from '../classes/random';
 import { HadithClass } from '../classes/hadith-class';
 import { AdhanClass } from '../classes/adhan-class';
-import { delay } from 'rxjs';
+import { Observable, delay } from 'rxjs';
+import { SurahList } from '../classes/surah-list';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class HttpService {
 
   hadiths: HadithClass = new HadithClass("","","","","","");
   adhans: AdhanClass = new AdhanClass;
+  surahs: SurahList = new SurahList;
 
   constructor(private http: HttpClient) {  }
 
@@ -73,7 +75,6 @@ export class HttpService {
     makeAPICall(id_hadith);
   }
 
-  // ERROR: TypeError: Cannot read properties of undefined (reading 'timings')
   getAdhanTimes(){
     // Function to make API call and handle response
     const makeAdhanAPICall = () => {
@@ -103,4 +104,49 @@ export class HttpService {
     };
     makeAdhanAPICall();
   }
+
+  getSurahList(url?: string): Observable<any>{
+    // Function to make API call and handle response
+    const apiUrl = `https://api.alquran.cloud/v1/surah`;
+    const makeSurahAPICall = () => {
+      if(url){
+          this.http.get<SurahList>(url).subscribe((res: SurahList) => {
+            this.surahs = res;
+            console.log(res);
+            console.log("Satisfactory response received from Surah Lists.");          
+          },
+          (error) => {
+            if (error.status === 404) {
+              // Do nothing if it's 404
+              console.log("404 Error from Surah Lists with Passed url!");
+            } else {
+              // Handle other errors if needed
+              console.error("API Error:", error);
+            }
+          }
+        );
+      } else {
+        this.http.get<SurahList>(apiUrl).subscribe((res: SurahList) => {
+            this.surahs = res;
+            console.log(res);
+            console.log("Satisfactory response received from Surah Lists.");          
+          },
+          (error) => {
+            if (error.status === 404) {
+              // Do nothing if it's 404
+              console.log("404 Error from Surah Lists!");
+            } else {
+              // Handle other errors if needed
+              console.error("API Error:", error);
+            }
+          }
+        );
+      }
+    };
+    if(url)
+      return this.http.get(url);
+    else
+      return this.http.get(apiUrl);
+  }
+
 }

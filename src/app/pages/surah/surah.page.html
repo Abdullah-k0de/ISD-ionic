@@ -1,0 +1,100 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="" (click)="close()"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title_of_page">{{ surahName }}</ion-title>
+    <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" id="main-content" [ngClass]="{'dark-mode': darkMode}">
+  <ion-list *ngFor="let ayah of surahText | async; let i = index" lines="none" [id]="'ayah-' + (i+1)">
+    <ion-item>
+      <ion-label class="ayah-text" [ngStyle]="{'font-size': fontSize + 'px'}">
+        <div class="arabic-text">{{ ayah.text }}
+          <div class="surah-number-circle">
+            <ion-text style="font-size: medium;">{{ i + 1 }}</ion-text>
+          </div>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-button
+        fill="clear"
+        slot="start"
+        size="medium"
+        style="color: #1f5a37;"
+        (click)="playAudio(ayah.number, ayah.audio)"
+      >
+        <ion-icon
+          [name]="currentAyahNumber === ayah.number && !audioPlayer.paused ? 'pause' : 'play'"
+        ></ion-icon>
+      </ion-button>
+      <ion-button
+        fill="clear"
+        slot="start"
+        size="medium"
+        style="color: #1f5a37;"
+        (click)="shareAyah(ayah.text, surahTextTranslation[i].text)"
+        aria-label="Share Ayah"
+      >
+        <ion-icon
+          slot="icon-only" name="share-social"></ion-icon>
+      </ion-button>
+    <ion-item *ngIf="translationMode" class="transparent" lines="none">
+      <div class="translation-text">{{ surahTextTranslation[i]?.text }}</div>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-menu side="end" menuId="fontSizeMenu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Settings</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="closeMenu()">
+          <ion-icon class="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item lines="none">
+        <ion-range min="14" max="26" [value]="20" [pin]="true" [(ngModel)]="fontSize" labelPlacement="stacked" label="Font Size" (ionChange)="updateFontSize()" aria-label="Font Size Range">
+          <ion-label slot="start" style="font-size: x-small;">A</ion-label>
+          <ion-label slot="end" style="font-size: x-large;">A</ion-label>
+        </ion-range>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label style="width: 100%; text-align: center;" [ngStyle]="{'font-size': fontSize + 'px'}">
+          <div style="font-size: 1.7em; color: #1f5a37;">
+            بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+          </div>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label style="color: black;">Dark Mode</ion-label>
+        <!-- <ion-toggle aria-label="Dark mode" color="secondary" slot="end" [(ngModel)]="darkMode" justify="space-between" (ionChange)="toggleDarkMode()"></ion-toggle> -->
+        <ion-toggle aria-label="Dark mode" color="success" slot="end" justify="space-between" (click)="toggleDarkMode()"></ion-toggle>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label style="color: black;">Translation</ion-label>
+        <ion-toggle aria-label="Translation mode" color="success" slot="end" justify="space-between" (click)="toggleTranslationMode()"></ion-toggle>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-searchbar 
+          [(ngModel)]="ayahNumber"
+          type="number" 
+          placeholder="Ayah Number" 
+          (ionInput)="onSearchAyah($event)">
+        </ion-searchbar>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<audio #audioPlayer></audio>

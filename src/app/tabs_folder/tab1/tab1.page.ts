@@ -13,6 +13,7 @@ export class Tab1Page {
   @ViewChild(IonContent) content: IonContent;
   platform: any;
   isAccordionOpen: boolean = false;
+  introductionText: string = "The Islamic Society of Denton (ISD) is a non-profit religious organization founded to serve the Greater Denton area community. ISD is dedicated towards worship, education and services according to Islamic faith principles as dictated by the Quran and the authentic sayings and traditions of Prophet Mohammed, peace be upon him. The Masjid (Mosque) was built, primarily, by residents of Denton, which included students attending both the University of North Texas and Texas Woman's University. Through hard work and generous donations, the Islamic Society of Denton opened in August of 1981 making it the first Masjid built in the State of Texas. ISD is not affiliated with any private, public or any other political organizations and/or governments.";
 
   constructor(public httpService: HttpService) {
     // this.httpService.getHadith();
