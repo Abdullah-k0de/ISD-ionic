@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collectionData } from '@angular/fire/firestore';
+import { Firestore, collectionData, orderBy, query } from '@angular/fire/firestore';
 import { collection } from 'firebase/firestore';
 import { Observable  } from 'rxjs';
 import { NotificationClass } from 'src/app/classes/notification-class';
@@ -32,7 +32,10 @@ export class Tab4Page implements OnInit {
     private file: File,
     private loadingController: LoadingController
   ) {
-    this.notification$ = collectionData(collection(this.firestore, 'notifications')) as Observable<NotificationClass[]>;
+    // this.notification$ = collectionData(collection(this.firestore, 'notifications')) as Observable<NotificationClass[]>;
+    const notificationsRef = collection(this.firestore, 'notifications');
+    const orderedNotificationsRef = query(notificationsRef, orderBy('date', 'desc'));
+    this.notification$ = collectionData(orderedNotificationsRef) as Observable<NotificationClass[]>;
   }
 
   // message / download not working
