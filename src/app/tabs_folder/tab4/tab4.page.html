@@ -40,9 +40,9 @@
     
     <ion-card-content>
       {{nt.description}}
-      <!-- <ion-button (click)="shareImage(nt.header, nt.imgpath, nt.description, nt.link)" style="float: right;" slot="end" fill="clear" aria-label="Share notification image">
+      <ion-button (click)="shareImage(nt.header, nt.imgpath, nt.description, nt.link)" style="float: right;" slot="end" fill="clear" aria-label="Share notification image">
         <ion-icon slot="icon-only" name="share-social" color="primary" size="small"></ion-icon>
-      </ion-button> -->
+      </ion-button>
       <br>
       <a [href]="nt.link">{{nt.link}}</a>
       <br>

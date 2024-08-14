@@ -20,12 +20,14 @@
     <img alt="Background Picture for Prayer times" [src]="'../../../assets/times-' + hourOfDay + '.jpg'">
   </div>
 
-  <ng-container *ngIf="!isLoading; else loadingOutsideSkeleton">
+  <!-- <ng-container *ngIf="!isLoading; else loadingOutsideSkeleton"> -->
+  <ng-container *ngIf="this.httpService.adhans?.data; else loadingOutsideSkeleton">
   <!-- Transparent container with table-like structure -->
   <div class="transparent-container">
 
     <!-- Using ionic  -->
-    <ion-grid class="ion-no-padding" *ngFor="let iq of iqama$ | async">
+    <!-- <ion-grid class="ion-no-padding" *ngFor="let iq of iqama$ | async"> -->
+      <ion-grid class="ion-no-padding">
       <ion-row>
         <ion-col size="4"></ion-col>
         <ion-col size="4" class="time">Adhan</ion-col>
@@ -33,42 +35,52 @@
       </ion-row>
       <ion-row>
         <ion-col size="4">Fajr</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Fajr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.fajr}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Fajr)}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.fajr}}</ion-col>
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.fajr}}</ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col size="5">Sunrise</ion-col>
-        <ion-col size="7" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Sunrise)}}</ion-col>
+        <!-- <ion-col size="7" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Sunrise)}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.sunrise}}</ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col size="4">Zuhr</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.duhr}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.zuhr}}</ion-col>
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.zuhr}}</ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col size="4">Asr</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col> -->
+        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.asr}}</ion-col>
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.asr}}</ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col size="4">Maghrib</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Maghrib)}}</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.maghrib)}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Maghrib)}}</ion-col> -->
+        <!-- <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.maghrib)}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.maghrib}}</ion-col>
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.maghrib}}</ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col size="4">Isha</ion-col>
-        <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col> -->
+        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.isha}}</ion-col>
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.isha}}</ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col size="8">Jummah (ISD)</ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah1}}</ion-col>
       </ion-row>
 
       <ion-row>
@@ -78,7 +90,8 @@
 
       <ion-row>
         <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
-        <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col> -->
+        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah2}}</ion-col>
       </ion-row>
 
       <ion-row>

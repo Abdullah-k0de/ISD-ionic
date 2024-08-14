@@ -75,17 +75,40 @@ export class HttpService {
     makeAPICall(id_hadith);
   }
 
-  getAdhanTimes(){
+  // getAdhanTimes(){
+  //   // Function to make API call and handle response
+  //   const makeAdhanAPICall = () => {
+  //       const today = new Date();
+  //       const day = today.getDate();
+  //       const month = today.getMonth() + 1;
+  //       const year = today.getFullYear();
+  //       const date = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+  //       const coordinates = "?latitude=33.201662695006874&longitude=-97.14494994434574&method=2";
+  //       console.log("Date being recieved is: "+date);
+  //       const apiUrl = `https://api.aladhan.com/v1/timings/date=${date}${coordinates}`;
+  //       this.http.get<AdhanClass>(apiUrl).subscribe((res: AdhanClass) => {
+  //           this.adhans = res;
+  //           console.log(res);
+  //           console.log("Satisfactory response received from Adhans.");          
+  //         },
+  //         (error) => {
+  //           if (error.status === 404) {
+  //             // Do nothing if it's 404
+  //             console.log("404 Error from Adhans!");
+  //           } else {
+  //             // Handle other errors if needed
+  //             console.error("API Error:", error);
+  //           }
+  //         }
+  //     );
+  //   };
+  //   makeAdhanAPICall();
+  // }
+
+  getNewAdhanTimes(){
     // Function to make API call and handle response
     const makeAdhanAPICall = () => {
-        const today = new Date();
-        const day = today.getDate();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
-        const date = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
-        const coordinates = "?latitude=33.201662695006874&longitude=-97.14494994434574&method=2";
-        console.log("Date being recieved is: "+date);
-        const apiUrl = `https://api.aladhan.com/v1/timings/date=${date}${coordinates}`;
+        const apiUrl = `https://masjidal.com/api/v1/time/range?masjid_id=O8L7ppA5`;
         this.http.get<AdhanClass>(apiUrl).subscribe((res: AdhanClass) => {
             this.adhans = res;
             console.log(res);
