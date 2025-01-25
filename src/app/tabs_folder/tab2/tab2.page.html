@@ -77,25 +77,29 @@
         <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.isha}}</ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row class="margin_remove_bottom">
         <ion-col size="8">Jummah (ISD)</ion-col>
         <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col> -->
         <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah1}}</ion-col>
       </ion-row>
 
       <ion-row>
-        <ion-col size="12"><a (click)="openMapsApp('1105 Greenlee St, Denton')"><u>1105 Greenlee St, Denton</u></a>
+        <ion-col class="padding_remove_top" size="12"><a (click)="openMapsApp('1105 Greenlee St, Denton')"><u>1105 Greenlee St, Denton</u></a>
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row class="margin_remove_bottom">
         <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
-        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah2}}</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col> -->                                 <!-- Firebase Timings -->
+        <ion-col size="4" class="time">2:15 PM</ion-col>
+        <!-- <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah2}}</ion-col> -->          <!-- Masjidal App Timings -->
+      </ion-row>
+
+      <ion-row class="margin_remove_bottom">
+        <ion-col class="padding_remove_top" size="12"><a (click)="openMapsApp('Goolsby Chalpel, 1622 Maple St, Denton')"><u>Goolsby Chalpel, 1622 Maple St, Denton</u></a></ion-col>
       </ion-row>
 
       <ion-row>
-        <ion-col size="12"><a (click)="openMapsApp('Goolsby Chalpel, 1622 Maple St, Denton')"><u>Goolsby Chalpel, 1622 Maple St, Denton</u></a></ion-col>
         <ion-col class="montly" size="12"><a href="https://masjidal.com/widget/monthly/?masjid_id=O8L7ppA5&jumuah_text=ISD%20Jummah"><u>MONTHLY CALENDAR</u></a></ion-col>
       </ion-row>
     </ion-grid>
