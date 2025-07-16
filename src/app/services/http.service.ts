@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Random } from '../classes/random';
 import { HadithClass } from '../classes/hadith-class';
 import { AdhanClass } from '../classes/adhan-class';
-import { Observable, delay } from 'rxjs';
+import { Observable, delay, map } from 'rxjs';
 import { SurahList } from '../classes/surah-list';
 
 @Injectable({
@@ -14,6 +14,7 @@ export class HttpService {
   hadiths: HadithClass = new HadithClass("","","","","","");
   adhans: AdhanClass = new AdhanClass;
   surahs: SurahList = new SurahList;
+  reciters: any[] = [];
 
   constructor(private http: HttpClient) {  }
 
@@ -170,6 +171,13 @@ export class HttpService {
       return this.http.get(url);
     else
       return this.http.get(apiUrl);
+  }
+
+  getReciters(): Observable<any[]> {
+    const apiURL = 'https://api.alquran.cloud/v1/edition/format/audio';
+    return this.http.get<any>(apiURL).pipe(
+      map(res => res.data || [])
+    );
   }
 
 }

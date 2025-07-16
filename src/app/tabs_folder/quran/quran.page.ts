@@ -16,6 +16,9 @@ export class QuranPage implements OnInit {
   currentAyahIndex: number = 0;
   playingSurahNumber: number | null = null;
   isPaused: boolean = false;
+  reciters: any[] = [];
+  selectedReciterId: string;
+
 
   constructor(
     private httpService: HttpService,
@@ -45,6 +48,7 @@ export class QuranPage implements OnInit {
     const loading = this.loadingController.create();
     (await loading).present();
     this.getSurahList();
+    this.getRecitersList();
     (await loading).dismiss();
   }
 
@@ -116,5 +120,17 @@ export class QuranPage implements OnInit {
   isSurahPlaying(surahNumber: number): boolean {
     return this.playingSurahNumber === surahNumber && !this.isPaused;
   }
+
+  getRecitersList(){
+    this.httpService.getReciters().subscribe(data => {
+    this.reciters = data;
+    });
+  }
+
+  onReciterChange() {
+    console.log('Selected Identifier:', this.selectedReciterId);
+    // Use this ID to fetch audio later
+  }
+
 
 }

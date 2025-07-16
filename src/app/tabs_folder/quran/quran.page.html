@@ -45,12 +45,22 @@
 </ion-content>
 
 <ion-footer>
-  <ion-buttons class="footer-buttons">
+  <!-- <ion-buttons class="footer-buttons">
     <ion-button size="small" (click)="scrollToTop()" class="footer-button">
       TOP <ion-icon name="arrow-up-sharp"></ion-icon>
     </ion-button>
     <ion-button size="small" (click)="scrollToDown()" class="footer-button">
       BOTTOM <ion-icon name="arrow-down-sharp"></ion-icon>
     </ion-button>
-  </ion-buttons>
+  </ion-buttons> -->
+  <ion-item>
+    <ion-label>Select Reciter</ion-label>
+    <ion-select [(ngModel)]="selectedReciterId" interface="popover" (ionChange)="onReciterChange()">
+      <ion-select-option *ngFor="let reciter of reciters" [value]="reciter.identifier">
+        {{ reciter.englishName }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+
 </ion-footer>
