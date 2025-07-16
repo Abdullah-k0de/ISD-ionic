@@ -68,7 +68,17 @@ ion-button {
     color: #1f5a37;
 }
 
-// ::ng-deep .select-popover {
-//   max-height: 50vh;
-//   overflow-y: auto;
+// ::ng-deep .select-interface-option {
+//   font-size: 14px;
+//   padding: 10px 16px;
+//   border-bottom: 1px solid #ccc;
+//   width: 100%;
 // }
+
+::ng-deep .select-interface-option:nth-child(odd) {
+  background-color: #f1fff1;
+}
+
+::ng-deep .select-interface-option:nth-child(even) {
+  background-color: #ffffff;
+}
