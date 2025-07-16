@@ -17,7 +17,9 @@ export class QuranPage implements OnInit {
   playingSurahNumber: number | null = null;
   isPaused: boolean = false;
   reciters: any[] = [];
-  selectedReciterId: string;
+  selectedReciterId: string = 'ar.muhammadayyoub';
+  currentSurahNumber: number;
+  lastUsedReciterId: string;
 
 
   constructor(
@@ -84,18 +86,23 @@ export class QuranPage implements OnInit {
   }
 
   playSurah(surahNumber: number) {
-    const apiUrl = `https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`;
-    this.httpService.getSurahList(apiUrl).subscribe(
-      (res: any) => {
-        console.log("currentSurahAyahs: ", this.currentAyahIndex);
-        
-        this.currentSurahAyahs = res.data.ayahs;
-        this.playCurrentAyah();
-      },
-      (error: any) => {
-        console.error("API Error:", error);
-      }
-    );
+    const reciterId = this.selectedReciterId || 'ar.muhammadayyoub'; // default 
+    if (this.lastUsedReciterId !== reciterId || this.currentSurahNumber !== surahNumber) {
+
+      const apiUrl = `https://api.alquran.cloud/v1/surah/${surahNumber}/${reciterId}`;
+      
+      this.httpService.getSurahList(apiUrl).subscribe(
+        (res: any) => {
+          this.currentSurahNumber = surahNumber;
+          this.currentSurahAyahs = res.data.ayahs;
+          this.currentAyahIndex = 0;
+          this.playCurrentAyah(); // Play fresh from start
+        },
+        (error: any) => {
+          console.error("API Error:", error);
+        }
+      );
+    }
   }
 
   togglePlayPause(event: Event, surahNumber: number) {
@@ -129,8 +136,26 @@ export class QuranPage implements OnInit {
 
   onReciterChange() {
     console.log('Selected Identifier:', this.selectedReciterId);
-    // Use this ID to fetch audio later
+    // If user has a surah loaded, reload it
+    if (this.currentSurahNumber) {
+      this.updateCurrentSurahWithReciter();
+    }
   }
 
+  updateCurrentSurahWithReciter() {
+    const reciterId = this.selectedReciterId || 'ar.alafasy';
+    const apiUrl = `https://api.alquran.cloud/v1/surah/${this.currentSurahNumber}/${reciterId}`;
+
+    this.httpService.getSurahList(apiUrl).subscribe(
+      (res: any) => {
+        this.currentSurahAyahs = res.data.ayahs;
+        this.lastUsedReciterId = reciterId;
+        // Don't play — just update
+      },
+      (error: any) => {
+        console.error("Error updating surah with new reciter:", error);
+      }
+    );
+  }
 
 }

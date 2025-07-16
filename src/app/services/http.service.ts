@@ -175,9 +175,18 @@ export class HttpService {
 
   getReciters(): Observable<any[]> {
     const apiURL = 'https://api.alquran.cloud/v1/edition/format/audio';
+    
     return this.http.get<any>(apiURL).pipe(
-      map(res => res.data || [])
-    );
+    map(res => {
+      const allReciters = res.data || [];
+
+      return allReciters
+        .filter((r: { language: string; }) => r.language === 'ar') // keep Arabic
+        .map((r: { language: string; name: any; }) => {
+          return r;
+        });
+    })
+  );
   }
 
 }

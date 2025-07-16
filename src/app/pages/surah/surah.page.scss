@@ -148,3 +148,7 @@ ion-item, ion-content, ion-list {
 #main-content.dark-mode ion-toggle.toggle-checked::part(handle) {
     background: #505050;
 }
+
+::ng-deep .select-interface-option {
+  font-size: x-small !important;
+}

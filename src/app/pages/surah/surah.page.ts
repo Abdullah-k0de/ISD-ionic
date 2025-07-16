@@ -23,6 +23,8 @@ export class SurahPage implements OnInit {
   darkMode: boolean = false; // Track the dark mode state
   translationMode: boolean= false;
   ayahNumber: number; // go to ayah feature
+  reciters: any[] = [];
+  selectedReciterId: string = 'ar.muhammadayyoub';
 
 
   @ViewChild('audioPlayer', { static: true }) set content(content: any) {
@@ -46,8 +48,19 @@ export class SurahPage implements OnInit {
   async ngOnInit() {
     const loading = await this.loadingController.create();
     await loading.present();
+    this.getRecitersList();
     this.getSurahArabicText();
     await loading.dismiss();
+  }
+
+  getRecitersList(){
+    this.httpService.getReciters().subscribe(data => {
+    this.reciters = data;
+    });
+  }
+
+  onReciterChange() {
+    this.getSurahArabicText();
   }
 
   close() {
@@ -77,26 +90,19 @@ export class SurahPage implements OnInit {
   }
 
   getSurahArabicText() {
-    const apiUrl = `https://api.alquran.cloud/v1/surah/${this.surahNumber}/editions/ar.alafasy,en.asad`;
-    // this.httpService.getSurahList(apiUrl).subscribe(
-    //   (res: any) => {
-    //     this.surahText = res.data.at(0).ayahs; // Assuming response has data property containing array of surahs
-    //     this.surahTextTranslation = res.data.at(1).ayahs;
-    //     console.log("Surah Text received:", this.surahText);
-    //     console.log("Srah Translation Text:", this.surahTextTranslation);
-        
-    //   },
-    //   (error: any) => {
-    //     console.error("API Error:", error);
-    //   }
-    // );
-    this.surahText = this.httpService.getSurahList(apiUrl).pipe(
-      map((res: any) => {
-        this.surahTextTranslation = res.data[1].ayahs;
-        return res.data[0].ayahs;
-      })
-    );
-  }
+  const reciterId = this.selectedReciterId || 'ar.muhammadayyoub';
+  const translationEdition = 'en.asad';
+  const apiUrl = `https://api.alquran.cloud/v1/surah/${this.surahNumber}/editions/${reciterId},${translationEdition}`;
+
+  this.surahText = this.httpService.getSurahList(apiUrl).pipe(
+    map((res: any) => {
+      const arabicAyahs = res.data[0].ayahs;
+      this.surahTextTranslation = res.data[1].ayahs;
+
+      return arabicAyahs; // ayahs already include .audio field from API!
+    })
+  );
+}
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
