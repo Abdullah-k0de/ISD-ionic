@@ -173,7 +173,7 @@ export class HttpService {
       return this.http.get(apiUrl);
   }
 
-  getReciters(): Observable<any[]> {
+  getRecitersForAyah(): Observable<any[]> {
     const apiURL = 'https://api.alquran.cloud/v1/edition/format/audio';
     
     return this.http.get<any>(apiURL).pipe(
@@ -185,8 +185,19 @@ export class HttpService {
         .map((r: { language: string; name: any; }) => {
           return r;
         });
-    })
-  );
+      })
+    );
+  }
+
+  getSurahReciters(): Observable<any[]> {
+    const apiUrl = 'https://raw.githubusercontent.com/islamic-network/cdn/master/info/cdn_surah_audio.json';
+    return this.http.get<any[]>(apiUrl).pipe(
+      map(reciters =>
+        reciters.filter(r =>
+          r.identifier?.startsWith('ar.')
+        )
+      )
+    );
   }
 
 }

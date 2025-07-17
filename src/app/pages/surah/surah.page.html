@@ -11,8 +11,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" id="main-content" [ngClass]="{'dark-mode': darkMode}">
-  <ion-list *ngFor="let ayah of surahText | async; let i = index" lines="none" [id]="'ayah-' + (i+1)">
-    <ion-item>
+  <ion-list *ngFor="let ayah of surahText; let i = index" lines="none" [id]="'ayah-' + (i+1)">
+    <ion-item [style.--background]="currentAyahNumber === ayah.number ? '#e8f5e9' : null">
       <ion-label class="ayah-text" [ngStyle]="{'font-size': fontSize + 'px'}">
         <div class="arabic-text">{{ ayah.text }}
           <div class="surah-number-circle">
@@ -48,6 +48,25 @@
     </ion-item>
   </ion-list>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-controls">
+      <ion-button 
+        expand="block"
+        class="footer-play-btn-wide"
+        (click)="toggleGlobalPlayPause()"
+      >
+        <ion-icon 
+          slot="start" 
+          [name]="!audioPlayer.paused ? 'pause' : 'play'">
+        </ion-icon>
+        Ayah {{ currentAyahNumber }}
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
+
 
 <ion-menu side="end" menuId="fontSizeMenu" contentId="main-content">
   <ion-header>

@@ -15,7 +15,7 @@ export class SurahPage implements OnInit {
   @Input() surahName: string;
   @Input() surahNumber: string;
 
-  surahText: Observable<any[]>;
+  surahText: any[] = [];
   surahTextTranslation: any[] = [];
   currentAyahNumber: number | null = null;
   audioPlayer: HTMLAudioElement;
@@ -54,7 +54,7 @@ export class SurahPage implements OnInit {
   }
 
   getRecitersList(){
-    this.httpService.getReciters().subscribe(data => {
+    this.httpService.getRecitersForAyah().subscribe(data => {
     this.reciters = data;
     });
   }
@@ -89,20 +89,30 @@ export class SurahPage implements OnInit {
     });
   }
 
+  // getSurahArabicText() {
+  //   const reciterId = this.selectedReciterId || 'ar.muhammadayyoub';
+  //   const translationEdition = 'en.asad';
+  //   const apiUrl = `https://api.alquran.cloud/v1/surah/${this.surahNumber}/editions/${reciterId},${translationEdition}`;
+
+  //   this.surahText = this.httpService.getSurahList(apiUrl).pipe(
+  //     map((res: any) => {
+  //       const arabicAyahs = res.data[0].ayahs;
+  //       this.surahTextTranslation = res.data[1].ayahs;
+
+  //       return arabicAyahs; // ayahs already include .audio field from API!
+  //     })
+  //   );
+  // }
   getSurahArabicText() {
-  const reciterId = this.selectedReciterId || 'ar.muhammadayyoub';
-  const translationEdition = 'en.asad';
-  const apiUrl = `https://api.alquran.cloud/v1/surah/${this.surahNumber}/editions/${reciterId},${translationEdition}`;
+    const arabicEditionId = this.selectedReciterId || 'ar.muhammadayyoub';
+    const translationEdition = 'en.asad';
+    const apiUrl = `https://api.alquran.cloud/v1/surah/${this.surahNumber}/editions/${arabicEditionId},${translationEdition}`;
 
-  this.surahText = this.httpService.getSurahList(apiUrl).pipe(
-    map((res: any) => {
-      const arabicAyahs = res.data[0].ayahs;
-      this.surahTextTranslation = res.data[1].ayahs;
-
-      return arabicAyahs; // ayahs already include .audio field from API!
-    })
-  );
-}
+    this.httpService.getSurahList(apiUrl).subscribe((res: any) => {
+      this.surahText = res.data[0]?.ayahs || [];
+      this.surahTextTranslation = res.data[1]?.ayahs || [];
+    });
+  }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
@@ -134,8 +144,31 @@ export class SurahPage implements OnInit {
     })
   }
 
+  // playAudio(ayahNumber: number, audioUrl: string) {
+  //   const audio = this.audioPlayer;
+  //   if (this.currentAyahNumber === ayahNumber) {
+  //     if (audio.paused) {
+  //       audio.play();
+  //     } else {
+  //       audio.pause();
+  //     }
+  //   } else {
+  //     this.currentAyahNumber = ayahNumber;
+  //     audio.src = audioUrl;
+  //     audio.load();
+  //     audio.oncanplaythrough = () => {
+  //       audio.play();
+  //     };
+      
+  //   }
+  // }
+  nextAudioPlayer = new Audio();
   playAudio(ayahNumber: number, audioUrl: string) {
     const audio = this.audioPlayer;
+
+    audio.onended = null;
+    audio.oncanplaythrough = null;
+
     if (this.currentAyahNumber === ayahNumber) {
       if (audio.paused) {
         audio.play();
@@ -146,9 +179,55 @@ export class SurahPage implements OnInit {
       this.currentAyahNumber = ayahNumber;
       audio.src = audioUrl;
       audio.load();
+
       audio.oncanplaythrough = () => {
         audio.play();
+
+        // 🔁 Preload next ayah
+        const currentIndex = this.surahText.findIndex(
+          ayah => ayah.number === ayahNumber
+        );
+        const nextAyah = this.surahText[currentIndex + 1];
+        if (nextAyah) {
+          this.nextAudioPlayer.src = nextAyah.audio;
+          this.nextAudioPlayer.load(); // Start preloading
+        }
       };
+
+      audio.onended = () => {
+        const currentIndex = this.surahText.findIndex(
+          ayah => ayah.number === this.currentAyahNumber
+        );
+
+        const nextAyah = this.surahText[currentIndex + 1];
+        if (nextAyah) {
+          this.playAudio(nextAyah.number, nextAyah.audio);
+        } else {
+          this.currentAyahNumber = null;
+          audio.pause();
+          audio.src = '';
+        }
+      };
+    }
+  }
+
+  toggleGlobalPlayPause() {
+    const audio = this.audioPlayer;
+
+    // If nothing is playing yet, start from the first ayah
+    if (!this.currentAyahNumber || !audio.src) {
+      if (this.surahText && this.surahText.length > 0) {
+        const firstAyah = this.surahText[0];
+        this.playAudio(firstAyah.number, firstAyah.audio);
+      }
+      return;
+    }
+
+    // Otherwise, toggle pause/resume
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
     }
   }
 

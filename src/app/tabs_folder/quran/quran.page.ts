@@ -17,7 +17,7 @@ export class QuranPage implements OnInit {
   playingSurahNumber: number | null = null;
   isPaused: boolean = false;
   reciters: any[] = [];
-  selectedReciterId: string = 'ar.muhammadayyoub';
+  selectedReciterId: string = 'ar.muhammadayyub';
   currentSurahNumber: number;
   lastUsedReciterId: string;
 
@@ -28,14 +28,11 @@ export class QuranPage implements OnInit {
     private modalController: ModalController
   ) {
     this.audioPlayer = new Audio();
+
+    // reset state when a full surah ends
     this.audioPlayer.onended = () => {
-      this.currentAyahIndex++;
-      if (this.currentAyahIndex < this.currentSurahAyahs.length) {
-        this.playCurrentAyah();
-      } else {
-        this.playingSurahNumber = null;
-        this.isPaused = false;  // Reset play/pause state when surah ends
-      }
+      this.playingSurahNumber = null;
+      this.isPaused = false;
     };
   }
 
@@ -76,34 +73,88 @@ export class QuranPage implements OnInit {
     modal.present();
   }
 
-  playCurrentAyah() {
-    const ayah = this.currentSurahAyahs[this.currentAyahIndex];
-    this.audioPlayer.src = ayah.audio;
-    this.audioPlayer.load();
-    this.audioPlayer.oncanplaythrough = () => {
-      this.audioPlayer.play();
-    };
-  }
+  // playCurrentAyah() {
+  //   const ayah = this.currentSurahAyahs[this.currentAyahIndex];
+  //   this.audioPlayer.src = ayah.audio;
+  //   this.audioPlayer.load();
+  //   this.audioPlayer.oncanplaythrough = () => {
+  //     this.audioPlayer.play();
+  //   };
+  // }
+
+
+  // playCurrentAyah() {
+  //   const ayah = this.currentSurahAyahs[this.currentAyahIndex];
+  //   this.audioPlayer.src = ayah.audio;
+  //   this.audioPlayer.load();
+
+  //   // Preload next
+  //   if (this.currentAyahIndex + 1 < this.currentSurahAyahs.length) {
+  //     const nextAyah = this.currentSurahAyahs[this.currentAyahIndex + 1];
+  //     this.nextAudio.src = nextAyah.audio;
+  //     this.nextAudio.load(); // preload
+  //   }
+
+  //   this.audioPlayer.oncanplaythrough = () => {
+  //     this.audioPlayer.play();
+  //   };
+
+  //   this.audioPlayer.onended = () => {
+  //     if (this.currentAyahIndex < this.currentSurahAyahs.length - 1) {
+  //       this.currentAyahIndex++;
+  //       this.playCurrentAyah();
+  //     }
+  //   };
+  // }
+
+
+  // playSurah(surahNumber: number) {
+  //   const reciterId = this.selectedReciterId || 'ar.muhammadayyoub'; // default 
+  //   if (this.lastUsedReciterId !== reciterId || this.currentSurahNumber !== surahNumber) {
+
+  //     const apiUrl = `https://api.alquran.cloud/v1/surah/${surahNumber}/${reciterId}`;
+      
+  //     this.httpService.getSurahList(apiUrl).subscribe(
+  //       (res: any) => {
+  //         this.currentSurahNumber = surahNumber;
+  //         this.currentSurahAyahs = res.data.ayahs;
+  //         this.currentAyahIndex = 0;
+  //         this.playCurrentAyah(); // Play fresh from start
+  //       },
+  //       (error: any) => {
+  //         console.error("API Error:", error);
+  //       }
+  //     );
+  //   }
+  // }
 
   playSurah(surahNumber: number) {
-    const reciterId = this.selectedReciterId || 'ar.muhammadayyoub'; // default 
-    if (this.lastUsedReciterId !== reciterId || this.currentSurahNumber !== surahNumber) {
+    const reciterId = this.selectedReciterId || 'ar.muhammadayyub';
+    const audioUrl = `https://cdn.islamic.network/quran/audio-surah/128/${reciterId}/${surahNumber}.mp3`;
 
-      const apiUrl = `https://api.alquran.cloud/v1/surah/${surahNumber}/${reciterId}`;
-      
-      this.httpService.getSurahList(apiUrl).subscribe(
-        (res: any) => {
-          this.currentSurahNumber = surahNumber;
-          this.currentSurahAyahs = res.data.ayahs;
-          this.currentAyahIndex = 0;
-          this.playCurrentAyah(); // Play fresh from start
-        },
-        (error: any) => {
-          console.error("API Error:", error);
-        }
-      );
-    }
+    console.log("Playing:", audioUrl);
+
+    this.audioPlayer.src = audioUrl;
+    this.audioPlayer.load();
+
+    this.audioPlayer.oncanplaythrough = () => {
+      this.audioPlayer.play().catch(err => {
+        console.error("Playback error:", err);
+        // this.handleAudioError("Playback failed. Try another reciter.");
+      });
+    };
+
+    this.audioPlayer.onerror = () => {
+      console.error("Audio failed to load:", audioUrl);
+      // this.handleAudioError("Audio not available for this reciter.");
+    };
+
+    this.currentSurahNumber = surahNumber;
+    this.playingSurahNumber = surahNumber;
+    this.isPaused = false;
+    this.lastUsedReciterId = reciterId;
   }
+
 
   togglePlayPause(event: Event, surahNumber: number) {
     event.stopPropagation();
@@ -129,7 +180,7 @@ export class QuranPage implements OnInit {
   }
 
   getRecitersList(){
-    this.httpService.getReciters().subscribe(data => {
+    this.httpService.getSurahReciters().subscribe(data => {
     this.reciters = data;
     });
   }
@@ -138,24 +189,24 @@ export class QuranPage implements OnInit {
     console.log('Selected Identifier:', this.selectedReciterId);
     // If user has a surah loaded, reload it
     if (this.currentSurahNumber) {
-      this.updateCurrentSurahWithReciter();
+      this.playSurah(this.currentSurahNumber);
     }
   }
 
-  updateCurrentSurahWithReciter() {
-    const reciterId = this.selectedReciterId || 'ar.alafasy';
-    const apiUrl = `https://api.alquran.cloud/v1/surah/${this.currentSurahNumber}/${reciterId}`;
+  // updateCurrentSurahWithReciter() {
+  //   const reciterId = this.selectedReciterId || 'ar.alafasy';
+  //   const apiUrl = `https://api.alquran.cloud/v1/surah/${this.currentSurahNumber}/${reciterId}`;
 
-    this.httpService.getSurahList(apiUrl).subscribe(
-      (res: any) => {
-        this.currentSurahAyahs = res.data.ayahs;
-        this.lastUsedReciterId = reciterId;
-        // Don't play — just update
-      },
-      (error: any) => {
-        console.error("Error updating surah with new reciter:", error);
-      }
-    );
-  }
+  //   this.httpService.getSurahList(apiUrl).subscribe(
+  //     (res: any) => {
+  //       this.currentSurahAyahs = res.data.ayahs;
+  //       this.lastUsedReciterId = reciterId;
+  //       // Don't play — just update
+  //     },
+  //     (error: any) => {
+  //       console.error("Error updating surah with new reciter:", error);
+  //     }
+  //   );
+  // }
 
 }

@@ -152,3 +152,22 @@ ion-item, ion-content, ion-list {
 ::ng-deep .select-interface-option {
   font-size: x-small !important;  
 }
+
+.footer-controls {
+  width: 100%;
+  padding: 10px 16px;
+}
+
+.footer-play-btn-wide {
+  --background: #1f5a37;
+  --color: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  font-weight: 600;
+  height: 60px;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
