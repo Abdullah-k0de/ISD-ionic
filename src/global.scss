@@ -53,3 +53,11 @@
     --ion-color-secondary: #3dc2ff;
     --ion-color-dark: #222428;
   }
+
+ion-tab-bar {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+ion-header, .app-header {
+  padding-top: env(safe-area-inset-top);
+}
