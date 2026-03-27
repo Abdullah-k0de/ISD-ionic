@@ -96,8 +96,15 @@ ion-content {
 }
 
 @keyframes hintFadeIn {
-  0% { opacity: 0; transform: translateY(-4px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // ---- Clock Wrapper ----
@@ -110,8 +117,15 @@ ion-content {
 }
 
 @keyframes clockFadeIn {
-  0% { opacity: 0; transform: scale(0.92); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 // ============================================================
@@ -126,8 +140,15 @@ ion-content {
 }
 
 @keyframes simpleViewIn {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // ---- Current Prayer Display ----
@@ -153,14 +174,25 @@ ion-content {
   margin-bottom: 0.4rem;
 }
 
-.tap-hint {
+.side-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   font-family: 'Outfit', sans-serif;
   font-size: 0.65rem;
-  color: var(--theme-accent-dim);
-  cursor: pointer;
+  color: var(--theme-accent);
+  font-weight: 400;
   margin-bottom: 0.6rem;
-  letter-spacing: 0.05em;
-  opacity: 0.7;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+
+  .bullet {
+    color: var(--theme-accent);
+    font-size: 0.5rem;
+    opacity: 0.6;
+  }
 }
 
 .current-time-big {
@@ -196,6 +228,14 @@ ion-content {
   color: var(--theme-text);
 }
 
+.next-arabic-list {
+  font-family: 'Amiri', serif;
+  font-size: 1.5rem;
+  color: var(--theme-accent-bright);
+  font-weight: 400;
+  margin: 0 0.1rem;
+}
+
 .next-time-val {
   font-family: 'Outfit', sans-serif;
   font-size: 0.85rem;
@@ -216,12 +256,10 @@ ion-content {
 .divider-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(var(--theme-accent-rgb), 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(var(--theme-accent-rgb), 0.2),
+      transparent);
 }
 
 .divider-countdown {
@@ -237,6 +275,9 @@ ion-content {
 .prayer-list {
   width: 100%;
   max-width: 360px;
+  transform: scale(0.85);
+  transform-origin: top center;
+  margin-bottom: -2.5rem;
 }
 
 .list-header {
@@ -250,7 +291,8 @@ ion-content {
     flex: 1;
   }
 
-  .header-azan, .header-iqama {
+  .header-azan,
+  .header-iqama {
     font-family: 'Outfit', sans-serif;
     font-size: 0.6rem;
     font-weight: 500;
@@ -266,18 +308,46 @@ ion-content {
   align-items: center;
   padding: 0.6rem 0;
 
-  &.active {
+  &.current {
     .time-name {
-      color: var(--theme-accent-bright);
-      font-weight: 600;
+      color: #ffffff;
+      font-weight: 700;
     }
+
     .time-azan {
-      color: var(--theme-accent-bright);
-      font-weight: 600;
+      color: #ffffff;
+      font-weight: 700;
     }
+
     .time-iqama {
       color: var(--theme-accent);
-      font-weight: 500;
+      font-weight: 700;
+    }
+  }
+
+  &.next {
+    .time-name {
+      color: var(--theme-accent-bright);
+      font-weight: 700;
+    }
+
+    .time-azan {
+      color: var(--theme-accent-bright);
+      font-weight: 700;
+    }
+
+    .time-iqama {
+      color: var(--theme-accent-bright);
+      font-weight: 700;
+    }
+  }
+
+  &.dim {
+
+    .time-name,
+    .time-azan-center {
+      color: rgba(var(--theme-text-rgb), 0.5);
+      font-weight: 400;
     }
   }
 
@@ -287,8 +357,8 @@ ion-content {
 .time-name {
   font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
-  font-weight: 400;
-  color: rgba(var(--theme-text-rgb), 0.85);
+  font-weight: 500;
+  color: var(--theme-text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   min-width: 5.5rem;
@@ -298,20 +368,18 @@ ion-content {
   flex: 1;
   height: 1px;
   margin: 0 0.5rem;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(var(--theme-accent-rgb), 0.15) 0,
-    rgba(var(--theme-accent-rgb), 0.15) 3px,
-    transparent 3px,
-    transparent 8px
-  );
+  background: repeating-linear-gradient(90deg,
+      rgba(var(--theme-accent-rgb), 0.15) 0,
+      rgba(var(--theme-accent-rgb), 0.15) 3px,
+      transparent 3px,
+      transparent 8px);
 }
 
 .time-azan {
   font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
   font-weight: 400;
-  color: rgba(var(--theme-text-rgb), 0.75);
+  color: rgba(var(--theme-text-rgb), 0.9);
   font-variant-numeric: tabular-nums;
   width: 5.5rem;
   text-align: right;
@@ -320,11 +388,21 @@ ion-content {
 .time-iqama {
   font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
-  font-weight: 400;
-  color: rgba(var(--theme-accent-rgb), 0.85);
+  font-weight: 500;
+  color: var(--theme-accent);
   font-variant-numeric: tabular-nums;
   width: 5.5rem;
   text-align: right;
+}
+
+.time-azan-center {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(var(--theme-text-rgb), 0.5);
+  font-variant-numeric: tabular-nums;
+  width: 11rem;
+  text-align: center;
 }
 
 // ---- Jummah Section ----
@@ -338,8 +416,15 @@ ion-content {
 }
 
 @keyframes jummahSlideUp {
-  0% { opacity: 0; transform: translateY(16px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .jummah-card {
@@ -383,6 +468,7 @@ ion-content {
 
 .jummah-address {
   margin-bottom: 0.5rem;
+
   a {
     font-family: 'Inter', sans-serif;
     font-size: 0.65rem;

@@ -75,3 +75,9 @@ Thumbs.db
 # Environment files with secrets
 src/environments/environment.ts
 src/environments/environment.prod.ts
+
+# Android
+private_key.pepk
+
+# iOS
+GoogleService-Info.plist

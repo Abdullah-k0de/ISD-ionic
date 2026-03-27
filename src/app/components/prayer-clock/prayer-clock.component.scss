@@ -27,8 +27,15 @@
 }
 
 @keyframes svgReveal {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 // Ring drawing animation with highlight glow
@@ -37,11 +44,29 @@
 }
 
 @keyframes ringDraw {
-  0% { stroke-dashoffset: 314; opacity: 0; stroke-width: 0; }
-  15% { opacity: 1; stroke-width: inherit; }
-  70% { stroke-dashoffset: 0; }
-  80% { filter: drop-shadow(0 0 4px rgba(var(--theme-accent-rgb), 0.6)); }
-  100% { stroke-dashoffset: 0; filter: none; }
+  0% {
+    stroke-dashoffset: 314;
+    opacity: 0;
+    stroke-width: 0;
+  }
+
+  15% {
+    opacity: 1;
+    stroke-width: inherit;
+  }
+
+  70% {
+    stroke-dashoffset: 0;
+  }
+
+  80% {
+    filter: drop-shadow(0 0 4px rgba(var(--theme-accent-rgb), 0.6));
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    filter: none;
+  }
 }
 
 // Breathing rings (subtle pulsing behind the clock)
@@ -57,7 +82,7 @@
   font-family: 'Outfit', sans-serif;
   font-size: 5px;
   font-weight: 500;
-  fill: rgba(var(--theme-text-rgb), 0.5);
+  fill: var(--theme-text);
   letter-spacing: 0.04em;
 }
 
@@ -67,6 +92,16 @@
   font-weight: 600;
   fill: var(--theme-accent);
   letter-spacing: 0.01em;
+}
+
+.dim-name {
+  fill: rgba(var(--theme-text-rgb), 0.5) !important;
+  font-weight: 400 !important;
+}
+
+.dim-time {
+  fill: rgba(var(--theme-accent-rgb), 0.7) !important;
+  font-weight: 400 !important;
 }
 
 // Inner iqama ring labels (lighter shade of theme accent)
@@ -87,41 +122,82 @@
   letter-spacing: 0.01em;
 }
 
-// Active prayer label
-.active-name {
+// Active prayer label (Next Prayer)
+.active-name,
+.active-time,
+.active-iqama-name {
   fill: var(--theme-accent-bright) !important;
+  font-weight: 700 !important;
 }
 
-.active-time {
-  fill: var(--theme-accent-bright) !important;
-  font-weight: 700;
+// Current prayer label
+.current-name,
+.current-time {
+  fill: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.current-iqama-name {
+  fill: var(--theme-accent) !important;
+  font-weight: 700 !important;
 }
 
 // ==========================================================
 // SVG TEXT — Center
 // ==========================================================
 
-.center-arabic {
+.center-current-ar {
   font-family: 'Amiri', serif;
-  font-size: 14px;
+  font-size: 16px;
   fill: var(--theme-accent);
 }
 
-.center-in {
+.center-current-en {
   font-family: 'Outfit', sans-serif;
-  font-size: 6px;
+  font-size: 8px;
+  font-weight: 500;
+  fill: var(--theme-text);
+  letter-spacing: 0.15em;
+}
+
+.center-next-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 4px;
   font-weight: 400;
-  fill: rgba(var(--theme-text-rgb), 0.45);
-  letter-spacing: 0.1em;
+  fill: rgba(var(--theme-text-rgb), 0.5);
+  letter-spacing: 0.25em;
+}
+
+.center-next-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 5.5px;
+  font-weight: 500;
+  fill: var(--theme-accent-bright);
+  letter-spacing: 0.15em;
+}
+
+.center-bullet {
+  font-family: 'Outfit', sans-serif;
+  font-size: 5px;
+  fill: var(--theme-accent);
+}
+
+.center-next-ar {
+  font-family: 'Amiri', serif;
+  font-size: 7.5px;
+  fill: var(--theme-accent-bright);
 }
 
 .center-countdown {
   font-family: 'Outfit', sans-serif;
-  font-size: 12px;
+  font-size: 9.5px;
   font-weight: 300;
   fill: var(--theme-text);
-  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
 }
+
+
 
 // ==========================================================
 // DATE ROW (below SVG)
@@ -132,14 +208,21 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  margin-top: -0.5rem;
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
   animation: dateIn 0.4s ease-out 1.4s both;
 }
 
 @keyframes dateIn {
-  0% { opacity: 0; transform: translateY(6px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hijri-date {
@@ -151,12 +234,31 @@
 
 .gregorian-date {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.65rem, 2.5vw, 0.85rem);
-  color: rgba(var(--theme-text-rgb), 0.3);
+  font-size: clamp(0.85rem, 3vw, 1.1rem);
+  font-weight: 400;
+  color: rgba(var(--theme-text-rgb), 0.85);
+  margin-top: 0.2rem;
+}
+
+.moon-phase-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  margin-top: 0.8rem;
 }
 
 .moon-icon {
-  margin-top: 0.3rem;
+  margin-top: 0;
+}
+
+.moon-phase-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(var(--theme-text-rgb), 0.35);
+  letter-spacing: 0.15em;
 }
 
 // ==========================================================
@@ -191,6 +293,7 @@
     opacity: 1;
     stroke-width: 2;
   }
+
   100% {
     r: 15;
     opacity: 0;
@@ -208,6 +311,7 @@
     transform: scale(1);
     opacity: 0.4;
   }
+
   100% {
     transform: scale(3);
     opacity: 0;
@@ -221,6 +325,7 @@
 
 // Reduced motion overrides for filter fallbacks
 @media (prefers-reduced-motion: reduce) {
+
   .ripple-fallback,
   .pulse-fallback {
     animation: none;

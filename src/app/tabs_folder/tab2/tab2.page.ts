@@ -21,6 +21,9 @@ export class Tab2Page implements OnInit, OnDestroy {
   currentPrayerName = '';
   nextPrayerName = '';
   nextPrayerTime = '';
+  
+  hijriDate = '';
+  gregorianDate = '';
 
   prayerNames: Record<string, { en: string; ar: string }> = {
     fajr: { en: 'Fajr', ar: 'الفجر' },
@@ -55,8 +58,28 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateCurrentState();
+    this.computeDates();
     this.countdownTimer = setInterval(() => this.updateCurrentState(), 1000);
     this.showClockHintOnce();
+  }
+  
+  private computeDates(): void {
+    const today = new Date();
+    try {
+      const hijriFormatter = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      this.hijriDate = hijriFormatter.format(today);
+    } catch (e) {
+      this.hijriDate = ''; 
+    }
+    this.gregorianDate = today.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric'
+    }).toUpperCase();
   }
 
   ngOnDestroy(): void {
@@ -149,6 +172,11 @@ export class Tab2Page implements OnInit, OnDestroy {
   /** Check if a prayer is the active (current) one */
   isActivePrayer(name: string): boolean {
     return this.currentPrayerName === name;
+  }
+
+  /** Check if a prayer is the next one */
+  isNextPrayer(name: string): boolean {
+    return this.nextPrayerName === name;
   }
 
   /** Check if a prayer is in the past */

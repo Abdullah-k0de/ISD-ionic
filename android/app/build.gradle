@@ -8,8 +8,8 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.isd.DentonMasjid"
-        minSdkVersion 22  // IT WAS: rootProject.ext.minSdkVersion
-        targetSdkVersion 35 // IT WAS: rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion  // IT WAS: rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion // IT WAS: rootProject.ext.targetSdkVersion
         versionCode 16
         versionName "2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

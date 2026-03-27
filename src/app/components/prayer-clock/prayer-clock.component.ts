@@ -252,6 +252,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
     asr: { en: 'Asr', ar: 'العصر' },
     maghrib: { en: 'Maghrib', ar: 'المغرب' },
     isha: { en: 'Isha', ar: 'العشاء' },
+    lastThird: { en: 'LAST 3RD', ar: '' }
   };
 
   ringOpacity = { faint: 0.06, subtle: 0.10, light: 0.15, medium: 0.25, strong: 0.40 };
@@ -835,6 +836,25 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
    * Checks if interactive animations should be disabled
    * Requirements: 10.6
    */
+  get hoveredMarker(): string | null {
+    return this.animationState.hoveredMarker;
+  }
+
+  onMarkerHover(prayer: PrayerTime): void {
+    if (this.shouldDisableInteractiveAnimations()) return;
+    this.animationState.hoveredMarker = prayer.name;
+  }
+
+  onMarkerLeave(): void {
+    this.animationState.hoveredMarker = null;
+  }
+
+  onMarkerClick(prayer: PrayerTime): void {
+    if (this.shouldDisableInteractiveAnimations()) return;
+    this.animationState.tappedMarker = prayer.name;
+    console.log('Marker clicked:', prayer.name);
+  }
+
   private shouldDisableInteractiveAnimations(): boolean {
     // Disable on reduced motion preference
     if (this.animationState.prefersReducedMotion) {
@@ -953,6 +973,21 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
       return { name, nameAr: this.prayerNames[name]?.ar || '', time, angle };
     });
 
+    // Add Last Third Marker
+    const fDate = this.parseTimeString(raw['fajr']);
+    if (maghribDate && fDate) {
+      fDate.setDate(fDate.getDate() + 1);
+      const nightMs = fDate.getTime() - maghribDate.getTime();
+      const lastThirdDate = new Date(maghribDate.getTime() + nightMs * (2 / 3));
+      const lastThirdAngle = this.timeToAngle(lastThirdDate, maghribHour);
+      this.prayers.push({
+        name: 'lastThird',
+        nameAr: '',
+        time: lastThirdDate,
+        angle: lastThirdAngle
+      });
+    }
+
     // Build iqama prayers for inner ring
     const iqamaRaw: Record<string, string> = {
       fajr: this.iqamaFajr,
@@ -1008,8 +1043,8 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
 
     if (!nextTime) nextTime = this.parseTimeString(this.fajrTime);
 
-    // Show NEXT prayer in center (not current)
-    this.currentPrayerName = next;
+    // Store both current and next
+    this.currentPrayerName = current;
     this.nextPrayerName = next;
 
     // Countdown
@@ -1031,9 +1066,9 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // Current time angle
-    const maghribDate = this.parseTimeString(this.maghribTime);
-    const maghribHour = maghribDate
-      ? maghribDate.getHours() + maghribDate.getMinutes() / 60 : 18;
+    const maghribDate1 = this.parseTimeString(this.maghribTime);
+    const maghribHour = maghribDate1
+      ? maghribDate1.getHours() + maghribDate1.getMinutes() / 60 : 18;
     const nowHours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
     const adjusted = ((nowHours - maghribHour + 24) % 24);
     this.currentTimeAngle = (adjusted / 24) * 360;
@@ -1062,6 +1097,8 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
+  moonPhaseText = '';
+
   private computeMoonPhase(): void {
     const now = new Date();
     const knownNewMoon = new Date(Date.UTC(2026, 1, 18, 0, 0, 0));
@@ -1073,8 +1110,10 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
     const waxing = phase < 0.5;
     const illum = Math.round(illumination * 10) / 10;
     const cx = 50, cy = 14, r = 4;
+    
     if (illum <= 0.03) { this.moonType = 'new'; this.moonPath = ''; return; }
     if (illum >= 0.97) { this.moonType = 'full'; this.moonPath = ''; return; }
+
     const terminatorRx = Math.abs(Math.cos(illumination * Math.PI)) * r;
     const topY = cy - r;
     const botY = cy + r;
@@ -1148,7 +1187,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /** Base label radius */
-  private labelRadius = 67;
+  private labelRadius = 74;
   private minAngleGap = 50; // minimum degrees between label centers
 
   /**
@@ -1215,7 +1254,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
       displayAngle: e.displayAngle,
       pos: this.getPosition(e.displayAngle, this.labelRadius),
       ringPos: this.getPosition(e.originalAngle, 46),
-      needsLine: e.needsLine,
+      needsLine: e.needsLine || e.prayer.name === 'lastThird',
       hasIqama: e.hasIqama,
     }));
   }
@@ -1226,6 +1265,11 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getPrayerTimeString(name: string): string {
+    if (name === 'lastThird') {
+      const prayer = this.prayers.find(p => p.name === 'lastThird');
+      return prayer && prayer.time ? prayer.time.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '';
+    }
+  
     const map: Record<string, string> = {
       fajr: this.fajrTime, sunrise: this.sunriseTime,
       dhuhr: this.dhuhrTime, asr: this.asrTime,
