@@ -9,9 +9,9 @@ android {
     defaultConfig {
         applicationId "com.isd.DentonMasjid"
         minSdkVersion 22  // IT WAS: rootProject.ext.minSdkVersion
-        targetSdkVersion 34 // IT WAS: rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName "2.1"
+        targetSdkVersion 35 // IT WAS: rootProject.ext.targetSdkVersion
+        versionCode 16
+        versionName "2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
