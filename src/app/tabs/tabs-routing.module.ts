@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: () => import('../tabs_folder/quran/quran.module').then(m => m.QuranPageModule)
       },
       {
+        path: 'settings',
+        loadChildren: () => import('../tabs_folder/settings/settings.module').then(m => m.SettingsPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'

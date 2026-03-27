@@ -10,9 +10,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" id="main-content" [ngClass]="{'dark-mode': darkMode}">
+<ion-content [fullscreen]="true" id="main-content">
   <ion-list *ngFor="let ayah of surahText; let i = index" lines="none" [id]="'ayah-' + (i+1)">
-    <ion-item [style.--background]="currentAyahNumber === ayah.number ? '#e8f5e9' : null">
+    <ion-item [class.ayah-highlight]="currentAyahNumber === ayah.number">
       <ion-label class="ayah-text" [ngStyle]="{'font-size': fontSize + 'px'}">
         <div class="arabic-text">{{ ayah.text }}
           <div class="surah-number-circle">
@@ -25,7 +25,6 @@
         fill="clear"
         slot="start"
         size="medium"
-        style="color: #1f5a37;"
         (click)="playAudio(ayah.number, ayah.audio)"
       >
         <ion-icon
@@ -36,7 +35,6 @@
         fill="clear"
         slot="start"
         size="medium"
-        style="color: #1f5a37;"
         (click)="shareAyah(ayah.text, surahTextTranslation[i].text)"
         aria-label="Share Ayah"
       >
@@ -90,25 +88,25 @@
       </ion-item>
       <ion-item lines="full">
         <ion-label style="width: 100%; text-align: center;" [ngStyle]="{'font-size': fontSize + 'px'}">
-          <div style="font-size: 1.7em; color: #1f5a37;">
+          <div class="arabic-preview" style="font-size: 1.7em;">
             بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </div>
         </ion-label>
       </ion-item>
       <ion-item lines="full">
-        <ion-label style="color: black;">Dark Mode</ion-label>
+        <ion-label>Dark Mode</ion-label>
         <!-- <ion-toggle aria-label="Dark mode" color="secondary" slot="end" [(ngModel)]="darkMode" justify="space-between" (ionChange)="toggleDarkMode()"></ion-toggle> -->
         <ion-toggle aria-label="Dark mode" color="success" slot="end" justify="space-between" (click)="toggleDarkMode()"></ion-toggle>
       </ion-item>
       <ion-item lines="full">
-        <ion-label style="color: black;">Translation</ion-label>
+        <ion-label>Translation</ion-label>
         <ion-toggle aria-label="Translation mode" color="success" slot="end" justify="space-between" (click)="toggleTranslationMode()"></ion-toggle>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating" style="font-size: small; color: black;">Select Reciter</ion-label>
+        <ion-label position="floating" style="font-size: small;">Select Reciter</ion-label>
         <ion-select
-          style="font-size: small; color: black;"
+          style="font-size: small;"
           #reciterSelect
           [(ngModel)]="selectedReciterId"
           interface="popover"

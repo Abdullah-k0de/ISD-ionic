@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
+import { IqamaService, IqamaTimes } from 'src/app/services/iqama.service';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -7,18 +8,23 @@ import { HttpService } from 'src/app/services/http.service';
 })
 export class Tab2Page {
   hourOfDay: string = "day";
+  iqamaTimes: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '' };
 
-  constructor(public httpService: HttpService) {
+  constructor(public httpService: HttpService, private iqamaService: IqamaService) {
     this.updateImageBasedOnTime();
     this.httpService.getNewAdhanTimes();
+    this.iqamaService.fetchIqamaTimes().subscribe(times => {
+      this.iqamaTimes = times;
+    });
   }
 
   handleRefresh(event: any) {
-    setTimeout(() => {
+    this.httpService.getNewAdhanTimes();
+    this.iqamaService.fetchIqamaTimes().subscribe(times => {
+      this.iqamaTimes = times;
       this.updateImageBasedOnTime();
-      this.httpService.getNewAdhanTimes();
       event.target.complete();
-    }, 1000);
+    });
   }
 
   async updateImageBasedOnTime(){

@@ -1,6 +1,12 @@
-iframe{
-    border: none;
-    width: 100%;
-    height: 100vh;
-    margin-bottom: -1.5%;
+// Tab 5 — Hadiths (Azan Theme)
+
+ion-content {
+  --background: transparent;
+  --color: var(--theme-text);
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }

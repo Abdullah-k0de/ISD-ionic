@@ -1,12 +1,8 @@
 /*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * App Global CSS — Azan Theme System
+ * -----------------------------------------------------------------
+ * Global styles with Azan PWA aesthetic: dark backgrounds,
+ * glassmorphic cards, accent glow effects, Inter/Amiri/Outfit fonts.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -18,46 +14,423 @@
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
 
-/* Optional CSS utils that can be commented out */
+/* Optional CSS utils */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-.transparent-modal{
-  --background: rgba(44, 39, 45, 0.2);
+/* =====================================================
+   BASE STYLES
+   ===================================================== */
 
-  &::part(content){
-    backdrop-filter: blur(7px);
-  }
+body {
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: var(--theme-text);
+  /* Night sky with milky way nebula band */
+  background:
+    radial-gradient(ellipse at 25% 20%, rgba(var(--theme-accent-rgb), 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 65% 35%, rgba(255,255,255,0.02) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 55%, rgba(var(--theme-accent-rgb), 0.03) 0%, transparent 45%),
+    radial-gradient(ellipse at 75% 70%, rgba(255,255,255,0.015) 0%, transparent 35%),
+    radial-gradient(ellipse at 50% 50%, rgba(var(--theme-accent-rgb), 0.025) 0%, transparent 60%),
+    var(--theme-bg);
 }
-.title_of_page{
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--theme-text-rgb), 0.2);
+  border-radius: 2px;
+}
+
+/* =====================================================
+   SELECTION
+   ===================================================== */
+
+::selection {
+  background: rgba(var(--theme-accent-rgb), 0.3);
+  color: var(--theme-text);
+}
+
+/* =====================================================
+   FOCUS
+   ===================================================== */
+
+:focus-visible {
+  outline: 2px solid rgba(var(--theme-accent-rgb), 0.5);
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   TYPOGRAPHY
+   ===================================================== */
+
+.title_of_page {
   text-align: center;
-  font-weight: bolder;
+  font-weight: 500;
   font-variant: small-caps;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.05em;
+  color: var(--theme-accent) !important;
 }
 
-:root {
-    /**
-     * Setting the variables for DEMO purposes only.
-     * Values will be set automatically when building an iOS or Android app.
-     */
-    --ion-safe-area-left: 5px;
-    --ion-safe-area-right: 5px;
-    --ion-background-color: #fefcf0;
-    --ion-text-color: #000000;
-    --ion-item-background: #ffffff;
-    --ion-card-background: #ffffff;
-    --ion-color-primary: #3880ff;
-    --ion-color-secondary: #3dc2ff;
-    --ion-color-dark: #222428;
-  }
+.arabic_text {
+  font-family: 'Amiri', serif;
+  text-align: right;
+}
 
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =====================================================
+   IONIC COMPONENT OVERRIDES
+   ===================================================== */
+
+ion-toolbar {
+  --background: var(--theme-bg);
+  --color: var(--theme-text);
+  --border-color: rgba(var(--theme-accent-rgb), 0.08);
+}
+
+/* Make all Ionic wrapper layers transparent so starfield shows through */
+ion-app {
+  background: transparent !important;
+  isolation: isolate; /* creates stacking context so z-index:-1 children stay visible */
+}
+
+ion-router-outlet,
+.ion-page {
+  background: transparent !important;
+}
+
+ion-content {
+  --background: transparent;
+  --ion-background-color: transparent;
+  --color: var(--theme-text);
+}
+
+ion-content::part(background) {
+  background: transparent !important;
+}
+
+/* =====================================================
+   NIGHT SKY — starfield background with shooting stars
+   ===================================================== */
+
+/* ----- Static stars (subtle background dots) ----- */
+.starfield-static {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  box-shadow:
+    /* Scattered across viewport — small, subtle dots */
+    4vw 5vh 0 0.4px rgba(255,255,255,0.35),
+    15vw 8vh 0 0.5px rgba(255,255,255,0.3),
+    28vw 3vh 0 0.4px rgba(255,255,255,0.4),
+    42vw 7vh 0 0.5px rgba(255,255,255,0.25),
+    58vw 4vh 0 0.4px rgba(255,255,255,0.35),
+    71vw 9vh 0 0.5px rgba(255,255,255,0.3),
+    85vw 6vh 0 0.4px rgba(255,255,255,0.4),
+    95vw 2vh 0 0.5px rgba(255,255,255,0.25),
+    7vw 16vh 0 0.5px rgba(255,255,255,0.3),
+    22vw 19vh 0 0.4px rgba(255,255,255,0.35),
+    37vw 14vh 0 0.5px rgba(255,255,255,0.25),
+    53vw 18vh 0 0.4px rgba(255,255,255,0.4),
+    68vw 12vh 0 0.5px rgba(255,255,255,0.3),
+    82vw 17vh 0 0.4px rgba(255,255,255,0.35),
+    93vw 15vh 0 0.5px rgba(255,255,255,0.25),
+    3vw 26vh 0 0.4px rgba(255,255,255,0.35),
+    18vw 29vh 0 0.5px rgba(255,255,255,0.3),
+    34vw 24vh 0 0.4px rgba(255,255,255,0.4),
+    50vw 28vh 0 0.5px rgba(255,255,255,0.25),
+    65vw 22vh 0 0.4px rgba(255,255,255,0.35),
+    80vw 27vh 0 0.5px rgba(255,255,255,0.3),
+    5vw 38vh 0 0.4px rgba(255,255,255,0.3),
+    20vw 42vh 0 0.5px rgba(255,255,255,0.35),
+    36vw 36vh 0 0.4px rgba(255,255,255,0.25),
+    52vw 40vh 0 0.5px rgba(255,255,255,0.4),
+    67vw 34vh 0 0.4px rgba(255,255,255,0.3),
+    83vw 38vh 0 0.5px rgba(255,255,255,0.35),
+    8vw 52vh 0 0.4px rgba(255,255,255,0.35),
+    24vw 48vh 0 0.5px rgba(255,255,255,0.3),
+    40vw 54vh 0 0.4px rgba(255,255,255,0.25),
+    55vw 50vh 0 0.5px rgba(255,255,255,0.4),
+    70vw 46vh 0 0.4px rgba(255,255,255,0.3),
+    86vw 52vh 0 0.5px rgba(255,255,255,0.35),
+    3vw 64vh 0 0.5px rgba(255,255,255,0.3),
+    18vw 60vh 0 0.4px rgba(255,255,255,0.35),
+    33vw 66vh 0 0.5px rgba(255,255,255,0.25),
+    48vw 62vh 0 0.4px rgba(255,255,255,0.4),
+    64vw 58vh 0 0.5px rgba(255,255,255,0.3),
+    79vw 64vh 0 0.4px rgba(255,255,255,0.35),
+    94vw 60vh 0 0.5px rgba(255,255,255,0.25),
+    10vw 74vh 0 0.4px rgba(255,255,255,0.35),
+    25vw 78vh 0 0.5px rgba(255,255,255,0.3),
+    41vw 72vh 0 0.4px rgba(255,255,255,0.25),
+    57vw 76vh 0 0.5px rgba(255,255,255,0.4),
+    72vw 70vh 0 0.4px rgba(255,255,255,0.3),
+    88vw 74vh 0 0.5px rgba(255,255,255,0.35),
+    6vw 86vh 0 0.5px rgba(255,255,255,0.3),
+    22vw 82vh 0 0.4px rgba(255,255,255,0.35),
+    38vw 88vh 0 0.5px rgba(255,255,255,0.25),
+    54vw 84vh 0 0.4px rgba(255,255,255,0.4),
+    69vw 80vh 0 0.5px rgba(255,255,255,0.3),
+    85vw 86vh 0 0.4px rgba(255,255,255,0.35),
+    12vw 94vh 0 0.4px rgba(255,255,255,0.3),
+    35vw 96vh 0 0.5px rgba(255,255,255,0.25),
+    60vw 92vh 0 0.4px rgba(255,255,255,0.35),
+    82vw 95vh 0 0.5px rgba(255,255,255,0.3);
+}
+
+/* ----- Twinkling stars (brighter, animated) ----- */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1.0; }
+}
+
+.starfield-twinkle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  animation: twinkle 4s ease-in-out infinite;
+  box-shadow:
+    12vw 11vh 0 0.7px rgba(var(--theme-accent-rgb), 0.6),
+    30vw 20vh 0 0.6px rgba(255,255,255,0.5),
+    55vw 9vh 0 0.7px rgba(var(--theme-accent-rgb), 0.55),
+    78vw 16vh 0 0.6px rgba(255,255,255,0.45),
+    8vw 35vh 0 0.7px rgba(var(--theme-accent-rgb), 0.6),
+    45vw 40vh 0 0.6px rgba(255,255,255,0.5),
+    88vw 32vh 0 0.7px rgba(var(--theme-accent-rgb), 0.55),
+    20vw 55vh 0 0.6px rgba(255,255,255,0.45),
+    62vw 58vh 0 0.7px rgba(var(--theme-accent-rgb), 0.6),
+    90vw 50vh 0 0.6px rgba(255,255,255,0.5),
+    15vw 72vh 0 0.7px rgba(var(--theme-accent-rgb), 0.55),
+    48vw 78vh 0 0.6px rgba(255,255,255,0.45),
+    75vw 68vh 0 0.7px rgba(var(--theme-accent-rgb), 0.6),
+    5vw 90vh 0 0.6px rgba(255,255,255,0.5),
+    40vw 92vh 0 0.7px rgba(var(--theme-accent-rgb), 0.55),
+    80vw 88vh 0 0.6px rgba(255,255,255,0.45);
+}
+
+/* ----- Shooting Stars ----- */
+/* Stars travel from upper area diagonally downward — bright head at front, trail behind */
+
+@keyframes shootingStar1 {
+  0%, 88%  { opacity: 0; transform: translateX(0) translateY(0); }
+  90%      { opacity: 1; }
+  100%     { opacity: 0; transform: translateX(70vw) translateY(35vh); }
+}
+
+@keyframes shootingStar2 {
+  0%, 85%  { opacity: 0; transform: translateX(0) translateY(0); }
+  88%      { opacity: 1; }
+  100%     { opacity: 0; transform: translateX(55vw) translateY(45vh); }
+}
+
+@keyframes shootingStar3 {
+  0%, 90%  { opacity: 0; transform: translateX(0) translateY(0); }
+  93%      { opacity: 1; }
+  100%     { opacity: 0; transform: translateX(65vw) translateY(25vh); }
+}
+
+@keyframes shootingStar4 {
+  0%, 82%  { opacity: 0; transform: translateX(0) translateY(0); }
+  85%      { opacity: 1; }
+  100%     { opacity: 0; transform: translateX(50vw) translateY(50vh); }
+}
+
+.shooting-star-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Each span is rotated to point along its travel direction.
+   The gradient runs: dim tail (left) → bright head (right),
+   and rotation aligns the element with the diagonal path. */
+.shooting-star-layer span {
+  position: absolute;
+  height: 1.5px;
+  border-radius: 1px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.shooting-star-layer span:nth-child(1) {
+  top: 5%;
+  left: 5%;
+  width: 100px;
+  transform-origin: left center;
+  /* angle ≈ atan(35/70) ≈ 26.5deg */
+  rotate: 26.5deg;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.05) 20%,
+    rgba(var(--theme-accent-rgb), 0.4) 60%,
+    rgba(255,255,255,0.95) 100%);
+  animation: shootingStar1 9s ease-in infinite 2s;
+}
+
+.shooting-star-layer span:nth-child(2) {
+  top: 12%;
+  left: 30%;
+  width: 80px;
+  transform-origin: left center;
+  /* angle ≈ atan(45/55) ≈ 39deg */
+  rotate: 39deg;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.05) 25%,
+    rgba(var(--theme-accent-rgb), 0.5) 65%,
+    rgba(255,255,255,0.9) 100%);
+  animation: shootingStar2 14s ease-in infinite 6s;
+}
+
+.shooting-star-layer span:nth-child(3) {
+  top: 8%;
+  left: 15%;
+  width: 120px;
+  transform-origin: left center;
+  /* angle ≈ atan(25/65) ≈ 21deg */
+  rotate: 21deg;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.04) 15%,
+    rgba(var(--theme-accent-rgb), 0.35) 55%,
+    rgba(255,255,255,0.85) 100%);
+  animation: shootingStar3 20s ease-in infinite 10s;
+}
+
+.shooting-star-layer span:nth-child(4) {
+  top: 3%;
+  left: 40%;
+  width: 70px;
+  transform-origin: left center;
+  /* angle ≈ atan(50/50) = 45deg */
+  rotate: 45deg;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.06) 20%,
+    rgba(var(--theme-accent-rgb), 0.45) 60%,
+    rgba(255,255,255,0.9) 100%);
+  animation: shootingStar4 25s ease-in infinite 16s;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .starfield-twinkle { animation: none; opacity: 0.6; }
+  .shooting-star-layer span { animation: none !important; display: none; }
+}
+
+ion-card {
+  --background: rgba(var(--theme-text-rgb), 0.04);
+  border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
+  border-radius: 1rem;
+  color: var(--theme-text);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+ion-item {
+  --background: transparent;
+  --color: var(--theme-text);
+  --border-color: rgba(var(--theme-text-rgb), 0.06);
+}
+
+ion-list {
+  background: transparent;
+  --ion-item-background: transparent;
+}
+
+/* Tab bar */
 ion-tab-bar {
+  --background: rgba(var(--theme-bg-rgb), 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(var(--theme-text-rgb), 0.05);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+ion-tab-button {
+  --color: rgba(var(--theme-text-rgb), 0.3);
+  --color-selected: var(--theme-accent);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+}
+
+/* Header */
 ion-header, .app-header {
   padding-top: env(safe-area-inset-top);
+}
+
+/* =====================================================
+   GLASSMORPHIC UTILITY CLASSES
+   ===================================================== */
+
+.glassmorphic-card {
+  background: rgba(var(--theme-text-rgb), 0.04);
+  border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.accent-glow {
+  box-shadow: 0 0 20px rgba(var(--theme-accent-rgb), 0.15),
+              0 0 40px rgba(var(--theme-accent-rgb), 0.05);
+}
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.transparent-modal {
+  --background: rgba(var(--theme-bg-rgb), 0.2);
+
+  &::part(content) {
+    backdrop-filter: blur(7px);
+  }
+}
+
+/* =====================================================
+   LINKS
+   ===================================================== */
+
+a {
+  color: var(--theme-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--theme-accent-bright);
 }

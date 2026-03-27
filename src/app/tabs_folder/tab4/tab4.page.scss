@@ -1,36 +1,51 @@
-ion-content{
-    background-color: #f1eee5;
+// Tab 4 — Notifications (Azan Theme)
+
+ion-content {
+  --background: transparent;
+  --color: var(--theme-text);
 }
 
-
-ion-list{
-    padding-right: 5%;
-    background-color: #f1eee5;
+ion-list {
+  padding-right: 5%;
+  background: transparent;
+  --ion-item-background: transparent;
 }
 
-ion-card{
-    width: 100%;
-    --background: #faf9f6;
-    
+ion-card {
+  width: 100%;
+  --background: rgba(var(--theme-text-rgb), 0.04);
+  border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--theme-text);
 }
 
-ion-item{
-    --background: #c0d8c8;
+ion-item {
+  --background: rgba(var(--theme-accent-rgb), 0.08);
+  --color: var(--theme-text);
 }
 
-ion-accordion{
-    background-color: #faf9f6;
+ion-accordion {
+  background-color: rgba(var(--theme-text-rgb), 0.02);
 }
 
-// ion-button{
-//     width: 99%;
-// }
-
-.page_titles{
-    text-align: center;
-    font-variant: small-caps;
+ion-card-content {
+  color: var(--theme-text);
 }
 
-.additional_details{
-    margin-top: 5%;
+.page_titles {
+  text-align: center;
+  font-variant: small-caps;
+  color: var(--theme-accent);
+  font-family: 'Outfit', sans-serif;
+}
+
+.additional_details {
+  margin-top: 5%;
+  color: var(--theme-text-muted);
+}
+
+a {
+  color: var(--theme-accent);
 }

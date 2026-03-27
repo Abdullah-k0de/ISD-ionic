@@ -1,91 +1,125 @@
+// Tab 1 — Home (Azan Theme)
+
 ion-content {
-    --background: rgb(8, 50, 65);
-    --color: #fff;
+  --background: transparent;
+  --color: var(--theme-text);
 }
 
 ion-content::part(scroll) {
-    padding-left: var(--ion-safe-area-left, 0);
-    padding-right: var(--ion-safe-area-right, 0);
-  }
-
-ion-fab-button{
-    --border-radius: 15px;
+  padding-left: var(--ion-safe-area-left, 0);
+  padding-right: var(--ion-safe-area-right, 0);
 }
 
-h3{
-    margin-left: 0.65em;
-    font-variant: small-caps;
-    font-weight: bold;
-}
-
-h6{
-    margin-left: 0.85em;
-    margin-right: 0.85em;
-    line-height: 1.5;
-}
-
-a{
-    color: cyan;
-    text-decoration: normal;
-}
-
-img{
-    padding-left: 0.6em;
-    padding-right: 0.6em;
-    border-radius: 5%;
-}
-
+// ---- Cards ----
 ion-card {
-    background: #fefcf0;
+  --background: rgba(var(--theme-text-rgb), 0.04);
+  border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--theme-text);
 }
 
-.donate_button{
-    margin: 1em;
+// ---- Headings ----
+h3 {
+  margin-left: 0.65em;
+  font-variant: small-caps;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  color: var(--theme-accent);
+  letter-spacing: 0.05em;
 }
 
-.page_titles{
-    text-align: center;
-    font-variant: small-caps;
-    // font-weight: bold;
+h6 {
+  margin-left: 0.85em;
+  margin-right: 0.85em;
+  line-height: 1.5;
+  color: var(--theme-text-muted);
 }
 
-.hadith_content{
-    margin: 0;
-    color: black;
-    line-height: 1.5;
+// ---- Links ----
+a {
+  color: var(--theme-accent);
+  text-decoration: none;
+}
+
+// ---- Image ----
+img {
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+  border-radius: 5%;
+}
+
+// ---- Social buttons ----
+ion-fab-button {
+  --border-radius: 15px;
+  --background: rgba(var(--theme-accent-rgb), 0.15);
+  --color: var(--theme-accent);
+  border: 1px solid rgba(var(--theme-accent-rgb), 0.2);
+}
+
+// ---- Donate button ----
+.donate_button {
+  margin: 1em;
+  --background: var(--theme-accent);
+  --color: var(--theme-bg);
+  --box-shadow: 0 0 20px rgba(var(--theme-accent-rgb), 0.3);
+}
+
+// ---- Hadith section ----
+.page_titles {
+  text-align: center;
+  font-variant: small-caps;
+  color: var(--theme-accent);
+  font-family: 'Outfit', sans-serif;
+}
+
+.hadith_content {
+  margin: 0;
+  color: var(--theme-text);
+  line-height: 1.5;
 }
 
 .hadith-title-clickable {
-    --background: #fefcf0;
+  --background: rgba(var(--theme-accent-rgb), 0.06);
 }
 
-.hadith_attribution{
-    display: inline-block;
+.hadith_attribution {
+  display: inline-block;
 }
 
-.hadith_grade{
-    float: right;
+.hadith_grade {
+  float: right;
 }
 
-.hadith_margin{
-    margin-bottom: 4%;
+.hadith_margin {
+  margin-bottom: 4%;
 }
 
-.arabic_text{
-    text-align: right;
+.arabic_text {
+  text-align: right;
+  font-family: 'Amiri', serif;
+  color: var(--theme-accent-bright);
 }
 
-.hadith_heading{
-    font-weight: bold;
+.hadith_heading {
+  font-weight: bold;
+  color: var(--theme-accent);
 }
 
 .attribution-grade {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .attribution-grade p {
-    margin: 0;
-    font-size: smaller;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.attribution-grade p {
+  margin: 0;
+  font-size: smaller;
+  color: var(--theme-text-muted);
+}
+
+// ---- Follow us section ----
+.follow_us {
+  margin-bottom: 1rem;
+}

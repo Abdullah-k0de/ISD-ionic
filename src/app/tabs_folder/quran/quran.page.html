@@ -36,7 +36,7 @@
               </ion-icon><br>
               </ion-button>
             </ion-buttons>
-            <ion-text style="color: black;">{{ surah.revelationType }}</ion-text>
+            <ion-text>{{ surah.revelationType }}</ion-text>
           </div>
         </div>
       </ion-label>
@@ -54,8 +54,8 @@
     </ion-button>
   </ion-buttons> -->
   <ion-item (click)="reciterSelect.open()">
-    <ion-label position="floating" style="color: black; font-weight: bold;">Select Reciter</ion-label>
-    <ion-select style="font-size: small; color: black;" #reciterSelect [(ngModel)]="selectedReciterId" interface="action-sheet" (ionChange)="onReciterChange()">
+    <ion-label position="floating" style="font-weight: bold;">Select Reciter</ion-label>
+    <ion-select style="font-size: small;" #reciterSelect [(ngModel)]="selectedReciterId" interface="action-sheet" (ionChange)="onReciterChange()">
       <ion-select-option *ngFor="let reciter of reciters" [value]="reciter.identifier">
         <ng-container *ngIf="reciter.language === 'en'; else arabicTemplate">
           {{ reciter.name }}
