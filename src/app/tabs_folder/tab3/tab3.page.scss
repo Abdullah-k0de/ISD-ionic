@@ -1,6 +1,11 @@
-iframe{
-    // border: none;
-    // width: 100%;
-    // height: 100vh;
-    margin-bottom: 0%;
+// Tab 3 — Calendar (Azan Theme)
+
+ion-content {
+  --background: transparent;
+  --color: var(--theme-text);
+}
+
+iframe {
+  border: none;
+  border-radius: 0.5rem;
 }

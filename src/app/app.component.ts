@@ -3,6 +3,7 @@ import { Platform } from '@ionic/angular';
 import { IonRouterOutlet } from '@ionic/angular';
 import { App } from '@capacitor/app';
 import { FcmService } from './services/fcm.service';
+import { ThemeService } from './services/theme.service';
 import 'firebase/messaging';
 import { environment } from 'src/environments/environment.prod';
 import { FirebaseApp, initializeApp } from 'firebase/app';
@@ -18,7 +19,7 @@ export class AppComponent {
 
   @ViewChild(IonRouterOutlet) outlet: any;
 
-  constructor(private platform: Platform, private fcmService: FcmService) {
+  constructor(private platform: Platform, private fcmService: FcmService, private themeService: ThemeService) {
     this.appRun();
     this.hideSplash();
 
