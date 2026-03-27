@@ -1,44 +1,107 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title class="title_of_page">
-      Denton Masjid Prayer Times
+      Prayer Times
     </ion-title>
+    <ion-buttons slot="end">
+      <div class="toggle-container">
+        <div class="view-toggle" (click)="toggleView()">
+          <span class="view-toggle-label">{{ showClock ? 'Clock' : 'List' }}</span>
+          <div class="view-toggle-track" [class.clock-active]="showClock">
+            <div class="view-toggle-thumb">
+              <ion-icon [name]="showClock ? 'time-outline' : 'list-outline'" size="small"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div class="hint-bubble" *ngIf="showClockHint" (click)="dismissHint()">
+    <span>Switch to clock view ⏰</span>
+    <div class="hint-arrow"></div>
+  </div>
+
   <div class="shooting-star-layer">
     <span></span><span></span><span></span><span></span>
   </div>
 
   <ion-refresher slot="fixed" [pullMin]="150" (ionRefresh)="handleRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="chevron-down-outline"
-      pullingText="اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى سَيِّدِنَا مُحَمَّدٍ"
-      refreshingSpinner="crescent"
-    >
+    <ion-refresher-content pullingIcon="chevron-down-outline"
+      pullingText="اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى سَيِّدِنَا مُحَمَّدٍ" refreshingSpinner="crescent">
     </ion-refresher-content>
   </ion-refresher>
 
-  <!-- Prayer Clock (Azan-style circular display) -->
   <ng-container *ngIf="this.httpService.adhans?.data; else loadingOutsideSkeleton">
-    <div class="clock-wrapper">
-      <app-prayer-clock
-        [fajrTime]="this.httpService.adhans.data.salah.at(0)?.fajr || ''"
+
+    <!-- ===== CLOCK VIEW ===== -->
+    <div class="clock-wrapper" *ngIf="showClock">
+      <app-prayer-clock [fajrTime]="this.httpService.adhans.data.salah.at(0)?.fajr || ''"
         [sunriseTime]="this.httpService.adhans.data.salah.at(0)?.sunrise || ''"
         [dhuhrTime]="this.httpService.adhans.data.salah.at(0)?.zuhr || ''"
         [asrTime]="this.httpService.adhans.data.salah.at(0)?.asr || ''"
         [maghribTime]="this.httpService.adhans.data.salah.at(0)?.maghrib || ''"
-        [ishaTime]="this.httpService.adhans.data.salah.at(0)?.isha || ''"
-        [iqamaFajr]="iqamaTimes.fajr"
-        [iqamaDhuhr]="iqamaTimes.dhuhr"
-        [iqamaAsr]="iqamaTimes.asr"
-        [iqamaMaghrib]="iqamaTimes.maghrib"
-        [iqamaIsha]="iqamaTimes.isha"
-      ></app-prayer-clock>
+        [ishaTime]="this.httpService.adhans.data.salah.at(0)?.isha || ''" [iqamaFajr]="iqamaTimes.fajr"
+        [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="iqamaTimes.maghrib"
+        [iqamaIsha]="iqamaTimes.isha"></app-prayer-clock>
     </div>
 
-    <!-- Jummah & Links (below clock) -->
+    <!-- ===== SIMPLIFIED LIST VIEW ===== -->
+    <div class="simple-view" *ngIf="!showClock">
+
+      <!-- Current prayer display -->
+      <div class="current-prayer-display">
+        <div class="current-arabic">{{ prayerNames[currentPrayerName]?.ar }}</div>
+        <div class="current-english">{{ prayerNames[currentPrayerName]?.en | uppercase }}</div>
+        <div class="tap-hint" (click)="toggleView()">tap for full clock</div>
+        <div class="current-time-big">{{ currentTimeStr }}</div>
+      </div>
+
+      <!-- Next prayer + countdown -->
+      <div class="next-prayer-row">
+        <span class="next-label">NEXT</span>
+        <span class="next-name">{{ prayerNames[nextPrayerName]?.en }}</span>
+        <span class="next-time-val">{{ nextPrayerTime }}</span>
+      </div>
+
+      <div class="prayer-divider">
+        <span class="divider-line"></span>
+        <span class="divider-countdown">{{ countdownStr }}</span>
+        <span class="divider-line"></span>
+      </div>
+
+      <!-- Prayer times list with iqama column -->
+      <div class="prayer-list">
+        <div class="list-header">
+          <span class="header-name"></span>
+          <span class="header-azan">AZAN</span>
+          <span class="header-iqama">IQAMA</span>
+        </div>
+        <div *ngFor="let prayer of prayerOrder" class="time-row" [class.active]="isActivePrayer(prayer)"
+          [class.past]="isPastPrayer(prayer)">
+          <span class="time-name">{{ prayerNames[prayer]?.en }}</span>
+          <span class="time-dots"></span>
+          <span class="time-azan">{{ getAzanTime(prayer) }}</span>
+          <span class="time-iqama">{{ getIqamaTime(prayer) || '—' }}</span>
+        </div>
+      </div>
+
+      <!-- Date row -->
+      <div class="simple-date-row">
+        <app-prayer-clock [fajrTime]="this.httpService.adhans.data.salah.at(0)?.fajr || ''"
+          [sunriseTime]="this.httpService.adhans.data.salah.at(0)?.sunrise || ''"
+          [dhuhrTime]="this.httpService.adhans.data.salah.at(0)?.zuhr || ''"
+          [asrTime]="this.httpService.adhans.data.salah.at(0)?.asr || ''"
+          [maghribTime]="this.httpService.adhans.data.salah.at(0)?.maghrib || ''"
+          [ishaTime]="this.httpService.adhans.data.salah.at(0)?.isha || ''" [iqamaFajr]="iqamaTimes.fajr"
+          [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="iqamaTimes.maghrib"
+          [iqamaIsha]="iqamaTimes.isha" style="display: none;"></app-prayer-clock>
+      </div>
+    </div>
+
+    <!-- Jummah & Links (below both views) -->
     <div class="jummah-section">
       <div class="jummah-card">
         <div class="jummah-row">
@@ -48,13 +111,11 @@
         <div class="jummah-address">
           <a (click)="openMapsApp('1105 Greenlee St, Denton')">1105 Greenlee St, Denton</a>
         </div>
-
-
       </div>
 
-      <a class="monthly-link" href="https://masjidal.com/widget/monthly/?masjid_id=O8L7ppA5&jumuah_text=ISD%20Jummah">
+      <!-- <a class="monthly-link" href="https://masjidal.com/widget/monthly/?masjid_id=O8L7ppA5&jumuah_text=ISD%20Jummah">
         MONTHLY CALENDAR
-      </a>
+      </a> -->
     </div>
   </ng-container>
 
