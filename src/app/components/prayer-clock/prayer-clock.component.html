@@ -1,0 +1,170 @@
+<div class="clock-page">
+
+  <!-- ===== CLOCK SVG — dual ring layout ===== -->
+  <svg viewBox="-35 -22 163 150" class="clock-svg" *ngIf="showClock">
+    <defs>
+      <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.2" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="markerGlow" x="-300%" y="-300%" width="700%" height="700%">
+        <feGaussianBlur stdDeviation="2" result="b1"/>
+        <feGaussianBlur stdDeviation="4" result="b2"/>
+        <feMerge>
+          <feMergeNode in="b2"/>
+          <feMergeNode in="b1"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="trailingGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+        <feColorMatrix in="blur" type="matrix"
+          values="1 0 0 0 0
+                  0 1 0 0 0
+                  0 0 1 0 0
+                  0 0 0 0.6 0"/>
+        <feMerge>
+          <feMergeNode in="colormatrix"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <linearGradient id="arcGrad" gradientUnits="userSpaceOnUse" x1="50" y1="0" x2="50" y2="100">
+        <stop offset="0%" stop-color="var(--theme-accent-bright)"/>
+        <stop offset="100%" stop-color="var(--theme-accent)"/>
+      </linearGradient>
+      <linearGradient id="iqamaArcGrad" gradientUnits="userSpaceOnUse" x1="50" y1="20" x2="50" y2="80">
+        <stop offset="0%" stop-color="var(--theme-accent-bright)" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="var(--theme-accent)" stop-opacity="0.35"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Outer frame ring -->
+    <circle cx="50" cy="50" r="50" fill="none"
+      stroke="rgba(var(--theme-accent-rgb), 0.1)"
+      stroke-width="0.3"
+      stroke-dasharray="314.2" class="ring-draw"/>
+
+    <!-- Hour tick marks -->
+    <line *ngFor="let tick of tickMarks"
+      [attr.x1]="tick.x1" [attr.y1]="tick.y1"
+      [attr.x2]="tick.x2" [attr.y2]="tick.y2"
+      [attr.stroke]="tick.major ? 'rgba(var(--theme-accent-rgb), 0.35)' : 'rgba(var(--theme-text-rgb), 0.1)'"
+      [attr.stroke-width]="tick.major ? 0.5 : 0.25"/>
+
+    <!-- ===== OUTER RING: AZAN TIMES ===== -->
+    <!-- Outer azan track ring -->
+    <circle cx="50" cy="50" r="44" fill="none"
+      stroke="rgba(var(--theme-text-rgb), 0.08)"
+      stroke-width="2.5"
+      stroke-dasharray="276.5" class="ring-draw"/>
+
+    <!-- Azan day progress arc -->
+    <path *ngIf="progressArcPath"
+      [attr.d]="progressArcPath"
+      fill="none" stroke="url(#arcGrad)" stroke-width="2.5"
+      stroke-linecap="round" filter="url(#softGlow)"/>
+
+    <!-- Trailing glow arc -->
+    <path *ngIf="trailingGlowArcPath"
+      [attr.d]="trailingGlowArcPath"
+      fill="none" stroke="var(--theme-accent-bright)" stroke-width="2.5"
+      stroke-linecap="round" [attr.filter]="getTrailingGlowFilter()"/>
+
+    <!-- Azan prayer marker dots -->
+    <ng-container *ngFor="let prayer of prayers">
+      <ng-container *ngIf="prayer.time && isMarkerRevealed(prayer.name)">
+        <circle *ngIf="currentPrayerName === prayer.name"
+          [attr.cx]="getPosition(prayer.angle, 44).x"
+          [attr.cy]="getPosition(prayer.angle, 44).y"
+          r="2.5" fill="var(--theme-accent-bright)"
+          filter="url(#markerGlow)"/>
+        <circle *ngIf="currentPrayerName !== prayer.name"
+          [attr.cx]="getPosition(prayer.angle, 44).x"
+          [attr.cy]="getPosition(prayer.angle, 44).y"
+          r="1.5" fill="var(--theme-accent)" opacity="0.7"/>
+      </ng-container>
+    </ng-container>
+
+    <!-- Current time indicator (white dot on outer ring) -->
+    <g [style.transform-origin]="'50px 50px'"
+       [style.transform]="'rotate(' + indicatorRotation + 'deg)'">
+      <circle cx="50" cy="6" r="2" fill="white" filter="url(#softGlow)"/>
+    </g>
+
+    <!-- ===== PRAYER LABELS (collision-avoiding positions) ===== -->
+    <ng-container *ngFor="let label of computedLabels">
+      <g *ngIf="isLabelRevealed(label.prayer.name)" class="svg-label"
+         [class.active-label]="currentPrayerName === label.prayer.name">
+        <!-- Pointer line from ring to nudged label -->
+        <line *ngIf="label.needsLine"
+          [attr.x1]="label.ringPos.x"
+          [attr.y1]="label.ringPos.y"
+          [attr.x2]="label.pos.x"
+          [attr.y2]="label.pos.y + 3"
+          stroke="rgba(var(--theme-accent-rgb), 0.2)"
+          stroke-width="0.3"
+          stroke-dasharray="1 0.8"/>
+        <!-- Prayer name -->
+        <text
+          [attr.x]="label.pos.x"
+          [attr.y]="label.pos.y"
+          text-anchor="middle" dominant-baseline="auto"
+          class="svg-label-name"
+          [class.active-name]="currentPrayerName === label.prayer.name">
+          {{ prayerNames[label.prayer.name]?.en | uppercase }}
+        </text>
+        <!-- Azan time -->
+        <text
+          [attr.x]="label.pos.x"
+          [attr.y]="label.pos.y + 6"
+          text-anchor="middle" dominant-baseline="auto"
+          class="svg-label-time"
+          [class.active-time]="currentPrayerName === label.prayer.name">
+          {{ formatTime(getPrayerTimeString(label.prayer.name)) }}
+        </text>
+        <!-- Iqama time -->
+        <text *ngIf="label.hasIqama"
+          [attr.x]="label.pos.x"
+          [attr.y]="label.pos.y + 11"
+          text-anchor="middle" dominant-baseline="auto"
+          class="svg-iqama-label-name">
+          IQAMA {{ formatTime(getIqamaPrayerTimeString(label.prayer.name)) }}
+        </text>
+      </g>
+    </ng-container>
+
+    <!-- ===== CENTER TEXT (next prayer only) ===== -->
+    <text x="50" y="41" text-anchor="middle" class="center-arabic">
+      {{ prayerNames[currentPrayerName]?.ar }}
+    </text>
+    <text x="50" y="50" text-anchor="middle" class="center-in">
+      in
+    </text>
+    <text x="50" y="62" text-anchor="middle" class="center-countdown">
+      {{ countdownText }}
+    </text>
+  </svg>
+
+  <!-- Dates (below the SVG, in HTML for crisp rendering) -->
+  <div class="date-row" *ngIf="showClock">
+    <span class="hijri-date">{{ hijriDate }}</span>
+    <span class="gregorian-date">{{ gregorianDate }}</span>
+    <!-- Moon phase icon -->
+    <svg *ngIf="moonType === 'full'" width="20" height="20" viewBox="0 0 20 20" class="moon-icon">
+      <circle cx="10" cy="10" r="6" fill="var(--theme-accent)" opacity="0.5"/>
+    </svg>
+    <svg *ngIf="moonType === 'phase' && moonPath" width="20" height="20" viewBox="45 3 15 15" class="moon-icon">
+      <path [attr.d]="moonPath" fill="var(--theme-accent)" opacity="0.45"/>
+    </svg>
+  </div>
+</div>

@@ -7,108 +7,60 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  
-  <div class="image-container">
-    <ion-refresher slot="fixed" [pullMin]="150" (ionRefresh)="handleRefresh($event)">
-      <ion-refresher-content
-        pullingIcon="chevron-down-outline"
-        pullingText="اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى سَيِّدِنَا مُحَمَّدٍ"
-        refreshingSpinner="crescent"
-      >
-      </ion-refresher-content>
-    </ion-refresher>
-    <img alt="Background Picture for Prayer times" [src]="'../../../assets/times-' + hourOfDay + '.jpg'">
+  <div class="shooting-star-layer">
+    <span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- <ng-container *ngIf="!isLoading; else loadingOutsideSkeleton"> -->
+  <ion-refresher slot="fixed" [pullMin]="150" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-outline"
+      pullingText="اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى سَيِّدِنَا مُحَمَّدٍ"
+      refreshingSpinner="crescent"
+    >
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Prayer Clock (Azan-style circular display) -->
   <ng-container *ngIf="this.httpService.adhans?.data; else loadingOutsideSkeleton">
-  <!-- Transparent container with table-like structure -->
-  <div class="transparent-container">
+    <div class="clock-wrapper">
+      <app-prayer-clock
+        [fajrTime]="this.httpService.adhans.data.salah.at(0)?.fajr || ''"
+        [sunriseTime]="this.httpService.adhans.data.salah.at(0)?.sunrise || ''"
+        [dhuhrTime]="this.httpService.adhans.data.salah.at(0)?.zuhr || ''"
+        [asrTime]="this.httpService.adhans.data.salah.at(0)?.asr || ''"
+        [maghribTime]="this.httpService.adhans.data.salah.at(0)?.maghrib || ''"
+        [ishaTime]="this.httpService.adhans.data.salah.at(0)?.isha || ''"
+        [iqamaFajr]="iqamaTimes.fajr"
+        [iqamaDhuhr]="iqamaTimes.dhuhr"
+        [iqamaAsr]="iqamaTimes.asr"
+        [iqamaMaghrib]="iqamaTimes.maghrib"
+        [iqamaIsha]="iqamaTimes.isha"
+      ></app-prayer-clock>
+    </div>
 
-    <!-- Using ionic  -->
-    <!-- <ion-grid class="ion-no-padding" *ngFor="let iq of iqama$ | async"> -->
-      <ion-grid class="ion-no-padding">
-      <ion-row>
-        <ion-col size="4"></ion-col>
-        <ion-col size="4" class="time">Adhan</ion-col>
-        <ion-col size="4" class="time">Iqama</ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">Fajr</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Fajr)}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.fajr}}</ion-col>
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.fajr}}</ion-col>
-      </ion-row>
+    <!-- Jummah & Links (below clock) -->
+    <div class="jummah-section">
+      <div class="jummah-card">
+        <div class="jummah-row">
+          <span class="jummah-label">Jummah (ISD)</span>
+          <span class="jummah-time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah1}}</span>
+        </div>
+        <div class="jummah-address">
+          <a (click)="openMapsApp('1105 Greenlee St, Denton')">1105 Greenlee St, Denton</a>
+        </div>
 
-      <ion-row>
-        <ion-col size="5">Sunrise</ion-col>
-        <!-- <ion-col size="7" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Sunrise)}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.sunrise}}</ion-col>
-      </ion-row>
 
-      <ion-row>
-        <ion-col size="4">Zuhr</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Dhuhr)}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.zuhr}}</ion-col>
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.zuhr}}</ion-col>
-      </ion-row>
+      </div>
 
-      <ion-row>
-        <ion-col size="4">Asr</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Asr)}}</ion-col> -->
-        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.asr}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.asr}}</ion-col>
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.asr}}</ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col size="4">Maghrib</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Maghrib)}}</ion-col> -->
-        <!-- <ion-col size="4" class="time">{{this.formatTime(this.IqamaTimes.maghrib)}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.maghrib}}</ion-col>
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.maghrib}}</ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col size="4">Isha</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.formatTime(this.httpService.adhans.data.timings.Isha)}}</ion-col> -->
-        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.isha}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.salah.at(0)?.isha}}</ion-col>
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.isha}}</ion-col>
-      </ion-row>
-
-      <ion-row class="margin_remove_bottom">
-        <ion-col size="8">Jummah (ISD)</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummah}}</ion-col> -->
-        <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah1}}</ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col class="padding_remove_top" size="12"><a (click)="openMapsApp('1105 Greenlee St, Denton')"><u>1105 Greenlee St, Denton</u></a>
-        </ion-col>
-      </ion-row>
-
-      <ion-row class="margin_remove_bottom">
-        <ion-col size="8">Jummah<ion-text class="small_jummah"> (UNT MSA SPONSORED)</ion-text></ion-col>
-        <!-- <ion-col size="4" class="time">{{this.IqamaTimes.jummahUNT}}</ion-col> -->                                 <!-- Firebase Timings -->
-        <ion-col size="4" class="time">2:15 PM</ion-col>
-        <!-- <ion-col size="4" class="time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah2}}</ion-col> -->          <!-- Masjidal App Timings -->
-      </ion-row>
-
-      <ion-row class="margin_remove_bottom">
-        <ion-col class="padding_remove_top" size="12"><a (click)="openMapsApp('Goolsby Chalpel, 1622 Maple St, Denton')"><u>Goolsby Chalpel, 1622 Maple St, Denton</u></a></ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col class="montly" size="12"><a href="https://masjidal.com/widget/monthly/?masjid_id=O8L7ppA5&jumuah_text=ISD%20Jummah"><u>MONTHLY CALENDAR</u></a></ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-
+      <a class="monthly-link" href="https://masjidal.com/widget/monthly/?masjid_id=O8L7ppA5&jumuah_text=ISD%20Jummah">
+        MONTHLY CALENDAR
+      </a>
+    </div>
   </ng-container>
+
   <ng-template #loadingOutsideSkeleton>
-    <div class="transparent-container">
-      <ion-skeleton-text animated class="outside-skeletion-text"></ion-skeleton-text>
+    <div class="loading-wrapper">
+      <ion-skeleton-text animated class="loading-skeleton"></ion-skeleton-text>
     </div>
   </ng-template>
 

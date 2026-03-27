@@ -1,0 +1,195 @@
+// Settings Page (Azan Theme)
+
+:host {
+  display: block;
+}
+
+ion-content {
+  --background: transparent;
+  --color: var(--theme-text);
+}
+
+.settings-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 1rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+// ---- Sections ----
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  color: rgba(var(--theme-text-rgb), 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+// ---- Mode Switcher ----
+.mode-switcher {
+  display: flex;
+  background: rgba(var(--theme-text-rgb), 0.04);
+  border: 1px solid rgba(var(--theme-text-rgb), 0.08);
+  border-radius: 2rem;
+  padding: 0.2rem;
+  gap: 0.15rem;
+}
+
+.mode-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.2rem;
+  background: transparent;
+  border: none;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: rgba(var(--theme-text-rgb), 0.45);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.mode-tab:hover {
+  color: rgba(var(--theme-text-rgb), 0.7);
+  background: rgba(var(--theme-text-rgb), 0.04);
+}
+
+.mode-tab.active {
+  background: rgba(var(--theme-accent-rgb), 0.15);
+  color: var(--theme-accent);
+}
+
+.mode-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+// ---- Theme Grid ----
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0.4rem;
+  background: rgba(var(--theme-text-rgb), 0.03);
+  border: 1px solid rgba(var(--theme-text-rgb), 0.06);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-card:hover {
+  background: rgba(var(--theme-text-rgb), 0.06);
+  border-color: rgba(var(--theme-text-rgb), 0.12);
+}
+
+.theme-card.selected {
+  background: rgba(var(--theme-accent-rgb), 0.1);
+  border-color: rgba(var(--theme-accent-rgb), 0.4);
+}
+
+.theme-preview {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--preview-bg);
+  overflow: hidden;
+}
+
+.preview-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, var(--preview-accent-bright) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+}
+
+.preview-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--preview-accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.theme-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: rgba(var(--theme-text-rgb), 0.7);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.theme-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.45rem;
+  color: rgba(var(--theme-text-rgb), 0.3);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.theme-card.selected .theme-name {
+  color: var(--theme-accent);
+}
+
+// ---- About ----
+.about-section {
+  margin-top: 1rem;
+}
+
+.about-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: rgba(var(--theme-text-rgb), 0.03);
+  border: 1px solid rgba(var(--theme-text-rgb), 0.06);
+  border-radius: 0.75rem;
+  width: 100%;
+}
+
+.about-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--theme-accent);
+}
+
+.about-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  color: rgba(var(--theme-text-rgb), 0.4);
+}

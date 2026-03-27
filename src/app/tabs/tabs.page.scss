@@ -1,10 +1,28 @@
-.custom-tab-bar {
-    ion-tab-button {
-      margin: 0; /* Remove default margin */
-      padding: 0; /* Remove default padding */
-    }
-  
-    ion-tab-button:not(:last-child) {
-      margin-right: -0.7rem; /* Adjust spacing between tab buttons */
-    }
+// Tab Bar (Azan Theme)
+
+ion-tab-bar {
+  --background: rgba(var(--theme-bg-rgb), 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(var(--theme-text-rgb), 0.05);
+
+  ion-tab-button {
+    --color: rgba(var(--theme-text-rgb), 0.3);
+    --color-selected: var(--theme-accent);
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.03em;
+    transition: color 0.2s ease;
   }
+
+  ion-tab-button:not(:last-child) {
+    margin-right: -0.7rem;
+  }
+
+  // Subtle glow on selected tab icon
+  ion-tab-button[aria-selected="true"] ion-icon {
+    filter: drop-shadow(0 0 6px rgba(var(--theme-accent-rgb), 0.4));
+  }
+}
