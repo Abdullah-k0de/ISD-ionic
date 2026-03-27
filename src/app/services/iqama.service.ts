@@ -36,6 +36,20 @@ export class IqamaService {
     this.loadFromCache();
   }
 
+  /** Return cached iqama times (if any) for immediate display */
+  getCachedIqamaTimes(): IqamaTimes | null {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached) as IqamaTimes;
+        if (parsed.fajr || parsed.dhuhr || parsed.asr || parsed.maghrib || parsed.isha) {
+          return parsed;
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'apikey': environment.supabase.anonKey,
