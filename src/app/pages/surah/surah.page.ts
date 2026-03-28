@@ -20,11 +20,11 @@ export class SurahPage implements OnInit {
   currentAyahNumber: number | null = null;
   audioPlayer: HTMLAudioElement;
   fontSize: number = 18; // Default font size
-  darkMode: boolean = false; // Track the dark mode state
+  lightMode: boolean = false; // Track the light mode state
   translationMode: boolean= false;
   ayahNumber: number; // go to ayah feature
   reciters: any[] = [];
-  selectedReciterId: string = 'ar.muhammadayyoub';
+  selectedReciterId: string = localStorage.getItem('selectedReciterId') || 'ar.muhammadayyoub';
 
 
   @ViewChild('audioPlayer', { static: true }) set content(content: any) {
@@ -60,6 +60,7 @@ export class SurahPage implements OnInit {
   }
 
   onReciterChange() {
+    localStorage.setItem('selectedReciterId', this.selectedReciterId);
     this.getSurahArabicText();
   }
 
@@ -114,13 +115,13 @@ export class SurahPage implements OnInit {
     });
   }
 
-  toggleDarkMode() {
-    this.darkMode = !this.darkMode;
+  toggleLightMode() {
+    this.lightMode = !this.lightMode;
     const mainContent = document.getElementById('main-content');
-    if (this.darkMode) {
-      mainContent?.classList.add('dark-mode');
+    if (this.lightMode) {
+      mainContent?.classList.add('light-mode');
     } else {
-      mainContent?.classList.remove('dark-mode');
+      mainContent?.classList.remove('light-mode');
     }
   }
 
@@ -163,52 +164,62 @@ export class SurahPage implements OnInit {
   //   }
   // }
   nextAudioPlayer = new Audio();
-  playAudio(ayahNumber: number, audioUrl: string) {
-    const audio = this.audioPlayer;
-
-    audio.onended = null;
-    audio.oncanplaythrough = null;
-
-    if (this.currentAyahNumber === ayahNumber) {
-      if (audio.paused) {
-        audio.play();
+  playAudio(ayahNumberInSurah: number, audioUrl: string) {
+    if (this.currentAyahNumber === ayahNumberInSurah) {
+      if (this.audioPlayer.paused) {
+        this.audioPlayer.play();
       } else {
-        audio.pause();
+        this.audioPlayer.pause();
       }
-    } else {
-      this.currentAyahNumber = ayahNumber;
-      audio.src = audioUrl;
-      audio.load();
-
-      audio.oncanplaythrough = () => {
-        audio.play();
-
-        // 🔁 Preload next ayah
-        const currentIndex = this.surahText.findIndex(
-          ayah => ayah.number === ayahNumber
-        );
-        const nextAyah = this.surahText[currentIndex + 1];
-        if (nextAyah) {
-          this.nextAudioPlayer.src = nextAyah.audio;
-          this.nextAudioPlayer.load(); // Start preloading
-        }
-      };
-
-      audio.onended = () => {
-        const currentIndex = this.surahText.findIndex(
-          ayah => ayah.number === this.currentAyahNumber
-        );
-
-        const nextAyah = this.surahText[currentIndex + 1];
-        if (nextAyah) {
-          this.playAudio(nextAyah.number, nextAyah.audio);
-        } else {
-          this.currentAyahNumber = null;
-          audio.pause();
-          audio.src = '';
-        }
-      };
+      return;
     }
+
+    this.currentAyahNumber = ayahNumberInSurah;
+    this.audioPlayer.onended = null;
+    this.audioPlayer.oncanplaythrough = null;
+
+    if (this.nextAudioPlayer.src === audioUrl && this.nextAudioPlayer.readyState >= 3) {
+      // Gapless swap
+      const temp = this.audioPlayer;
+      this.audioPlayer = this.nextAudioPlayer;
+      this.nextAudioPlayer = temp;
+      this.audioPlayer.play();
+      this.setupSurahAudioListeners(ayahNumberInSurah);
+    } else {
+      this.audioPlayer.src = audioUrl;
+      this.audioPlayer.load();
+
+      this.audioPlayer.oncanplaythrough = () => {
+        this.audioPlayer.play();
+      };
+      this.setupSurahAudioListeners(ayahNumberInSurah);
+    }
+    
+    // 🔁 Preload next ayah
+    const currentIndex = this.surahText.findIndex(
+      ayah => ayah.numberInSurah === ayahNumberInSurah
+    );
+    const nextAyah = this.surahText[currentIndex + 1];
+    if (nextAyah) {
+      this.nextAudioPlayer.src = nextAyah.audio;
+      this.nextAudioPlayer.load(); 
+    }
+  }
+
+  setupSurahAudioListeners(ayahNumberInSurah: number) {
+    this.audioPlayer.onended = () => {
+      this.audioPlayer.onended = null;
+      const currentIndex = this.surahText.findIndex(
+        ayah => ayah.numberInSurah === this.currentAyahNumber
+      );
+
+      const nextAyah = this.surahText[currentIndex + 1];
+      if (nextAyah) {
+        this.playAudio(nextAyah.numberInSurah, nextAyah.audio);
+      } else {
+        this.currentAyahNumber = null;
+      }
+    };
   }
 
   toggleGlobalPlayPause() {
@@ -218,7 +229,7 @@ export class SurahPage implements OnInit {
     if (!this.currentAyahNumber || !audio.src) {
       if (this.surahText && this.surahText.length > 0) {
         const firstAyah = this.surahText[0];
-        this.playAudio(firstAyah.number, firstAyah.audio);
+        this.playAudio(firstAyah.numberInSurah, firstAyah.audio);
       }
       return;
     }

@@ -1,34 +1,25 @@
 export class AdhanClass {
-  status: string
-  data: Data
-  message: any[]
+  code?: number;
+  status?: string;
+  data?: Data;
 }
 
 export interface Data {
-  salah: Salah[]
-  iqamah: Iqamah[]
+  timings?: Timings;
+  date?: any;
+  meta?: any;
 }
 
-export interface Salah {
-  date: string
-  hijri_date: string
-  hijri_month: string
-  day: string
-  fajr: string
-  sunrise: string
-  zuhr: string
-  asr: string
-  maghrib: string
-  isha: string
-}
-
-export interface Iqamah {
-  date: string
-  fajr: string
-  zuhr: string
-  asr: string
-  maghrib: string
-  isha: string
-  jummah1: string
-  jummah2: string
+export interface Timings {
+  Fajr: string;
+  Sunrise: string;
+  Dhuhr: string;
+  Asr: string;
+  Sunset: string;
+  Maghrib: string;
+  Isha: string;
+  Imsak: string;
+  Midnight: string;
+  Firstthird: string;
+  Lastthird: string;
 }

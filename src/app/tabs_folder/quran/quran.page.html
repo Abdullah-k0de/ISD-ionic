@@ -54,8 +54,8 @@
     </ion-button>
   </ion-buttons> -->
   <ion-item (click)="reciterSelect.open()">
-    <ion-label position="floating" style="font-weight: bold;">Select Reciter</ion-label>
-    <ion-select style="font-size: small;" #reciterSelect [(ngModel)]="selectedReciterId" interface="action-sheet" (ionChange)="onReciterChange()">
+    <ion-label position="floating" style="font-weight: bold; color: white;">Select Reciter</ion-label>
+    <ion-select [interfaceOptions]="{ cssClass: 'theme-popover' }" style="font-size: small; color: white;" #reciterSelect [(ngModel)]="selectedReciterId" interface="popover" (ionChange)="onReciterChange()">
       <ion-select-option *ngFor="let reciter of reciters" [value]="reciter.identifier">
         <ng-container *ngIf="reciter.language === 'en'; else arabicTemplate">
           {{ reciter.name }}

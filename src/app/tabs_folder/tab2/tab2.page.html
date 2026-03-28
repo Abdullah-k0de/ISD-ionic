@@ -39,12 +39,12 @@
       <div class="view-container">
         <!-- ===== CLOCK VIEW ===== -->
         <div class="clock-wrapper" *ngIf="showClock">
-          <app-prayer-clock [fajrTime]="this.httpService.adhans.data.salah.at(0)?.fajr || ''"
-            [sunriseTime]="this.httpService.adhans.data.salah.at(0)?.sunrise || ''"
-            [dhuhrTime]="this.httpService.adhans.data.salah.at(0)?.zuhr || ''"
-            [asrTime]="this.httpService.adhans.data.salah.at(0)?.asr || ''"
-            [maghribTime]="this.httpService.adhans.data.salah.at(0)?.maghrib || ''"
-            [ishaTime]="this.httpService.adhans.data.salah.at(0)?.isha || ''" [iqamaFajr]="iqamaTimes.fajr"
+          <app-prayer-clock [fajrTime]="getAzanTime('fajr')"
+            [sunriseTime]="getAzanTime('sunrise')"
+            [dhuhrTime]="getAzanTime('dhuhr')"
+            [asrTime]="getAzanTime('asr')"
+            [maghribTime]="getAzanTime('maghrib')"
+            [ishaTime]="getAzanTime('isha')" [iqamaFajr]="iqamaTimes.fajr"
             [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="iqamaTimes.maghrib"
             [iqamaIsha]="iqamaTimes.isha"></app-prayer-clock>
         </div>
@@ -54,8 +54,8 @@
 
           <!-- Current prayer display -->
           <div class="current-prayer-display">
-            <div class="current-arabic">{{ prayerNames[currentPrayerName]?.ar }}</div>
-            <div class="current-english">{{ prayerNames[currentPrayerName]?.en | uppercase }}</div>
+            <div class="current-arabic">{{ prayerNames[currentPrayerName].ar }}</div>
+            <div class="current-english">{{ prayerNames[currentPrayerName].en | uppercase }}</div>
             <div class="side-dates">
               <span class="gregorian">{{ gregorianDate }}</span>
               <span class="bullet">•</span>
@@ -67,9 +67,9 @@
           <!-- Next prayer + countdown -->
           <div class="next-prayer-row">
             <span class="next-label">NEXT</span>
-            <span class="next-name">{{ prayerNames[nextPrayerName]?.en }}</span>
+            <span class="next-name">{{ prayerNames[nextPrayerName].en }}</span>
             <span class="bullet">•</span>
-            <span class="next-arabic-list">{{ prayerNames[nextPrayerName]?.ar }}</span>
+            <span class="next-arabic-list">{{ prayerNames[nextPrayerName].ar }}</span>
             <span class="next-time-val">{{ nextPrayerTime }}</span>
           </div>
 
@@ -88,7 +88,7 @@
             </div>
             <div *ngFor="let prayer of prayerOrder" class="time-row" [class.current]="isActivePrayer(prayer)"
               [class.next]="isNextPrayer(prayer)" [class.past]="isPastPrayer(prayer)" [class.dim]="prayer === 'sunrise'">
-              <span class="time-name">{{ prayerNames[prayer]?.en }}</span>
+              <span class="time-name">{{ prayerNames[prayer].en }}</span>
               <span class="time-dots"></span>
               <ng-container *ngIf="prayer !== 'sunrise'">
                 <span class="time-azan">{{ getAzanTime(prayer) }}</span>
@@ -102,12 +102,12 @@
 
           <!-- Date row -->
           <div class="simple-date-row">
-            <app-prayer-clock [fajrTime]="this.httpService.adhans.data.salah.at(0)?.fajr || ''"
-              [sunriseTime]="this.httpService.adhans.data.salah.at(0)?.sunrise || ''"
-              [dhuhrTime]="this.httpService.adhans.data.salah.at(0)?.zuhr || ''"
-              [asrTime]="this.httpService.adhans.data.salah.at(0)?.asr || ''"
-              [maghribTime]="this.httpService.adhans.data.salah.at(0)?.maghrib || ''"
-              [ishaTime]="this.httpService.adhans.data.salah.at(0)?.isha || ''" [iqamaFajr]="iqamaTimes.fajr"
+            <app-prayer-clock [fajrTime]="getAzanTime('fajr')"
+              [sunriseTime]="getAzanTime('sunrise')"
+              [dhuhrTime]="getAzanTime('dhuhr')"
+              [asrTime]="getAzanTime('asr')"
+              [maghribTime]="getAzanTime('maghrib')"
+              [ishaTime]="getAzanTime('isha')" [iqamaFajr]="iqamaTimes.fajr"
               [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="iqamaTimes.maghrib"
               [iqamaIsha]="iqamaTimes.isha" style="display: none;"></app-prayer-clock>
           </div>
@@ -119,7 +119,7 @@
         <div class="jummah-card">
           <div class="jummah-row">
             <span class="jummah-label">Jummah (ISD)</span>
-            <span class="jummah-time">{{this.httpService.adhans.data.iqamah.at(0)?.jummah1}}</span>
+            <span class="jummah-time">1:45 PM</span>
           </div>
           <div class="jummah-address">
             <a (click)="openMapsApp('1105 Greenlee St, Denton')">1105 Greenlee St, Denton</a>

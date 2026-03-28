@@ -114,7 +114,7 @@
           class="svg-label-name" [class.current-name]="currentPrayerName === label.prayer.name"
           [class.active-name]="nextPrayerName === label.prayer.name"
           [class.dim-name]="label.prayer.name === 'sunrise' || label.prayer.name === 'lastThird'">
-          {{ prayerNames[label.prayer.name]?.en | uppercase }}
+          {{ prayerNames[label.prayer.name].en | uppercase }}
         </text>
         <!-- Azan time -->
         <text [attr.x]="label.pos.x" [attr.y]="label.pos.y + 6" text-anchor="middle" dominant-baseline="auto"
@@ -135,11 +135,11 @@
 
     <!-- ===== CENTER TEXT ===== -->
     <text x="50" y="28" text-anchor="middle" class="center-current-ar">
-      {{ prayerNames[currentPrayerName]?.ar }}
+      {{ prayerNames[currentPrayerName].ar }}
     </text>
     
     <text x="50" y="39" text-anchor="middle" class="center-current-en">
-      {{ prayerNames[currentPrayerName]?.en | uppercase }}
+      {{ prayerNames[currentPrayerName].en | uppercase }}
     </text>
     
     <text x="50" y="52" text-anchor="middle" class="center-next-heading">
@@ -147,9 +147,9 @@
     </text>
     
     <text x="50" y="64" text-anchor="middle">
-      <tspan class="center-next-en">{{ prayerNames[nextPrayerName]?.en | uppercase }}</tspan>
+      <tspan class="center-next-en">{{ prayerNames[nextPrayerName].en | uppercase }}</tspan>
       <tspan class="center-bullet"> • </tspan>
-      <tspan class="center-next-ar">{{ prayerNames[nextPrayerName]?.ar }}</tspan>
+      <tspan class="center-next-ar">{{ prayerNames[nextPrayerName].ar }}</tspan>
     </text>
     
     <text x="50" y="75" text-anchor="middle" class="center-countdown">

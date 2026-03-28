@@ -434,3 +434,26 @@ a {
 a:hover {
   color: var(--theme-accent-bright);
 }
+
+/* =====================================================
+   THEMED POPOVER SELECT
+   ===================================================== */
+.theme-popover {
+  --background: rgba(var(--theme-bg-rgb), 0.95);
+  --backdrop-opacity: 0.4;
+  --color: var(--theme-text);
+  
+  ion-content {
+    --background: transparent;
+  }
+  
+  ion-item {
+    --background: transparent;
+    --color: var(--theme-text);
+  }
+
+  ion-radio {
+    --color: var(--theme-text-muted);
+    --color-checked: var(--theme-accent);
+  }
+}

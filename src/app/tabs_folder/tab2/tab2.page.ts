@@ -146,14 +146,24 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   /** Get the azan time string for a given prayer name */
   getAzanTime(name: string): string {
-    const data = this.httpService.adhans?.data?.salah?.at(0);
-    if (!data) return '';
+    const timings = this.httpService.adhans?.data?.timings as any;
+    if (!timings) return '';
     const map: Record<string, string> = {
-      fajr: data.fajr, sunrise: data.sunrise,
-      dhuhr: data.zuhr, asr: data.asr,
-      maghrib: data.maghrib, isha: data.isha,
+      fajr: timings.Fajr, sunrise: timings.Sunrise,
+      dhuhr: timings.Dhuhr, asr: timings.Asr,
+      maghrib: timings.Maghrib, isha: timings.Isha,
     };
-    return map[name] || '';
+    return this.formatTime12Hour(map[name]) || '';
+  }
+
+  private formatTime12Hour(time: string): string {
+    if (!time) return '';
+    const [h, m] = time.split(':');
+    if (!h || !m) return time;
+    let hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour}:${m} ${ampm}`;
   }
 
   /** Get iqama time for a given prayer */
