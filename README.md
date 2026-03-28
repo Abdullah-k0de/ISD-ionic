@@ -127,11 +127,3 @@ Standard scripts defined in `package.json`:
 
 ---
 *Built for the Islamic Society of Denton.*
-
-
-*To Do's:*
-[x] Incerase the scale of list view
-[ ] Reduce the gap below the time in list view
-
-[ ] reduce the gap above the hijri date
-[x] increase the scale slightly in rings
