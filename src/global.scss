@@ -120,6 +120,128 @@ ion-router-outlet,
   background: transparent !important;
 }
 
+/*
+ * App Global CSS — Azan Theme System
+ * -----------------------------------------------------------------
+ * Global styles with Azan PWA aesthetic: dark backgrounds,
+ * glassmorphic cards, accent glow effects, Inter/Amiri/Outfit fonts.
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* =====================================================
+   BASE STYLES
+   ===================================================== */
+
+body {
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: var(--theme-text);
+  /* Night sky with milky way nebula band */
+  background:
+    radial-gradient(ellipse at 25% 20%, rgba(var(--theme-accent-rgb), 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 65% 35%, rgba(255,255,255,0.02) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 55%, rgba(var(--theme-accent-rgb), 0.03) 0%, transparent 45%),
+    radial-gradient(ellipse at 75% 70%, rgba(255,255,255,0.015) 0%, transparent 35%),
+    radial-gradient(ellipse at 50% 50%, rgba(var(--theme-accent-rgb), 0.025) 0%, transparent 60%),
+    var(--theme-bg);
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--theme-text-rgb), 0.2);
+  border-radius: 2px;
+}
+
+/* =====================================================
+   SELECTION
+   ===================================================== */
+
+::selection {
+  background: rgba(var(--theme-accent-rgb), 0.3);
+  color: var(--theme-text);
+}
+
+/* =====================================================
+   FOCUS
+   ===================================================== */
+
+:focus-visible {
+  outline: 2px solid rgba(var(--theme-accent-rgb), 0.5);
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   TYPOGRAPHY
+   ===================================================== */
+
+.title_of_page {
+  text-align: center;
+  font-weight: 500;
+  font-variant: small-caps;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.05em;
+  color: var(--theme-accent) !important;
+}
+
+.arabic_text {
+  font-family: 'Amiri', serif;
+  text-align: right;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =====================================================
+   IONIC COMPONENT OVERRIDES
+   ===================================================== */
+
+ion-toolbar {
+  --background: var(--theme-bg);
+  --color: var(--theme-text);
+  --border-color: rgba(var(--theme-accent-rgb), 0.08);
+}
+
+/* Make all Ionic wrapper layers transparent so starfield shows through */
+ion-app {
+  background: transparent !important;
+  isolation: isolate; /* creates stacking context so z-index:-1 children stay visible */
+}
+
+ion-router-outlet,
+.ion-page {
+  background: transparent !important;
+}
+
 ion-content {
   --background: transparent;
   --ion-background-color: transparent;
@@ -128,6 +250,24 @@ ion-content {
 
 ion-content::part(background) {
   background: transparent !important;
+}
+
+/* Global Light Mode Consistency Override */
+body.light-mode-active {
+  --ion-background-color: var(--theme-bg);
+  --ion-text-color: var(--theme-text);
+  background: var(--theme-bg) !important;
+
+  ion-item, ion-card, .glassmorphic-card {
+    --background: rgba(var(--theme-accent-rgb), 0.05);
+    background: rgba(var(--theme-accent-rgb), 0.05);
+    --color: var(--theme-text);
+    border-color: rgba(var(--theme-accent-rgb), 0.1);
+  }
+
+  .starfield-static, .starfield-twinkle, .shooting-star-layer {
+     display: none !important;
+  }
 }
 
 /* =====================================================
@@ -456,4 +596,26 @@ a:hover {
     --color: var(--theme-text-muted);
     --color-checked: var(--theme-accent);
   }
+}
+
+/* =====================================================
+   TRUE LIGHT THEME SUPPORT
+   Supports Cedar Forest, Persian Tile, and other bright themes
+   ===================================================== */
+body.light-mode-active {
+  --theme-marker: #94a3b8;
+  
+  /* Remove starfield completely for light mode */
+  background: var(--theme-bg) !important;
+  
+  /* Map variables for components that use them directly */
+  --ion-tab-bar-background: rgba(var(--theme-bg-rgb), 0.95);
+  --ion-item-background: rgba(var(--theme-accent-rgb), 0.05);
+}
+
+body.light-mode-active .starfield-static, 
+body.light-mode-active .starfield-twinkle,
+body.light-mode-active .shooting-star-layer span {
+  display: none !important;
+  opacity: 0 !important;
 }

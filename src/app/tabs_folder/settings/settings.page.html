@@ -13,24 +13,17 @@
 
       <!-- Dark / Light Mode Toggle -->
       <div class="mode-switcher">
-        <button
-          class="mode-tab"
-          [class.active]="currentMode === 'dark'"
-          (click)="switchMode('dark')"
-        >
+        <button class="mode-tab" [class.active]="currentMode === 'dark'" (click)="switchMode('dark')">
           <svg viewBox="0 0 24 24" fill="currentColor" class="mode-icon">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z" />
           </svg>
           <span>Dark</span>
         </button>
-        <button
-          class="mode-tab"
-          [class.active]="currentMode === 'light'"
-          (click)="switchMode('light')"
-        >
+        <button class="mode-tab" [class.active]="currentMode === 'light'" (click)="switchMode('light')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mode-icon">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
           </svg>
           <span>Light</span>
         </button>
@@ -38,15 +31,9 @@
 
       <!-- Theme Grid -->
       <div class="theme-grid">
-        <button
-          *ngFor="let theme of themes"
-          class="theme-card"
-          [class.selected]="currentThemeId === theme.id"
-          (click)="selectTheme(theme.id)"
-          [style.--preview-bg]="theme.bg"
-          [style.--preview-accent]="theme.accent"
-          [style.--preview-accent-bright]="theme.accentBright"
-        >
+        <button *ngFor="let theme of themes" class="theme-card" [class.selected]="currentThemeId === theme.id"
+          (click)="selectTheme(theme.id)" [style.--preview-bg]="theme.bg" [style.--preview-accent]="theme.accent"
+          [style.--preview-accent-bright]="theme.accentBright">
           <div class="theme-preview">
             <div class="preview-glow"></div>
             <div class="preview-dot"></div>
@@ -58,13 +45,13 @@
     </div>
 
     <!-- About Section -->
-    <div class="section about-section">
+    <!-- <div class="section about-section">
       <span class="section-label">About</span>
       <div class="about-card">
         <span class="about-name">Islamic Society of Denton</span>
         <span class="about-desc">Masjid app with Azan-inspired theme</span>
       </div>
-    </div>
+    </div> -->
 
   </div>
 </ion-content>

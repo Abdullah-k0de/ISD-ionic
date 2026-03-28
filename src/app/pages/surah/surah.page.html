@@ -22,7 +22,7 @@
       </ion-label>
     </ion-item>
     <ion-button fill="clear" slot="start" size="medium" (click)="playAudio(ayah.numberInSurah, ayah.audio)">
-      <ion-icon [name]="currentAyahNumber === ayah.numberInSurah && !audioPlayer.paused ? 'pause' : 'play'"></ion-icon>
+      <ion-icon [name]="currentAyahNumber === ayah.numberInSurah && isPlaying ? 'pause' : 'play'"></ion-icon>
     </ion-button>
     <ion-button fill="clear" slot="start" size="medium" (click)="shareAyah(ayah.text, surahTextTranslation[i].text)"
       aria-label="Share Ayah">
@@ -38,7 +38,7 @@
   <ion-toolbar>
     <div class="footer-controls">
       <ion-button expand="block" class="footer-play-btn-wide" (click)="toggleGlobalPlayPause()">
-        <ion-icon slot="start" [name]="!audioPlayer.paused ? 'pause' : 'play'">
+        <ion-icon slot="start" [name]="isPlaying ? 'pause' : 'play'">
         </ion-icon>
         Ayah {{ currentAyahNumber }}
       </ion-button>
@@ -75,10 +75,6 @@
           </div>
         </ion-label>
       </ion-item>
-      <!-- <ion-item lines="full">
-        <ion-label>Light Mode</ion-label>
-        <ion-toggle aria-label="Light mode" color="success" slot="end" justify="space-between" (click)="toggleLightMode()"></ion-toggle>
-      </ion-item> -->
       <ion-item lines="full">
         <ion-label>Translation</ion-label>
         <ion-toggle aria-label="Translation mode" color="success" slot="end" justify="space-between"

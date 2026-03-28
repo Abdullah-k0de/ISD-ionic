@@ -19,9 +19,10 @@ export class SurahPage implements OnInit {
   surahTextTranslation: any[] = [];
   currentAyahNumber: number | null = null;
   audioPlayer: HTMLAudioElement;
+  nextAudioPlayer = new Audio();
+  isPlaying: boolean = false;
   fontSize: number = 18; // Default font size
-  lightMode: boolean = false; // Track the light mode state
-  translationMode: boolean= false;
+  translationMode: boolean = false;
   ayahNumber: number; // go to ayah feature
   reciters: any[] = [];
   selectedReciterId: string = localStorage.getItem('selectedReciterId') || 'ar.muhammadayyoub';
@@ -53,9 +54,9 @@ export class SurahPage implements OnInit {
     await loading.dismiss();
   }
 
-  getRecitersList(){
+  getRecitersList() {
     this.httpService.getRecitersForAyah().subscribe(data => {
-    this.reciters = data;
+      this.reciters = data;
     });
   }
 
@@ -65,6 +66,8 @@ export class SurahPage implements OnInit {
   }
 
   close() {
+    this.audioPlayer.pause();
+    this.isPlaying = false;
     this.modalController.dismiss();
   }
 
@@ -115,16 +118,6 @@ export class SurahPage implements OnInit {
     });
   }
 
-  toggleLightMode() {
-    this.lightMode = !this.lightMode;
-    const mainContent = document.getElementById('main-content');
-    if (this.lightMode) {
-      mainContent?.classList.add('light-mode');
-    } else {
-      mainContent?.classList.remove('light-mode');
-    }
-  }
-
   toggleTranslationMode() {
     this.translationMode = !this.translationMode;
   }
@@ -134,15 +127,15 @@ export class SurahPage implements OnInit {
       message: ayahText + "\n" + translation + "\n\n-" + this.surahName,
       subject: "Quran Ayah",
     };
-    
+
     console.log("OPTIONS ", options);
-    
+
     this.socialSharing.shareWithOptions(options)
-    .then(res => {
-      console.log(res);
-    }).catch(e => {
-      console.log(e);
-    })
+      .then(res => {
+        console.log(res);
+      }).catch(e => {
+        console.log(e);
+      })
   }
 
   // playAudio(ayahNumber: number, audioUrl: string) {
@@ -160,16 +153,16 @@ export class SurahPage implements OnInit {
   //     audio.oncanplaythrough = () => {
   //       audio.play();
   //     };
-      
+
   //   }
-  // }
-  nextAudioPlayer = new Audio();
   playAudio(ayahNumberInSurah: number, audioUrl: string) {
     if (this.currentAyahNumber === ayahNumberInSurah) {
       if (this.audioPlayer.paused) {
         this.audioPlayer.play();
+        this.isPlaying = true;
       } else {
         this.audioPlayer.pause();
+        this.isPlaying = false;
       }
       return;
     }
@@ -184,17 +177,21 @@ export class SurahPage implements OnInit {
       this.audioPlayer = this.nextAudioPlayer;
       this.nextAudioPlayer = temp;
       this.audioPlayer.play();
+      this.isPlaying = true;
       this.setupSurahAudioListeners(ayahNumberInSurah);
+      this.scrollToAyah(ayahNumberInSurah);
     } else {
       this.audioPlayer.src = audioUrl;
       this.audioPlayer.load();
 
       this.audioPlayer.oncanplaythrough = () => {
         this.audioPlayer.play();
+        this.isPlaying = true;
       };
       this.setupSurahAudioListeners(ayahNumberInSurah);
+      this.scrollToAyah(ayahNumberInSurah);
     }
-    
+
     // 🔁 Preload next ayah
     const currentIndex = this.surahText.findIndex(
       ayah => ayah.numberInSurah === ayahNumberInSurah
@@ -202,7 +199,7 @@ export class SurahPage implements OnInit {
     const nextAyah = this.surahText[currentIndex + 1];
     if (nextAyah) {
       this.nextAudioPlayer.src = nextAyah.audio;
-      this.nextAudioPlayer.load(); 
+      this.nextAudioPlayer.load();
     }
   }
 
@@ -218,8 +215,23 @@ export class SurahPage implements OnInit {
         this.playAudio(nextAyah.numberInSurah, nextAyah.audio);
       } else {
         this.currentAyahNumber = null;
+        this.isPlaying = false;
       }
     };
+  }
+
+  scrollToAyah(ayahNumber: number) {
+    setTimeout(async () => {
+      const element = document.getElementById(`ayah-${ayahNumber}`);
+      if (element) {
+        const scrollElement = await this.contents.getScrollElement();
+        const viewportHeight = scrollElement.clientHeight;
+        const targetY = element.offsetTop - (viewportHeight / 2) + (element.clientHeight / 2);
+
+        // Using a longer duration (800ms) for a more "regal" and fluid-feeling transition
+        this.contents.scrollToPoint(0, targetY, 800);
+      }
+    }, 150);
   }
 
   toggleGlobalPlayPause() {
@@ -237,8 +249,10 @@ export class SurahPage implements OnInit {
     // Otherwise, toggle pause/resume
     if (audio.paused) {
       audio.play();
+      this.isPlaying = true;
     } else {
       audio.pause();
+      this.isPlaying = false;
     }
   }
 
@@ -248,7 +262,7 @@ export class SurahPage implements OnInit {
     if (!ayahNumber) {
       return; // Do nothing if input is empty
     }
-    
+
     const element = document.getElementById(`ayah-${ayahNumber}`);
     if (element) {
       this.contents.scrollToPoint(0, element.offsetTop, 700);

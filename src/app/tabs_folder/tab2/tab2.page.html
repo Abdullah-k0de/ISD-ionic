@@ -87,14 +87,14 @@
               <span class="header-iqama">IQAMA</span>
             </div>
             <div *ngFor="let prayer of prayerOrder" class="time-row" [class.current]="isActivePrayer(prayer)"
-              [class.next]="isNextPrayer(prayer)" [class.past]="isPastPrayer(prayer)" [class.dim]="prayer === 'sunrise'">
+              [class.next]="isNextPrayer(prayer)" [class.past]="isPastPrayer(prayer)" [class.dim]="prayer === 'sunrise' || prayer === 'lastThird'">
               <span class="time-name">{{ prayerNames[prayer].en }}</span>
               <span class="time-dots"></span>
-              <ng-container *ngIf="prayer !== 'sunrise'">
+              <ng-container *ngIf="prayer !== 'sunrise' && prayer !== 'lastThird'">
                 <span class="time-azan">{{ getAzanTime(prayer) }}</span>
                 <span class="time-iqama">{{ getIqamaTime(prayer) || '—' }}</span>
               </ng-container>
-              <ng-container *ngIf="prayer === 'sunrise'">
+              <ng-container *ngIf="prayer === 'sunrise' || prayer === 'lastThird'">
                 <span class="time-azan-center">{{ getAzanTime(prayer) }}</span>
               </ng-container>
             </div>

@@ -112,7 +112,8 @@ ion-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%; /* take all available vertical space */
+  height: 100%;
+  /* take all available vertical space */
   min-height: 100%;
 }
 
@@ -298,7 +299,7 @@ ion-content {
 .list-header {
   display: flex;
   align-items: center;
-  padding: 0 0 0.4rem;
+  padding: 0 0.45rem 0.4rem;
   border-bottom: 1px solid rgba(var(--theme-accent-rgb), 0.08);
   margin-bottom: 0.3rem;
 
@@ -321,21 +322,26 @@ ion-content {
 .time-row {
   display: flex;
   align-items: center;
-  padding: 0.45rem 0;
+  padding: 0.45rem 0.45rem;
 
   &.current {
+    background: var(--theme-accent);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.2);
+
     .time-name {
-      color: #ffffff;
+      color: var(--theme-bg);
       font-weight: 700;
     }
 
     .time-azan {
-      color: #ffffff;
+      color: var(--theme-bg);
       font-weight: 700;
     }
 
     .time-iqama {
-      color: var(--theme-accent);
+      color: var(--theme-bg);
+      opacity: 0.9;
       font-weight: 700;
     }
   }

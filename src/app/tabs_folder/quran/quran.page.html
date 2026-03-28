@@ -31,9 +31,8 @@
           <div class="surah-revelation">
             <ion-buttons>
               <ion-button (click)="togglePlayPause($event, surah.number)">
-                <ion-icon
-                [name]="isSurahPlaying(surah.number) ? 'pause' : 'play'" size="medium">
-              </ion-icon><br>
+                <ion-icon [name]="isSurahPlaying(surah.number) ? 'pause' : 'play'" size="medium">
+                </ion-icon><br>
               </ion-button>
             </ion-buttons>
             <ion-text>{{ surah.revelationType }}</ion-text>
@@ -54,8 +53,9 @@
     </ion-button>
   </ion-buttons> -->
   <ion-item (click)="reciterSelect.open()">
-    <ion-label position="floating" style="font-weight: bold; color: white;">Select Reciter</ion-label>
-    <ion-select [interfaceOptions]="{ cssClass: 'theme-popover' }" style="font-size: small; color: white;" #reciterSelect [(ngModel)]="selectedReciterId" interface="popover" (ionChange)="onReciterChange()">
+    <ion-label position="floating" style="font-weight: bold; color: var(--theme-text);">Select Reciter</ion-label>
+    <ion-select [interfaceOptions]="{ cssClass: 'theme-popover' }" style="font-size: small; color: var(--theme-text);"
+      #reciterSelect [(ngModel)]="selectedReciterId" interface="popover" (ionChange)="onReciterChange()">
       <ion-select-option *ngFor="let reciter of reciters" [value]="reciter.identifier">
         <ng-container *ngIf="reciter.language === 'en'; else arabicTemplate">
           {{ reciter.name }}

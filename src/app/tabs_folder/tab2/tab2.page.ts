@@ -21,7 +21,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   currentPrayerName = '';
   nextPrayerName = '';
   nextPrayerTime = '';
-  
+
   hijriDate = '';
   gregorianDate = '';
 
@@ -32,9 +32,10 @@ export class Tab2Page implements OnInit, OnDestroy {
     asr: { en: 'Asr', ar: 'العصر' },
     maghrib: { en: 'Maghrib', ar: 'المغرب' },
     isha: { en: 'Isha', ar: 'العشاء' },
+    lastThird: { en: 'Last 3rd', ar: 'الثلث الأخير' },
   };
 
-  prayerOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
+  prayerOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha', 'lastThird'];
 
   constructor(
     public httpService: HttpService,
@@ -62,7 +63,7 @@ export class Tab2Page implements OnInit, OnDestroy {
     this.countdownTimer = setInterval(() => this.updateCurrentState(), 1000);
     this.showClockHintOnce();
   }
-  
+
   private computeDates(): void {
     const today = new Date();
     try {
@@ -73,7 +74,7 @@ export class Tab2Page implements OnInit, OnDestroy {
       });
       this.hijriDate = hijriFormatter.format(today);
     } catch (e) {
-      this.hijriDate = ''; 
+      this.hijriDate = '';
     }
     this.gregorianDate = today.toLocaleDateString('en-US', {
       weekday: 'short',
@@ -148,6 +149,18 @@ export class Tab2Page implements OnInit, OnDestroy {
   getAzanTime(name: string): string {
     const timings = this.httpService.adhans?.data?.timings as any;
     if (!timings) return '';
+
+    if (name === 'lastThird') {
+      const maghrib = this.parseTimeToDate(this.formatTime12Hour(timings.Maghrib));
+      const fajr = this.parseTimeToDate(this.formatTime12Hour(timings.Fajr));
+      if (maghrib && fajr) {
+        fajr.setDate(fajr.getDate() + 1);
+        const nightMs = fajr.getTime() - maghrib.getTime();
+        const lastThirdDate = new Date(maghrib.getTime() + nightMs * (2 / 3));
+        return lastThirdDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+    }
+
     const map: Record<string, string> = {
       fajr: timings.Fajr, sunrise: timings.Sunrise,
       dhuhr: timings.Dhuhr, asr: timings.Asr,
