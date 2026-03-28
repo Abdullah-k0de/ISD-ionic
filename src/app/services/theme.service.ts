@@ -129,6 +129,38 @@ const DARK_THEMES: Record<string, ThemeConfig> = {
 
 // ---- Light Themes ----
 const LIGHT_THEMES: Record<string, ThemeConfig> = {
+  mint_forest: {
+    id: 'mint_forest', name: 'Mint Leaf', description: 'Refreshing light mint with dark pine accents.',
+    bg: '#f5fdf9', bgGradient: null,
+    accent: '#2d5a27', accentBright: '#4a8a3f', accentDim: '#1a3d16',
+    accentRgb: '45, 90, 39', accentBrightRgb: '74, 138, 63',
+    marker: '#d1f2e1', text: '#122610', textMuted: '#4a6b47', textRgb: '18, 38, 16',
+    ringOpacity: '1.8', glowIntensity: '0.9',
+  },
+  royal_indigo: {
+    id: 'royal_indigo', name: 'Royal Lavender', description: 'Pale lavender with deep indigo accents.',
+    bg: '#fcfaff', bgGradient: null,
+    accent: '#4c1d95', accentBright: '#7c3aed', accentDim: '#2e1065',
+    accentRgb: '76, 29, 149', accentBrightRgb: '124, 58, 237',
+    marker: '#ede9fe', text: '#1e1b4b', textMuted: '#4338ca', textRgb: '30, 27, 75',
+    ringOpacity: '1.7', glowIntensity: '1.1',
+  },
+  desert_rose: {
+    id: 'desert_rose', name: 'Desert Sand', description: 'Warm desert sand with deep terracotta accents.',
+    bg: '#fffbf5', bgGradient: null,
+    accent: '#c05621', accentBright: '#ed8936', accentDim: '#7b341e',
+    accentRgb: '192, 86, 33', accentBrightRgb: '237, 137, 54',
+    marker: '#fef3c7', text: '#431908', textMuted: '#8b5033', textRgb: '67, 25, 8',
+    ringOpacity: '1.6', glowIntensity: '1.0',
+  },
+  cream_sepia: {
+    id: 'cream_sepia', name: 'Cream Parchment', description: 'Ancient manuscript feel with deep burgundy.',
+    bg: '#fbf8f1', bgGradient: null,
+    accent: '#800000', accentBright: '#a52a2a', accentDim: '#4d0000',
+    accentRgb: '128, 0, 0', accentBrightRgb: '165, 42, 42',
+    marker: '#f3e5ab', text: '#2b1d0e', textMuted: '#5e432c', textRgb: '43, 29, 14',
+    ringOpacity: '1.5', glowIntensity: '0.8',
+  },
   light_cedar: {
     id: 'light_cedar', name: 'Cedar Forest', description: 'Rich dark green on pearl white.',
     bg: '#ffffff', bgGradient: null,
@@ -144,38 +176,6 @@ const LIGHT_THEMES: Record<string, ThemeConfig> = {
     accentRgb: '30, 58, 138', accentBrightRgb: '59, 130, 246',
     marker: '#dbeafe', text: '#0b192c', textMuted: '#475569', textRgb: '11, 25, 44',
     ringOpacity: '2', glowIntensity: '1',
-  },
-  cream_sepia: {
-    id: 'cream_sepia', name: 'Cream Parchment', description: 'Ancient manuscript feel with deep burgundy.',
-    bg: '#fbf8f1', bgGradient: null,
-    accent: '#800000', accentBright: '#a52a2a', accentDim: '#4d0000',
-    accentRgb: '128, 0, 0', accentBrightRgb: '165, 42, 42',
-    marker: '#f3e5ab', text: '#2b1d0e', textMuted: '#5e432c', textRgb: '43, 29, 14',
-    ringOpacity: '1.5', glowIntensity: '0.8',
-  },
-  mint_forest: {
-    id: 'mint_forest', name: 'Mint Leaf', description: 'Refreshing light mint with dark pine accents.',
-    bg: '#f5fdf9', bgGradient: null,
-    accent: '#2d5a27', accentBright: '#4a8a3f', accentDim: '#1a3d16',
-    accentRgb: '45, 90, 39', accentBrightRgb: '74, 138, 63',
-    marker: '#d1f2e1', text: '#122610', textMuted: '#4a6b47', textRgb: '18, 38, 16',
-    ringOpacity: '1.8', glowIntensity: '0.9',
-  },
-  desert_rose: {
-    id: 'desert_rose', name: 'Desert Sand', description: 'Warm desert sand with deep terracotta accents.',
-    bg: '#fffbf5', bgGradient: null,
-    accent: '#c05621', accentBright: '#ed8936', accentDim: '#7b341e',
-    accentRgb: '192, 86, 33', accentBrightRgb: '237, 137, 54',
-    marker: '#fef3c7', text: '#431908', textMuted: '#8b5033', textRgb: '67, 25, 8',
-    ringOpacity: '1.6', glowIntensity: '1.0',
-  },
-  royal_indigo: {
-    id: 'royal_indigo', name: 'Royal Lavender', description: 'Pale lavender with deep indigo accents.',
-    bg: '#fcfaff', bgGradient: null,
-    accent: '#4c1d95', accentBright: '#7c3aed', accentDim: '#2e1065',
-    accentRgb: '76, 29, 149', accentBrightRgb: '124, 58, 237',
-    marker: '#ede9fe', text: '#1e1b4b', textMuted: '#4338ca', textRgb: '30, 27, 75',
-    ringOpacity: '1.7', glowIntensity: '1.1',
   },
   gold: {
     id: 'gold', name: 'Ottoman Crimson', description: 'Deep crimson with gold thread.',
@@ -292,14 +292,21 @@ export class ThemeService {
 
   /** Set dark or light mode */
   setMode(mode: 'dark' | 'light'): void {
+    const oldMode = this.currentMode;
     this.currentMode = mode;
     localStorage.setItem('azan-theme-mode', mode);
 
-    // If current theme doesn't exist in new mode, fallback to first available
-    const pool = mode === 'light' ? LIGHT_THEMES : DARK_THEMES;
-    if (!pool[this.currentThemeId]) {
-      this.currentThemeId = Object.keys(pool)[0];
-      localStorage.setItem('azan-theme', this.currentThemeId);
+    // If switching to light mode, set default to mint_forest
+    if (oldMode === 'dark' && mode === 'light') {
+      this.currentThemeId = 'mint_forest';
+      localStorage.setItem('azan-theme', 'mint_forest');
+    } else {
+      // General fallback if current theme doesn't exist in new mode
+      const pool = mode === 'light' ? LIGHT_THEMES : DARK_THEMES;
+      if (!pool[this.currentThemeId]) {
+        this.currentThemeId = Object.keys(pool)[0];
+        localStorage.setItem('azan-theme', this.currentThemeId);
+      }
     }
 
     this.applyTheme();
@@ -316,7 +323,7 @@ export class ThemeService {
     const root = document.documentElement;
 
     // Toggle light mode active class on body for global overrides (for True Light themes)
-    const trueLightIds = ['light_cedar', 'light_persian', 'cream_sepia', 'mint_forest', 'desert_rose', 'royal_indigo'];
+    const trueLightIds = ['mint_forest', 'cream_sepia', 'desert_rose', 'royal_indigo', 'light_cedar', 'light_persian'];
     document.body.classList.toggle('light-mode-active', this.currentMode === 'light' && trueLightIds.includes(theme.id));
 
     // Extract RGB from bg hex for compositing

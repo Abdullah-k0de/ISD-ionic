@@ -133,14 +133,40 @@
 // Current prayer label
 .current-name,
 .current-time {
-  fill: #ffffff !important;
+  fill: var(--theme-text) !important;
   font-weight: 700 !important;
 }
+
+// Light Mode Overrides for Clock
+:host-context(body.light-mode-active) {
+  .current-name,
+  .current-time {
+    fill: var(--theme-accent) !important;
+  }
+}
+
 
 .current-iqama-name {
   fill: var(--theme-accent) !important;
   font-weight: 700 !important;
 }
+
+// Marker and Indicator Fills
+.current-marker {
+  fill: #ffffff;
+}
+
+.time-indicator {
+  fill: #ffffff;
+}
+
+:host-context(body.light-mode-active) {
+  .current-marker,
+  .time-indicator {
+    fill: var(--theme-accent) !important;
+  }
+}
+
 
 // ==========================================================
 // SVG TEXT — Center

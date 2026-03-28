@@ -78,10 +78,10 @@
         (mouseleave)="onMarkerLeave()"
         (click)="onMarkerClick(prayer)">
         <!-- Diamond for current prayer -->
-        <polygon *ngIf="currentPrayerName === prayer.name"
+        <polygon *ngIf="currentPrayerName === prayer.name" class="current-marker"
           points="0,-3.5 3.5,0 0,3.5 -3.5,0"
           [attr.transform]="'translate(' + getPosition(prayer.angle, 44).x + ',' + getPosition(prayer.angle, 44).y + ')'"
-          fill="#ffffff" filter="url(#markerGlow)" />
+          filter="url(#markerGlow)" />
           
         <!-- Diamond for next prayer -->
         <polygon *ngIf="nextPrayerName === prayer.name"
@@ -99,7 +99,7 @@
 
     <!-- Current time indicator (white dot on outer ring) -->
     <g [style.transform-origin]="'50px 50px'" [style.transform]="'rotate(' + indicatorRotation + 'deg)'">
-      <circle cx="50" cy="6" r="2" fill="white" filter="url(#softGlow)" />
+      <circle cx="50" cy="6" r="2" class="time-indicator" filter="url(#softGlow)" />
     </g>
 
     <!-- ===== PRAYER LABELS (collision-avoiding positions) ===== -->
