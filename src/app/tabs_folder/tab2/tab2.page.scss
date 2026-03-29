@@ -372,7 +372,22 @@ ion-content {
     }
   }
 
+  // Specificity fix: When a dimmed row (Sunrise/Last Third) is CURRENT or NEXT, it must be readable/highlighted.
+  &.current.dim {
+    .time-name,
+    .time-azan-center {
+      color: var(--theme-bg);
+      font-weight: 700;
+    }
+  }
 
+  &.next.dim {
+    .time-name,
+    .time-azan-center {
+      color: var(--theme-accent-bright);
+      font-weight: 700;
+    }
+  }
 }
 
 .time-name {
@@ -457,6 +472,19 @@ ion-content {
   padding: 0.75rem 1rem;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transition: all 0.4s ease;
+
+  &.active {
+    background: rgba(var(--theme-accent-rgb), 0.15);
+    border: 1.5px solid var(--theme-accent-bright);
+    box-shadow: 0 0 20px rgba(var(--theme-accent-rgb), 0.3);
+    transform: scale(1.02);
+
+    .jummah-label, .jummah-time, .jummah-address a {
+      color: var(--theme-accent-bright);
+      font-weight: 700;
+    }
+  }
 }
 
 .jummah-row {
@@ -538,3 +566,75 @@ ion-content {
   --background: rgba(var(--theme-accent-rgb), 0.06);
   --background-rgb: var(--theme-accent-rgb);
 }
+
+// ============================================================
+// DEBUG SIMULATION PANEL STYLES
+// ============================================================
+.simulation-debug-panel {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(var(--theme-bg-rgb), 0.95);
+  border-bottom: 1px solid rgba(var(--theme-accent-rgb), 0.2);
+  padding: 0.75rem 1.25rem;
+  z-index: 10000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  .sim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    ion-toggle {
+      --handle-background: var(--theme-accent);
+      --handle-background-checked: var(--theme-accent-bright);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--theme-text);
+    }
+  }
+
+  .sim-controls {
+    display: flex;
+    gap: 1rem;
+    animation: fadeIn 0.3s ease-out;
+
+    .sim-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
+
+      label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: rgba(var(--theme-text-rgb), 0.5);
+        letter-spacing: 0.05em;
+      }
+
+      input {
+        background: rgba(var(--theme-text-rgb), 0.1);
+        border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
+        border-radius: 4px;
+        color: var(--theme-text);
+        padding: 0.4rem;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+
+        &:focus {
+          border-color: var(--theme-accent);
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

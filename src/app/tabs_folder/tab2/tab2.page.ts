@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { IqamaService, IqamaTimes } from 'src/app/services/iqama.service';
+import { TimeSimulationService } from 'src/app/services/time-simulation.service';
 
 @Component({
   selector: 'app-tab2',
@@ -24,6 +25,8 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   hijriDate = '';
   gregorianDate = '';
+  isFriday = false;
+  showDebugPanel = false; // Set to true to see simulation controls
 
   prayerNames: Record<string, { en: string; ar: string }> = {
     fajr: { en: 'Fajr', ar: 'الفجر' },
@@ -39,7 +42,8 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   constructor(
     public httpService: HttpService,
-    private iqamaService: IqamaService
+    private iqamaService: IqamaService,
+    public timeService: TimeSimulationService
   ) {
     this.updateImageBasedOnTime();
     this.httpService.getNewAdhanTimes();
@@ -58,32 +62,45 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (!this.showDebugPanel) {
+      this.timeService.setIsSimulationMode(false);
+    }
     this.updateCurrentState();
     this.computeDates();
     this.countdownTimer = setInterval(() => this.updateCurrentState(), 1000);
     this.showClockHintOnce();
+
+    // Refresh when simulation settings change
+    this.timeService.isSimulationMode$.subscribe(() => this.onSimulationChange());
+    this.timeService.simulatedDate$.subscribe(() => this.onSimulationChange());
+    this.timeService.simulatedTime$.subscribe(() => this.updateCurrentState());
+  }
+
+  private onSimulationChange(): void {
+    this.httpService.getNewAdhanTimes();
+    this.updateCurrentState();
+    this.computeDates();
+    this.updateImageBasedOnTime();
   }
 
   private computeDates(): void {
-    const today = new Date();
+    const today = this.timeService.getNow();
 
-    // 1. Prioritize Hijri date from Aladhan API (already fetched in HttpService)
-    const hijri = this.httpService.adhans?.data?.date?.hijri;
-    if (hijri) {
-      // API returns "Shawwāl", "10", "1447", "AH"
-      this.hijriDate = `${hijri.month.en} ${hijri.day}, ${hijri.year} ${hijri.designation.abbreviated}`;
-    } else {
-      // 2. Fallback to Intl (useful before API returns or if it fails)
-      try {
-        const hijriFormatter = new Intl.DateTimeFormat('en-u-ca-islamic-umaq', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        });
-        this.hijriDate = hijriFormatter.format(today);
-      } catch (e) {
-        this.hijriDate = '';
-      }
+    // Use instant local calculation (same as Clock) to ensure synchronization during simulation
+    try {
+      const day = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric' }).format(today);
+      const monthNum = parseInt(
+        new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { month: 'numeric' }).format(today), 10
+      );
+      const year = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { year: 'numeric' }).format(today);
+      const hijriMonths = [
+        'Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Thani',
+        'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', 'Shaban',
+        'Ramadan', 'Shawwal', 'Dhu al-Qadah', 'Dhu al-Hijjah'
+      ];
+      this.hijriDate = `${day} ${hijriMonths[monthNum - 1] || monthNum} ${year.replace(/[^\d]/g, '')} AH`;
+    } catch (e) {
+      this.hijriDate = '';
     }
 
     this.gregorianDate = today.toLocaleDateString('en-US', {
@@ -129,7 +146,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   async updateImageBasedOnTime() {
-    const currentHour = new Date().getHours();
+    const currentHour = this.timeService.getNow().getHours();
     this.hourOfDay = currentHour >= 18 ? 'night' : 'day';
   }
 
@@ -140,7 +157,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   /** Parse "HH:MM AM/PM" or "HH:MM" to a Date object for today */
   private parseTimeToDate(timeStr: string): Date | null {
     if (!timeStr) return null;
-    const now = new Date();
+    const now = this.timeService.getNow();
     const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(am|pm)?/i);
     if (!match) return null;
 
@@ -192,6 +209,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   /** Get iqama time for a given prayer */
   getIqamaTime(name: string): string {
     if (name === 'sunrise') return '';
+    if (this.isFriday && name === 'dhuhr') return '1:45 PM';
     const map: Record<string, string> = {
       fajr: this.iqamaTimes.fajr,
       dhuhr: this.iqamaTimes.dhuhr,
@@ -221,7 +239,16 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   /** Update current/next prayer and countdown */
   private updateCurrentState(): void {
-    const now = new Date();
+    const now = this.timeService.getNow();
+    this.isFriday = now.getDay() === 5; // 5 is Friday
+
+    // Update prayer names for Jummah if it's Friday
+    if (this.isFriday) {
+      this.prayerNames['dhuhr'] = { en: 'Jummah', ar: 'الجمعة' };
+    } else {
+      this.prayerNames['dhuhr'] = { en: 'Dhuhr', ar: 'الظهر' };
+    }
+
     this.currentTimeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
     // Refresh dates periodically (to pick up API data when it arrives)
@@ -235,11 +262,20 @@ export class Tab2Page implements OnInit, OnDestroy {
     for (let i = 0; i < this.prayerOrder.length; i++) {
       const name = this.prayerOrder[i];
       const timeStr = this.getAzanTime(name);
+      
+      // Sunrise should be considered "Next" if currently Fajr and it hasn't passed.
       const d = this.parseTimeToDate(timeStr);
       if (d && now < d) {
         nextPrayer = name;
         nextDate = d;
-        currentPrayer = i > 0 ? this.prayerOrder[i - 1] : 'isha';
+        
+        // If it's before Fajr today, current is Isha (yesterday).
+        // If it's after Fajr but before Sunrise, current is Fajr.
+        if (i === 0) {
+          currentPrayer = 'isha';
+        } else {
+          currentPrayer = this.prayerOrder[i - 1];
+        }
         break;
       }
       if (i === this.prayerOrder.length - 1) {
@@ -270,5 +306,16 @@ export class Tab2Page implements OnInit, OnDestroy {
         this.countdownStr = '--:--';
       }
     }
+  }
+
+  // ==== Simulation Helper Methods ====
+  onSimDateChange(event: any): void {
+    const val = event.target.value;
+    if (val) this.timeService.setSimulatedDate(val);
+  }
+
+  onSimTimeChange(event: any): void {
+    const val = event.target.value;
+    if (val) this.timeService.setSimulatedTime(val);
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, OnChanges, Input } from '@angular/core';
+import { TimeSimulationService } from 'src/app/services/time-simulation.service';
 
 /**
  * PrayerClockComponent
@@ -233,6 +234,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   hijriDate = '';
   gregorianDate = '';
   showClock = true;
+  isFriday = false;
 
   // Animated arc angle — starts at 0, tweens to currentTimeAngle
   displayAngle = 0;
@@ -330,6 +332,8 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   private reducedMotionMediaQuery: MediaQueryList | null = null;
   private reducedMotionListener: ((event: MediaQueryListEvent) => void) | null = null;
 
+  constructor(private timeService: TimeSimulationService) {}
+
   ngOnInit(): void {
     this.updatePrayerData();
     this.computeHijriDate();
@@ -362,6 +366,23 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
         }
       }, 1000);
     });
+
+    // Refresh when simulation settings change
+    this.timeService.isSimulationMode$.subscribe(() => this.onSimulationChange());
+    this.timeService.simulatedDate$.subscribe(() => this.onSimulationChange());
+    this.timeService.simulatedTime$.subscribe(() => this.updateCurrentState());
+  }
+
+  private onSimulationChange(): void {
+    this.updatePrayerData();
+    this.updateCurrentState();
+    this.computeHijriDate();
+    this.computeGregorianDate();
+    this.computeMoonPhase();
+    
+    // Replay arc sweep animation when date changes
+    this.displayAngle = 0;
+    this.startArcAnimation();
   }
 
   ngOnDestroy(): void {
@@ -953,7 +974,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
     const meridiem = match[3];
     if (meridiem === 'PM' && hours < 12) hours += 12;
     if (meridiem === 'AM' && hours === 12) hours = 0;
-    const now = new Date();
+    const now = this.timeService.getNow();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
   }
 
@@ -1010,7 +1031,16 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private updateCurrentState(): void {
-    const now = new Date();
+    const now = this.timeService.getNow();
+    this.isFriday = now.getDay() === 5; // 5 is Friday
+
+    // Update prayer names for Jummah if it's Friday
+    if (this.isFriday) {
+      this.prayerNames['dhuhr'] = { en: 'Jummah', ar: 'الجمعة' };
+    } else {
+      this.prayerNames['dhuhr'] = { en: 'Dhuhr', ar: 'الظهر' };
+    }
+
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     // Determine only the NEXT prayer (not current)
@@ -1043,7 +1073,6 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
 
     if (!nextTime) nextTime = this.parseTimeString(this.fajrTime);
 
-    // Store both current and next
     this.currentPrayerName = current;
     this.nextPrayerName = next;
 
@@ -1076,7 +1105,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
 
   private computeHijriDate(): void {
     try {
-      const now = new Date();
+      const now = this.timeService.getNow();
       const day = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric' }).format(now);
       const monthNum = parseInt(
         new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { month: 'numeric' }).format(now), 10
@@ -1092,7 +1121,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private computeGregorianDate(): void {
-    this.gregorianDate = new Date().toLocaleDateString('en-US', {
+    this.gregorianDate = this.timeService.getNow().toLocaleDateString('en-US', {
       weekday: 'long', day: 'numeric', month: 'long',
     });
   }
@@ -1100,7 +1129,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   moonPhaseText = '';
 
   private computeMoonPhase(): void {
-    const now = new Date();
+    const now = this.timeService.getNow();
     const knownNewMoon = new Date(Date.UTC(2026, 1, 18, 0, 0, 0));
     const lunarCycle = 29.53058867;
     const daysSince = (now.getTime() - knownNewMoon.getTime()) / (1000 * 60 * 60 * 24);
@@ -1279,6 +1308,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getIqamaPrayerTimeString(name: string): string {
+    if (this.isFriday && name === 'dhuhr') return '1:45 PM';
     const map: Record<string, string> = {
       fajr: this.iqamaFajr,
       dhuhr: this.iqamaDhuhr,

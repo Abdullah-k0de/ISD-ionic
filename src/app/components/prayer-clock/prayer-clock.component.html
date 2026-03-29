@@ -129,21 +129,21 @@
     </ng-container>
 
     <!-- ===== CENTER TEXT ===== -->
-    <text x="50" y="23" text-anchor="middle" class="center-current-ar">
+    <text x="50" y="24.5" text-anchor="middle" class="center-current-ar">
       {{ prayerNames[currentPrayerName].ar }}
     </text>
 
-    <text x="50" y="36" text-anchor="middle" class="center-current-en">
+    <text x="50" y="37.5" text-anchor="middle" class="center-current-en">
       {{ prayerNames[currentPrayerName].en | uppercase }}
     </text>
 
     <!-- Adhan Time -->
-    <text x="50" y="48" text-anchor="middle" class="center-current-adhan">
+    <text x="50" y="49.5" text-anchor="middle" class="center-current-adhan">
       {{ formatTime(getPrayerTimeString(currentPrayerName)) }}
     </text>
 
     <!-- Iqama Time -->
-    <text x="50" y="55" text-anchor="middle" class="center-current-iqama">
+    <text *ngIf="getIqamaPrayerTimeString(currentPrayerName)" x="50" y="56.5" text-anchor="middle" class="center-current-iqama">
       IQAMA {{ formatTime(getIqamaPrayerTimeString(currentPrayerName)) }}
     </text>
 

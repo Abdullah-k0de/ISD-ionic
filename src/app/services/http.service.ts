@@ -5,6 +5,7 @@ import { HadithClass } from '../classes/hadith-class';
 import { AdhanClass } from '../classes/adhan-class';
 import { Observable, delay, map } from 'rxjs';
 import { SurahList } from '../classes/surah-list';
+import { TimeSimulationService } from './time-simulation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +17,10 @@ export class HttpService {
   surahs: SurahList = new SurahList;
   reciters: any[] = [];
 
-  constructor(private http: HttpClient) {  }
+  constructor(private http: HttpClient, private timeService: TimeSimulationService) {  }
 
   private generateRandomNumber(): number{
-    const now = new Date();
+    const now = this.timeService.getNow();
     const seed = now.getDate() + now.getMonth() + now.getFullYear();
     const random = new Random(seed);
     return random.nextInt(2962, 3100);
@@ -79,7 +80,7 @@ export class HttpService {
   getNewAdhanTimes(){
     // Function to make API call and handle response
     const makeAdhanAPICall = () => {
-        const today = new Date();
+        const today = this.timeService.getNow();
         const day = today.getDate();
         const month = today.getMonth() + 1;
         const year = today.getFullYear();

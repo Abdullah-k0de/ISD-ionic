@@ -34,6 +34,31 @@
     </ion-refresher-content>
   </ion-refresher>
 
+  <!-- ============================================================== -->
+  <!-- DEBUG SIMULATION PANEL (Set showDebugPanel=true in .ts to see) -->
+  <!-- ============================================================== -->
+  <div class="simulation-debug-panel" *ngIf="showDebugPanel">
+    <div class="sim-header">
+      <ion-toggle [checked]="timeService.getIsSimulationMode()" 
+                  (ionChange)="timeService.setIsSimulationMode($event.detail.checked)">
+        Simulate Time
+      </ion-toggle>
+    </div>
+    <div class="sim-controls" *ngIf="timeService.getIsSimulationMode()">
+      <div class="sim-input-group">
+        <label>Date:</label>
+        <input type="date" [value]="timeService.getSimulatedDate()" 
+               (change)="onSimDateChange($event)">
+      </div>
+      <div class="sim-input-group">
+        <label>Time:</label>
+        <input type="time" [value]="timeService.getSimulatedTime()" 
+               (change)="onSimTimeChange($event)">
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+
   <ng-container *ngIf="this.httpService.adhans?.data; else loadingOutsideSkeleton">
     <div class="full-height-wrapper">
       <div class="view-container">
@@ -116,7 +141,7 @@
 
       <!-- Jummah & Links (below both views) -->
       <div class="jummah-section">
-        <div class="jummah-card">
+        <div class="jummah-card" [class.active]="isFriday && (currentPrayerName === 'dhuhr' || nextPrayerName === 'dhuhr')">
           <div class="jummah-row">
             <span class="jummah-label">Jummah (ISD)</span>
             <span class="jummah-time">1:45 PM</span>
@@ -138,5 +163,5 @@
       <ion-skeleton-text animated class="loading-skeleton"></ion-skeleton-text>
     </div>
   </ng-template>
-
+  
 </ion-content>
