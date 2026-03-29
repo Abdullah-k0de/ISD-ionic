@@ -129,35 +129,35 @@
     </ng-container>
 
     <!-- ===== CENTER TEXT ===== -->
-    <text x="50" y="25" text-anchor="middle" class="center-current-ar">
+    <text x="50" y="23" text-anchor="middle" class="center-current-ar">
       {{ prayerNames[currentPrayerName].ar }}
     </text>
 
-    <text x="50" y="34" text-anchor="middle" class="center-current-en">
+    <text x="50" y="36" text-anchor="middle" class="center-current-en">
       {{ prayerNames[currentPrayerName].en | uppercase }}
     </text>
 
     <!-- Adhan Time -->
-    <text x="50" y="46" text-anchor="middle" class="center-current-adhan">
+    <text x="50" y="48" text-anchor="middle" class="center-current-adhan">
       {{ formatTime(getPrayerTimeString(currentPrayerName)) }}
     </text>
 
     <!-- Iqama Time -->
-    <text x="50" y="53" text-anchor="middle" class="center-current-iqama">
+    <text x="50" y="55" text-anchor="middle" class="center-current-iqama">
       IQAMA {{ formatTime(getIqamaPrayerTimeString(currentPrayerName)) }}
     </text>
 
-    <text x="50" y="63" text-anchor="middle" class="center-next-heading">
+    <text x="50" y="65" text-anchor="middle" class="center-next-heading">
       NEXT
     </text>
 
-    <text x="50" y="72" text-anchor="middle">
+    <text x="50" y="74" text-anchor="middle">
       <tspan class="center-next-en">{{ prayerNames[nextPrayerName].en | uppercase }}</tspan>
       <tspan class="center-bullet"> • </tspan>
       <tspan class="center-next-ar">{{ prayerNames[nextPrayerName].ar }}</tspan>
     </text>
 
-    <text x="50" y="82" text-anchor="middle" class="center-countdown">
+    <text x="50" y="84" text-anchor="middle" class="center-countdown">
       {{ countdownText }}
     </text>
   </svg>

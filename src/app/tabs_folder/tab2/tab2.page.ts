@@ -66,16 +66,26 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   private computeDates(): void {
     const today = new Date();
-    try {
-      const hijriFormatter = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
-      this.hijriDate = hijriFormatter.format(today);
-    } catch (e) {
-      this.hijriDate = '';
+
+    // 1. Prioritize Hijri date from Aladhan API (already fetched in HttpService)
+    const hijri = this.httpService.adhans?.data?.date?.hijri;
+    if (hijri) {
+      // API returns "Shawwāl", "10", "1447", "AH"
+      this.hijriDate = `${hijri.month.en} ${hijri.day}, ${hijri.year} ${hijri.designation.abbreviated}`;
+    } else {
+      // 2. Fallback to Intl (useful before API returns or if it fails)
+      try {
+        const hijriFormatter = new Intl.DateTimeFormat('en-u-ca-islamic-umaq', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+        this.hijriDate = hijriFormatter.format(today);
+      } catch (e) {
+        this.hijriDate = '';
+      }
     }
+
     this.gregorianDate = today.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -213,6 +223,9 @@ export class Tab2Page implements OnInit, OnDestroy {
   private updateCurrentState(): void {
     const now = new Date();
     this.currentTimeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+    // Refresh dates periodically (to pick up API data when it arrives)
+    this.computeDates();
 
     // Find current and next prayer
     let currentPrayer = 'isha';
