@@ -186,6 +186,40 @@
   letter-spacing: 0.15em;
 }
 
+.center-current-adhan {
+  font-family: 'Outfit', sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  fill: var(--theme-accent);
+  letter-spacing: 0.02em;
+}
+
+.center-current-iqama {
+  font-family: 'Outfit', sans-serif;
+  font-size: 6px;
+  font-weight: 500;
+  fill: var(--theme-accent-bright);
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+.center-current-adhan {
+  font-family: 'Outfit', sans-serif;
+  font-size: 6.5px;
+  font-weight: 600;
+  fill: var(--theme-accent);
+  letter-spacing: 0.02em;
+}
+
+.center-current-iqama {
+  font-family: 'Outfit', sans-serif;
+  font-size: 5.5px;
+  font-weight: 500;
+  fill: var(--theme-accent-bright);
+  opacity: 0.85;
+  letter-spacing: 0.04em;
+}
+
 .center-next-heading {
   font-family: 'Outfit', sans-serif;
   font-size: 4px;

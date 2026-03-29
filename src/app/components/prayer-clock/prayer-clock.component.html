@@ -72,23 +72,18 @@
 
     <!-- Azan prayer marker dots -->
     <ng-container *ngFor="let prayer of prayers">
-      <g *ngIf="isMarkerRevealed(prayer.name)" class="prayer-marker"
-        [class.hovered]="hoveredMarker === prayer.name"
-        (mouseenter)="onMarkerHover(prayer)"
-        (mouseleave)="onMarkerLeave()"
-        (click)="onMarkerClick(prayer)">
+      <g *ngIf="isMarkerRevealed(prayer.name)" class="prayer-marker" [class.hovered]="hoveredMarker === prayer.name"
+        (mouseenter)="onMarkerHover(prayer)" (mouseleave)="onMarkerLeave()" (click)="onMarkerClick(prayer)">
         <!-- Diamond for current prayer -->
-        <polygon *ngIf="currentPrayerName === prayer.name" class="current-marker"
-          points="0,-3.5 3.5,0 0,3.5 -3.5,0"
+        <polygon *ngIf="currentPrayerName === prayer.name" class="current-marker" points="0,-3.5 3.5,0 0,3.5 -3.5,0"
           [attr.transform]="'translate(' + getPosition(prayer.angle, 44).x + ',' + getPosition(prayer.angle, 44).y + ')'"
           filter="url(#markerGlow)" />
-          
+
         <!-- Diamond for next prayer -->
-        <polygon *ngIf="nextPrayerName === prayer.name"
-          points="0,-3.5 3.5,0 0,3.5 -3.5,0"
+        <polygon *ngIf="nextPrayerName === prayer.name" points="0,-3.5 3.5,0 0,3.5 -3.5,0"
           [attr.transform]="'translate(' + getPosition(prayer.angle, 44).x + ',' + getPosition(prayer.angle, 44).y + ')'"
           fill="var(--theme-accent-bright)" filter="url(#markerGlow)" />
-          
+
         <!-- Diamond for standard/inactive prayers (including Last Third) -->
         <polygon *ngIf="currentPrayerName !== prayer.name && nextPrayerName !== prayer.name"
           points="0,-3.5 3.5,0 0,3.5 -3.5,0"
@@ -134,25 +129,35 @@
     </ng-container>
 
     <!-- ===== CENTER TEXT ===== -->
-    <text x="50" y="28" text-anchor="middle" class="center-current-ar">
+    <text x="50" y="25" text-anchor="middle" class="center-current-ar">
       {{ prayerNames[currentPrayerName].ar }}
     </text>
-    
-    <text x="50" y="39" text-anchor="middle" class="center-current-en">
+
+    <text x="50" y="34" text-anchor="middle" class="center-current-en">
       {{ prayerNames[currentPrayerName].en | uppercase }}
     </text>
-    
-    <text x="50" y="52" text-anchor="middle" class="center-next-heading">
+
+    <!-- Adhan Time -->
+    <text x="50" y="46" text-anchor="middle" class="center-current-adhan">
+      {{ formatTime(getPrayerTimeString(currentPrayerName)) }}
+    </text>
+
+    <!-- Iqama Time -->
+    <text x="50" y="53" text-anchor="middle" class="center-current-iqama">
+      IQAMA {{ formatTime(getIqamaPrayerTimeString(currentPrayerName)) }}
+    </text>
+
+    <text x="50" y="63" text-anchor="middle" class="center-next-heading">
       NEXT
     </text>
-    
-    <text x="50" y="64" text-anchor="middle">
+
+    <text x="50" y="72" text-anchor="middle">
       <tspan class="center-next-en">{{ prayerNames[nextPrayerName].en | uppercase }}</tspan>
       <tspan class="center-bullet"> • </tspan>
       <tspan class="center-next-ar">{{ prayerNames[nextPrayerName].ar }}</tspan>
     </text>
-    
-    <text x="50" y="75" text-anchor="middle" class="center-countdown">
+
+    <text x="50" y="82" text-anchor="middle" class="center-countdown">
       {{ countdownText }}
     </text>
   </svg>
