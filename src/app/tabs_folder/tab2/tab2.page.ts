@@ -11,6 +11,7 @@ import { TimeSimulationService } from 'src/app/services/time-simulation.service'
 export class Tab2Page implements OnInit, OnDestroy {
   hourOfDay: string = 'day';
   iqamaTimes: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '' };
+  private lastFetchedDate: number | null = null;
 
   showClock = false;
   showClockHint = false;
@@ -141,8 +142,14 @@ export class Tab2Page implements OnInit, OnDestroy {
     this.iqamaService.fetchIqamaTimes().subscribe(times => {
       this.iqamaTimes = times;
       this.updateImageBasedOnTime();
-      event.target.complete();
+      if (event && event.target) {
+        event.target.complete();
+      }
     });
+  }
+
+  ionViewWillEnter() {
+    this.handleRefresh(null);
   }
 
   async updateImageBasedOnTime() {
@@ -242,6 +249,12 @@ export class Tab2Page implements OnInit, OnDestroy {
     const now = this.timeService.getNow();
     this.isFriday = now.getDay() === 5; // 5 is Friday
 
+    // Automatically fetch new data if the day rolls over at midnight
+    if (this.lastFetchedDate !== null && this.lastFetchedDate !== now.getDate()) {
+      this.handleRefresh(null);
+    }
+    this.lastFetchedDate = now.getDate();
+
     // Update prayer names for Jummah if it's Friday
     if (this.isFriday) {
       this.prayerNames['dhuhr'] = { en: 'Jummah', ar: 'الجمعة' };
@@ -262,13 +275,13 @@ export class Tab2Page implements OnInit, OnDestroy {
     for (let i = 0; i < this.prayerOrder.length; i++) {
       const name = this.prayerOrder[i];
       const timeStr = this.getAzanTime(name);
-      
+
       // Sunrise should be considered "Next" if currently Fajr and it hasn't passed.
       const d = this.parseTimeToDate(timeStr);
       if (d && now < d) {
         nextPrayer = name;
         nextDate = d;
-        
+
         // If it's before Fajr today, current is Isha (yesterday).
         // If it's after Fajr but before Sunrise, current is Fajr.
         if (i === 0) {

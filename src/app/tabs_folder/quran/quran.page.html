@@ -54,15 +54,15 @@
   </ion-buttons> -->
   <ion-item (click)="reciterSelect.open()">
     <ion-label position="floating" style="font-weight: bold; color: var(--theme-text);">Select Reciter</ion-label>
-    <ion-select [interfaceOptions]="{ cssClass: 'theme-popover' }" style="font-size: small; color: var(--theme-text);"
-      #reciterSelect [(ngModel)]="selectedReciterId" interface="popover" (ionChange)="onReciterChange()">
+    <ion-select [interfaceOptions]="{ cssClass: 'theme-alert', header: 'Select Reciter' }" 
+      style="font-size: small; color: var(--theme-text);"
+      #reciterSelect [(ngModel)]="selectedReciterId" interface="alert" (ionChange)="onReciterChange()">
       <ion-select-option *ngFor="let reciter of reciters" [value]="reciter.identifier">
         <ng-container *ngIf="reciter.language === 'en'; else arabicTemplate">
           {{ reciter.name }}
         </ng-container>
         <ng-template #arabicTemplate>
-          <!-- {{ reciter.englishName }} -  -->
-          {{ reciter.name }}
+          {{ reciter.englishName }} - {{ reciter.name }}
         </ng-template>
       </ion-select-option>
     </ion-select>

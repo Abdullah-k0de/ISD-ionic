@@ -87,7 +87,7 @@ export class HttpService {
         const date = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
         const coordinates = "?latitude=33.201662695006874&longitude=-97.14494994434574&method=2";
         console.log("Date being recieved is: " + date);
-        const apiUrl = `https://api.aladhan.com/v1/timings/date=${date}${coordinates}`;
+        const apiUrl = `https://api.aladhan.com/v1/timings/${date}${coordinates}`;
         
         this.http.get<AdhanClass>(apiUrl).subscribe((res: AdhanClass) => {
             this.adhans = res;

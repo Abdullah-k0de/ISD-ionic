@@ -404,6 +404,9 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(): void {
     this.updatePrayerData();
     this.updateCurrentState();
+    this.computeHijriDate();
+    this.computeGregorianDate();
+    this.computeMoonPhase();
     // Replay arc sweep animation when data changes
     this.displayAngle = 0;
     this.startArcAnimation();

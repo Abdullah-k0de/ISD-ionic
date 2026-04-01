@@ -83,8 +83,8 @@
 
       <ion-item>
         <ion-label position="floating" style="font-size: small;">Select Reciter</ion-label>
-        <ion-select style="font-size: small;" #reciterSelect [(ngModel)]="selectedReciterId" interface="popover"
-          [interfaceOptions]="{ cssClass: 'theme-popover' }" (ionChange)="onReciterChange()">
+        <ion-select style="font-size: small;" #reciterSelect [(ngModel)]="selectedReciterId" interface="alert"
+          [interfaceOptions]="{ cssClass: 'theme-alert', header: 'Select Reciter' }" (ionChange)="onReciterChange()">
           <ion-select-option *ngFor="let reciter of reciters" [value]="reciter.identifier">
             <ng-container *ngIf="reciter.language === 'en'; else arabicTemplate">
               {{ reciter.name }}
