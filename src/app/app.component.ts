@@ -25,7 +25,7 @@ export class AppComponent {
 
     // Back and exit with hardware back button
     this.platform.backButton.subscribeWithPriority(-1, () => {
-      if(!this.outlet?.canGoBack()){
+      if (!this.outlet?.canGoBack()) {
         App.exitApp();
       }
     });
@@ -33,7 +33,7 @@ export class AppComponent {
     this.platform.ready().then(async () => {
       try {
         initializeApp(environment.firebase);
-        console.log("Only init");        
+        console.log("Only init");
         AngularFireModule.initializeApp(environment.firebase);
         console.log("Angular init");
         console.log("Firebase initialized successfully && Before initPush()");
@@ -48,7 +48,7 @@ export class AppComponent {
     await SplashScreen.hide();
 
     await SplashScreen.show({
-      showDuration: 850,
+      showDuration: 400,
       autoHide: true,
     });
   }
