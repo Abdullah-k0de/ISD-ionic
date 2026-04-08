@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#080808"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="top">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISD Prayer Times"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingBottom="2dp" />
+
+            <TextView
+                android:id="@+id/tv_hijri_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#d4af37"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/tv_last_refreshed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#a0a0a0"
+                android:textSize="10sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Refresh Button -->
+        <TextView
+            android:id="@+id/btn_refresh"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="8dp"
+            android:text="↻"
+            android:textColor="#d4af37"
+            android:textSize="26sp"
+            android:gravity="center"
+            android:contentDescription="Refresh Data" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#33ffffff" />
+
+    <!-- Table Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#a0a0a0"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="AZAN"
+            android:textColor="#a0a0a0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="end" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="IQAMAH"
+            android:textColor="#a0a0a0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Fajr -->
+    <LinearLayout android:id="@+id/row_fajr" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_fajr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fajr" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_fajr_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- AM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
+        <TextView android:id="@+id/tv_fajr_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Sunrise -->
+    <LinearLayout android:id="@+id/row_sunrise" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_sunrise_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sunrise" android:textColor="#a0a0a0" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_sunrise_azan" android:layout_width="160dp" android:layout_height="wrap_content" android:text="--:-- AM" android:textColor="#a0a0a0" android:textSize="14sp" android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Dhuhr -->
+    <LinearLayout android:id="@+id/row_dhuhr" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_dhuhr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Dhuhr" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_dhuhr_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
+        <TextView android:id="@+id/tv_dhuhr_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Asr -->
+    <LinearLayout android:id="@+id/row_asr" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_asr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Asr" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_asr_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
+        <TextView android:id="@+id/tv_asr_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Maghrib -->
+    <LinearLayout android:id="@+id/row_maghrib" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_maghrib_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Maghrib" android:textColor="#FFFFFF" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/tv_maghrib_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
+        <TextView android:id="@+id/tv_maghrib_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Isha -->
+    <LinearLayout android:id="@+id/row_isha" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_isha_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Isha" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_isha_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
+        <TextView android:id="@+id/tv_isha_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Last Third -->
+    <LinearLayout android:id="@+id/row_lastthird" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_lastthird_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Last 3rd" android:textColor="#a0a0a0" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_lastthird_azan" android:layout_width="160dp" android:layout_height="wrap_content" android:text="--:-- AM" android:textColor="#a0a0a0" android:textSize="14sp" android:gravity="center" />
+    </LinearLayout>
+
+    <FrameLayout android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="2dp" android:layout_marginBottom="8dp" android:background="#33ffffff" />
+
+    <!-- Jummah -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="2dp" android:paddingBottom="8dp" android:paddingStart="6dp" android:paddingEnd="6dp">
+        <TextView android:id="@+id/tv_jummah_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Jummah (ISD)" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+        <TextView android:id="@+id/tv_jummah_time" android:layout_width="80dp" android:layout_height="wrap_content" android:text="1:45 PM" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
+    </LinearLayout>
+
+    <FrameLayout android:layout_width="match_parent" android:layout_height="8dp" />
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { Preferences } from '@capacitor/preferences';
 
 export interface ThemeConfig {
   id: string;
@@ -323,6 +324,14 @@ export class ThemeService {
   private applyTheme(): void {
     const theme = this.activeTheme;
     const root = document.documentElement;
+
+    // Send the theme colors to the Native Android Widget
+    if (Capacitor.isNativePlatform()) {
+      Preferences.set({ key: 'widget_bg', value: theme.bg });
+      Preferences.set({ key: 'widget_text', value: theme.text });
+      Preferences.set({ key: 'widget_text_muted', value: theme.textMuted });
+      Preferences.set({ key: 'widget_accent', value: theme.accent });
+    }
 
     // Set solid background for status bar on native platforms to prevent scrolling content bleeding
     if (Capacitor.isNativePlatform()) {

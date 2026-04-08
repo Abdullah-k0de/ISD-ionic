@@ -27,6 +27,26 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
+
+        <receiver android:name="com.isd.DentonMasjid.PrayerWidgetProvider" android:exported="true" android:label="Prayer Times Detailed">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.isd.DentonMasjid.ACTION_REFRESH_WIDGET" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/prayer_widget_info" />
+        </receiver>
+
+        <receiver android:name="com.isd.DentonMasjid.PrayerCompactWidgetProvider" android:exported="true" android:label="Prayer Times Compact">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.isd.DentonMasjid.ACTION_REFRESH_COMPACT_WIDGET" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/prayer_widget_compact_info" />
+        </receiver>
     </application>
 
     <!-- Permissions -->
