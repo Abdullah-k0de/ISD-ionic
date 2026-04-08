@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header >
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button default-href="" (click)="close()"></ion-back-button>
@@ -10,7 +10,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" id="main-content">
+<ion-content  id="main-content">
   <ion-list *ngFor="let ayah of surahText; let i = index" lines="none" [id]="'ayah-' + (i+1)">
     <ion-item [class.ayah-highlight]="currentAyahNumber === ayah.numberInSurah">
       <ion-label class="ayah-text" [ngStyle]="{'font-size': fontSize + 'px'}">

@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Preferences } from '@capacitor/preferences';
 
 export interface ThemeConfig {
   id: string;
@@ -322,6 +325,26 @@ export class ThemeService {
     const theme = this.activeTheme;
     const root = document.documentElement;
 
+    // Send the theme colors to the Native Android Widget
+    if (Capacitor.isNativePlatform()) {
+      Preferences.set({ key: 'widget_bg', value: theme.bg });
+      Preferences.set({ key: 'widget_text', value: theme.text });
+      Preferences.set({ key: 'widget_text_muted', value: theme.textMuted });
+      Preferences.set({ key: 'widget_accent', value: theme.accent });
+    }
+
+    // Set solid background for status bar on native platforms to prevent scrolling content bleeding
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const isDark = this.isColorDark(theme.bg);
+        StatusBar.setOverlaysWebView({ overlay: false });
+        StatusBar.setBackgroundColor({ color: theme.bg });
+        StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light });
+      } catch (err) {
+        console.warn('Error setting StatusBar:', err);
+      }
+    }
+
     // Toggle light mode active class on body for global overrides (for True Light themes)
     const trueLightIds = ['mint_forest', 'cream_sepia', 'desert_rose', 'royal_indigo', 'light_cedar', 'light_persian'];
     document.body.classList.toggle('light-mode-active', this.currentMode === 'light' && trueLightIds.includes(theme.id));
@@ -380,5 +403,22 @@ export class ThemeService {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result) return '0, 0, 0';
     return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
+  }
+
+  /** Determine if a hex color is dark based on relative luminance */
+  private isColorDark(hex: string): boolean {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return true; // Default to dark
+    const r = parseInt(result[1], 16);
+    const g = parseInt(result[2], 16);
+    const b = parseInt(result[3], 16);
+    // HSP algorithm (luminance)
+    const hsp = Math.sqrt(
+      0.299 * (r * r) +
+      0.587 * (g * g) +
+      0.114 * (b * b)
+    );
+    // HSP Threshold (if higher, it's light)
+    return hsp < 127.5;
   }
 }
