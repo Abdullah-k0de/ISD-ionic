@@ -104,7 +104,7 @@ export class Tab4Page implements OnInit {
       console.log("Resolved URI:", resolvedUri.nativeURL);
       const options = {
         message: imageHeader + "\n" + imageDesc + "\n",
-        subject: "Denton Masjid Event",
+        subject: "Islamic Society of Denton Event",
         files: [resolvedUri.nativeURL],
         url: imageLink,
       };
@@ -119,7 +119,7 @@ export class Tab4Page implements OnInit {
     } else {
       const options = {
         message: imageHeader + "\n" + imageDesc + "\n",
-        subject: "Denton Masjid Event",
+        subject: "Islamic Society of Denton Event",
         url: imageLink,
       };
       this.socialSharing.shareWithOptions(options)

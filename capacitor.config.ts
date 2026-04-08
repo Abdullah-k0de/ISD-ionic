@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.isd.DentonMasjid',
-  appName: 'Denton Masjid',
+  appName: 'Islamic Society of Denton',
   webDir: 'www',
   server: {
     androidScheme: 'https'
