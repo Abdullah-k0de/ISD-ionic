@@ -11,61 +11,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="top">
+        android:gravity="center_vertical">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitCenter"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ISD Prayer Times"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingBottom="2dp" />
-            
-            <TextView
-                android:id="@+id/tv_hijri_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#a0a0a0"
-                android:textSize="12sp" />
-                
-            <TextView
-                android:id="@+id/tv_georgian_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Loading Date..."
-                android:textColor="#a0a0a0"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_last_refreshed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#a0a0a0"
-                android:textSize="10sp"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
+            android:text="ISD Prayer Times"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="2dp" />
 
         <!-- Refresh Button -->
         <TextView
             android:id="@+id/btn_refresh"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:layout_marginStart="8dp"
             android:text="↻"
             android:textColor="#d4af37"
             android:textSize="26sp"
             android:gravity="center"
             android:contentDescription="Refresh Data" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_hijri_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#d4af37"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_georgian_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading Date..."
+        android:textColor="#d4af37"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/tv_last_refreshed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#d4af37"
+        android:textSize="10sp"
+        android:layout_marginTop="2dp" />
 
     <!-- Next Prayer Block -->
     <LinearLayout

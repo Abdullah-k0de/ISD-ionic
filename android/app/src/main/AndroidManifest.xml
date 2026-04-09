@@ -28,6 +28,27 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- Mini widgets declared first so they appear at top of widget picker -->
+        <receiver android:name="com.isd.DentonMasjid.PrayerMiniBoxWidgetProvider" android:exported="true" android:label="ISD Now (Box)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.isd.DentonMasjid.ACTION_REFRESH_MINI_BOX" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/prayer_widget_mini_box_info" />
+        </receiver>
+
+        <receiver android:name="com.isd.DentonMasjid.PrayerMiniLineWidgetProvider" android:exported="true" android:label="ISD Now (Strip)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.isd.DentonMasjid.ACTION_REFRESH_MINI_LINE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/prayer_widget_mini_line_info" />
+        </receiver>
+
         <receiver android:name="com.isd.DentonMasjid.PrayerWidgetProvider" android:exported="true" android:label="Prayer Times Detailed">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

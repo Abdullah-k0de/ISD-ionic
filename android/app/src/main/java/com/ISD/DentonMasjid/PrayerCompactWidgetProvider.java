@@ -155,57 +155,94 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
     }
 
     private void fetchDataSync(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        try {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-            String todayDate = dateFormatter.format(new Date());
+        // Schedule a safety fallback alarm FIRST — before any network calls.
+        scheduleNextRetryAlarm(context, appWidgetIds, 30 * 60 * 1000L); // retry in 30 min if no data
 
-            URL adhanUrl = new URL("https://api.aladhan.com/v1/timings/" + todayDate
-                    + "?latitude=33.201662&longitude=-97.144949&method=2");
-            HttpURLConnection adhanConn = (HttpURLConnection) adhanUrl.openConnection();
-            adhanConn.setConnectTimeout(6000);
-            adhanConn.setReadTimeout(6000);
-            adhanConn.setRequestMethod("GET");
-            StringBuilder adhanBuilder = new StringBuilder();
-            if (adhanConn.getResponseCode() == 200) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(adhanConn.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    adhanBuilder.append(line);
+        Exception lastException = null;
+        for (int attempt = 0; attempt < 2; attempt++) {
+            try {
+                if (attempt > 0)
+                    Thread.sleep(3000); // wait 3s before retry
+
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                String todayDate = dateFormatter.format(new Date());
+
+                URL adhanUrl = new URL("https://api.aladhan.com/v1/timings/" + todayDate
+                        + "?latitude=33.201662&longitude=-97.144949&method=2");
+                HttpURLConnection adhanConn = (HttpURLConnection) adhanUrl.openConnection();
+                adhanConn.setConnectTimeout(12000);
+                adhanConn.setReadTimeout(12000);
+                adhanConn.setRequestMethod("GET");
+                StringBuilder adhanBuilder = new StringBuilder();
+                if (adhanConn.getResponseCode() == 200) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(adhanConn.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        adhanBuilder.append(line);
+                    }
+                    reader.close();
                 }
-                reader.close();
-            }
-            String adhanJsonString = adhanBuilder.toString();
+                String adhanJsonString = adhanBuilder.toString();
 
-            URL supabaseUrl = new URL("https://qybqlmhslforglomkxjg.supabase.co/rest/v1/prayer_times?select=*");
-            HttpURLConnection iqamaConn = (HttpURLConnection) supabaseUrl.openConnection();
-            iqamaConn.setConnectTimeout(6000);
-            iqamaConn.setReadTimeout(6000);
-            iqamaConn.setRequestMethod("GET");
-            iqamaConn.setRequestProperty("apikey",
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5YnFsbWhzbGZvcmdsb21reGpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMDkxMjEsImV4cCI6MjA4Nzg4NTEyMX0.UPWuMcfM4mc9liWuYRydq19UAr5PPI5jPcJRqdVu57E");
-            iqamaConn.setRequestProperty("Authorization",
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5YnFsbWhzbGZvcmdsb21reGpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMDkxMjEsImV4cCI6MjA4Nzg4NTEyMX0.UPWuMcfM4mc9liWuYRydq19UAr5PPI5jPcJRqdVu57E");
+                URL supabaseUrl = new URL("https://qybqlmhslforglomkxjg.supabase.co/rest/v1/prayer_times?select=*");
+                HttpURLConnection iqamaConn = (HttpURLConnection) supabaseUrl.openConnection();
+                iqamaConn.setConnectTimeout(12000);
+                iqamaConn.setReadTimeout(12000);
+                iqamaConn.setRequestMethod("GET");
+                iqamaConn.setRequestProperty("apikey",
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5YnFsbWhzbGZvcmdsb21reGpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMDkxMjEsImV4cCI6MjA4Nzg4NTEyMX0.UPWuMcfM4mc9liWuYRydq19UAr5PPI5jPcJRqdVu57E");
+                iqamaConn.setRequestProperty("Authorization",
+                        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5YnFsbWhzbGZvcmdsb21reGpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMDkxMjEsImV4cCI6MjA4Nzg4NTEyMX0.UPWuMcfM4mc9liWuYRydq19UAr5PPI5jPcJRqdVu57E");
 
-            StringBuilder iqamaBuilder = new StringBuilder();
-            if (iqamaConn.getResponseCode() == 200) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(iqamaConn.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    iqamaBuilder.append(line);
+                StringBuilder iqamaBuilder = new StringBuilder();
+                if (iqamaConn.getResponseCode() == 200) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(iqamaConn.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        iqamaBuilder.append(line);
+                    }
+                    reader.close();
                 }
-                reader.close();
+                String iqamaJsonString = iqamaBuilder.toString();
+
+                // Success — updateWidgetWithData will set the precise prayer alarm
+                updateWidgetWithData(context, appWidgetManager, appWidgetIds, adhanJsonString, iqamaJsonString);
+                return; // done, exit retry loop
+
+            } catch (Exception e) {
+                lastException = e;
+                Log.w("PrayerCompactWidget", "Fetch attempt " + (attempt + 1) + " failed", e);
             }
-            String iqamaJsonString = iqamaBuilder.toString();
+        }
 
-            updateWidgetWithData(context, appWidgetManager, appWidgetIds, adhanJsonString, iqamaJsonString);
+        // All retries exhausted — show error but chain is still alive via fallback
+        // alarm
+        Log.e("PrayerCompactWidget", "All fetch attempts failed", lastException);
+        for (int appWidgetId : appWidgetIds) {
+            RemoteViews errorViews = new RemoteViews(context.getPackageName(), R.layout.prayer_clock_compact_widget);
+            errorViews.setTextViewText(R.id.tv_last_refreshed, "Tap ↻ to retry");
+            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, errorViews);
+        }
+    }
 
-        } catch (Exception e) {
-            Log.e("PrayerCompactWidget", "Fetch failed", e);
+    /** Schedules a fallback alarm so the chain survives network failures. */
+    private void scheduleNextRetryAlarm(Context context, int[] appWidgetIds, long delayMs) {
+        android.app.AlarmManager am = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        long triggerAt = System.currentTimeMillis() + delayMs;
 
-            for (int appWidgetId : appWidgetIds) {
-                RemoteViews errorViews = new RemoteViews(context.getPackageName(), R.layout.prayer_clock_compact_widget);
-                errorViews.setTextViewText(R.id.tv_last_refreshed, "Connection Error");
-                appWidgetManager.partiallyUpdateAppWidget(appWidgetId, errorViews);
+        // Log the schedule time for the user (ISDPrayer tag)
+        String readableTime = new SimpleDateFormat("EEE, MMM d, h:mm:ss a", Locale.US).format(new Date(triggerAt));
+        Log.d("ISDPrayer", "[Compact] Next RETRY wakeup scheduled for: " + readableTime);
+
+        for (int appWidgetId : appWidgetIds) {
+            Intent alarmIntent = new Intent(context, PrayerCompactWidgetProvider.class);
+            alarmIntent.setAction(ACTION_REFRESH_COMPACT_WIDGET);
+            PendingIntent pi = PendingIntent.getBroadcast(context, appWidgetId + 9000, alarmIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            try {
+                am.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            } catch (SecurityException se) {
+                am.set(android.app.AlarmManager.RTC_WAKEUP, triggerAt, pi);
             }
         }
     }
@@ -224,7 +261,8 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
         if (text == null)
             return "";
         android.text.SpannableString sp = new android.text.SpannableString(text);
-        sp.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, text.length(), android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sp.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, text.length(),
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return sp;
     }
 
@@ -245,7 +283,7 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
             int currentMins = timeToMinutes(currentTimeStr);
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
-            views.setTextViewText(R.id.tv_last_refreshed, "Updated: " + timeFormat.format(new Date()));
+            views.setTextViewText(R.id.tv_last_refreshed, "Last Updated: " + timeFormat.format(new Date()));
 
             if (!adhanBody.isEmpty()) {
                 JSONObject dateObj = new JSONObject(adhanBody).getJSONObject("data").getJSONObject("date");
@@ -361,17 +399,27 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
                 if (currentMins >= pIsha && nextPrayerIndex == 0) {
                     nextTimeMs += 86400000L; // Next Fajr is tomorrow
                 }
-                
+
+                // Auto-Wakeup when prayer hits (Use 30s buffer after Adhan)
+                long triggerAt = nextTimeMs + 5000L;
+
+                // Log the schedule time for the user (ISDPrayer tag)
+                String readableTime = new SimpleDateFormat("EEE, MMM d, h:mm:ss a", Locale.US)
+                        .format(new Date(triggerAt));
+                Log.d("ISDPrayer", "[Compact] Next Adhan wakeup scheduled for: " + readableTime);
+
                 for (int appWidgetId : appWidgetIds) {
                     Intent alarmIntent = new Intent(context, PrayerCompactWidgetProvider.class);
                     alarmIntent.setAction(ACTION_REFRESH_COMPACT_WIDGET);
                     PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(
-                            context, appWidgetId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-                    android.app.AlarmManager am = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            context, appWidgetId, alarmIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    android.app.AlarmManager am = (android.app.AlarmManager) context
+                            .getSystemService(Context.ALARM_SERVICE);
                     try {
-                        am.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC, nextTimeMs + 1000L, alarmPendingIntent);
+                        am.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC, triggerAt, alarmPendingIntent);
                     } catch (SecurityException se) {
-                        am.set(android.app.AlarmManager.RTC, nextTimeMs + 1000L, alarmPendingIntent);
+                        am.set(android.app.AlarmManager.RTC, triggerAt, alarmPendingIntent);
                     }
                 }
             }
