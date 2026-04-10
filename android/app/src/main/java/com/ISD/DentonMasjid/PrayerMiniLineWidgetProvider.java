@@ -153,10 +153,13 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
                 int pAsr = toMins(rawAsr), pMaghrib = toMins(rawMaghrib), pIsha = toMins(rawIsha);
                 int nowMins = toMins(new SimpleDateFormat("HH:mm", Locale.US).format(new Date()));
 
+                java.util.Calendar calendar = java.util.Calendar.getInstance();
+                boolean isFriday = calendar.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY;
+
                 String[][] prayers = {
                         { "Fajr", rawFajr, "fajr" },
                         { "Sunrise", rawSunrise, "sunrise" },
-                        { "Dhuhr", rawDhuhr, "dhuhr" },
+                        { isFriday ? "Jummah" : "Dhuhr", rawDhuhr, isFriday ? "jummah" : "dhuhr" },
                         { "Asr", rawAsr, "asr" },
                         { "Maghrib", rawMaghrib, "maghrib" },
                         { "Isha", rawIsha, "isha" }
@@ -188,10 +191,12 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
                         String curKey = prayers[curIdx][2];
                         String nxtKey = prayers[nextIdx][2];
                         if (pKey.equals(curKey) || (pKey.equals("zuhr") && curKey.equals("dhuhr"))
-                                || (pKey.equals("dhur") && curKey.equals("dhuhr")))
+                                || (pKey.equals("dhur") && curKey.equals("dhuhr"))
+                                || (pKey.equals("jumuah") && curKey.equals("jummah")))
                             curIqama = iqamaT;
                         if (pKey.equals(nxtKey) || (pKey.equals("zuhr") && nxtKey.equals("dhuhr"))
-                                || (pKey.equals("dhur") && nxtKey.equals("dhuhr")))
+                                || (pKey.equals("dhur") && nxtKey.equals("dhuhr"))
+                                || (pKey.equals("jumuah") && nxtKey.equals("jummah")))
                             nextIqama = iqamaT;
                     }
                 }
@@ -203,12 +208,12 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
                 views.setTextViewText(R.id.tv_next_azan, fmt(prayers[nextIdx][1]));
                 views.setTextViewText(R.id.tv_next_iqama, nextIqama);
 
-                java.util.Calendar cal = java.util.Calendar.getInstance();
-                cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
-                cal.set(java.util.Calendar.MINUTE, 0);
-                cal.set(java.util.Calendar.SECOND, 0);
-                cal.set(java.util.Calendar.MILLISECOND, 0);
-                long nextTimeMs = cal.getTimeInMillis() + (nextPrayerMins * 60000L);
+                // Reuse the 'calendar' instance
+                calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                calendar.set(java.util.Calendar.MINUTE, 0);
+                calendar.set(java.util.Calendar.SECOND, 0);
+                calendar.set(java.util.Calendar.MILLISECOND, 0);
+                long nextTimeMs = calendar.getTimeInMillis() + (nextPrayerMins * 60000L);
                 if (nowMins >= pIsha && nextIdx == 0)
                     nextTimeMs += 86400000L;
 

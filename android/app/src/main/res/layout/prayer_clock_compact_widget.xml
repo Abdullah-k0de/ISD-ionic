@@ -104,27 +104,27 @@
 
     <!-- Fajr -->
     <LinearLayout android:id="@+id/row_fajr" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_fajr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fajr" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_fajr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fajr" android:textColor="#FFFFFF" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_fajr_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- AM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
         <TextView android:id="@+id/tv_fajr_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
     </LinearLayout>
 
     <!-- Sunrise -->
     <LinearLayout android:id="@+id/row_sunrise" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_sunrise_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sunrise" android:textColor="#a0a0a0" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_sunrise_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sunrise" android:textColor="#a0a0a0" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_sunrise_azan" android:layout_width="160dp" android:layout_height="wrap_content" android:text="--:-- AM" android:textColor="#a0a0a0" android:textSize="14sp" android:gravity="center" />
     </LinearLayout>
 
     <!-- Dhuhr -->
     <LinearLayout android:id="@+id/row_dhuhr" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_dhuhr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Dhuhr" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_dhuhr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Dhuhr" android:textColor="#FFFFFF" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_dhuhr_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
         <TextView android:id="@+id/tv_dhuhr_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
     </LinearLayout>
 
     <!-- Asr -->
     <LinearLayout android:id="@+id/row_asr" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_asr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Asr" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_asr_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Asr" android:textColor="#FFFFFF" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_asr_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
         <TextView android:id="@+id/tv_asr_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
     </LinearLayout>
@@ -138,14 +138,14 @@
 
     <!-- Isha -->
     <LinearLayout android:id="@+id/row_isha" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_isha_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Isha" android:textColor="#FFFFFF" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_isha_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Isha" android:textColor="#FFFFFF" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_isha_azan" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:-- PM" android:textColor="#FFFFFF" android:textSize="14sp" android:gravity="end" />
         <TextView android:id="@+id/tv_isha_iqama" android:layout_width="80dp" android:layout_height="wrap_content" android:text="--:--" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
     </LinearLayout>
 
     <!-- Last Third -->
     <LinearLayout android:id="@+id/row_lastthird" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="6dp" android:paddingBottom="6dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_lastthird_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Last 3rd" android:textColor="#a0a0a0" android:textSize="14sp" />
+        <TextView android:id="@+id/tv_lastthird_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Last 3rd" android:textColor="#a0a0a0" android:textSize="14sp" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_lastthird_azan" android:layout_width="160dp" android:layout_height="wrap_content" android:text="--:-- AM" android:textColor="#a0a0a0" android:textSize="14sp" android:gravity="center" />
     </LinearLayout>
 
@@ -153,7 +153,7 @@
 
     <!-- Jummah -->
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="2dp" android:paddingBottom="8dp" android:paddingStart="6dp" android:paddingEnd="6dp">
-        <TextView android:id="@+id/tv_jummah_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Jummah (ISD)" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+        <TextView android:id="@+id/tv_jummah_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Jummah" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
         <TextView android:id="@+id/tv_jummah_time" android:layout_width="80dp" android:layout_height="wrap_content" android:text="1:45 PM" android:textColor="#d4af37" android:textStyle="bold" android:textSize="14sp" android:gravity="end" />
     </LinearLayout>
 

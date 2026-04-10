@@ -269,6 +269,8 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
     private void updateWidgetWithData(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,
             String adhanBody, String iqamaBody) {
         try {
+            java.util.Calendar calendar = java.util.Calendar.getInstance();
+            boolean isFriday = calendar.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY;
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.prayer_clock_compact_widget);
 
             int[] allRowIds = { R.id.row_fajr, R.id.row_sunrise, R.id.row_dhuhr, R.id.row_asr, R.id.row_maghrib,
@@ -381,20 +383,37 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
                 if (iqamaIds[nextPrayerIndex] != -1)
                     views.setTextColor(iqamaIds[nextPrayerIndex], accentColor);
 
-                String[] allNames = { "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha" };
+                isFriday = calendar.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY;
+                String[] allNames = { "Fajr", "Sunrise", isFriday ? "Jummah" : "Dhuhr", "Asr", "Maghrib", "Isha" };
                 String[] allAzans = { formatTime(rawFajr), formatTime(rawSunrise), formatTime(rawDhuhr),
                         formatTime(rawAsr), formatTime(rawMaghrib), formatTime(rawIsha) };
 
-                views.setTextViewText(nameIds[nextPrayerIndex], makeBold(allNames[nextPrayerIndex]));
-                views.setTextViewText(azanIds[nextPrayerIndex], makeBold(allAzans[nextPrayerIndex]));
+                String nextPrayerEn = isFriday && nextPrayerIndex == 2 ? "Jummah" : allNames[nextPrayerIndex];
+                String nextPrayerAr = isFriday && nextPrayerIndex == 2 ? "الجمعة"
+                        : (nextPrayerIndex == 0 ? "الفجر"
+                                : nextPrayerIndex == 1 ? "الشروق"
+                                        : nextPrayerIndex == 2 ? "الظهر"
+                                                : nextPrayerIndex == 3 ? "العصر"
+                                                        : nextPrayerIndex == 4 ? "المغرب" : "العشاء");
 
-                // Auto-Wakeup when prayer hits
-                java.util.Calendar c = java.util.Calendar.getInstance();
-                c.set(java.util.Calendar.HOUR_OF_DAY, 0);
-                c.set(java.util.Calendar.MINUTE, 0);
-                c.set(java.util.Calendar.SECOND, 0);
-                c.set(java.util.Calendar.MILLISECOND, 0);
-                long midnightMs = c.getTimeInMillis();
+                views.setTextViewText(R.id.tv_next_prayer_names, nextPrayerAr + " • " + nextPrayerEn);
+                for (int i = 0; i < nameIds.length; i++) {
+                    String nameText = allNames[i];
+                    if (i == nextPrayerIndex) {
+                        views.setTextViewText(nameIds[i], makeBold(nameText));
+                        views.setTextViewText(azanIds[i], makeBold(allAzans[i]));
+                    } else {
+                        views.setTextViewText(nameIds[i], nameText);
+                        views.setTextViewText(azanIds[i], allAzans[i]);
+                    }
+                }
+
+                // Setup Alarm for next refresh
+                calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                calendar.set(java.util.Calendar.MINUTE, 0);
+                calendar.set(java.util.Calendar.SECOND, 0);
+                calendar.set(java.util.Calendar.MILLISECOND, 0);
+                long midnightMs = calendar.getTimeInMillis();
                 long nextTimeMs = midnightMs + (nextPrayerMins * 60000L);
                 if (currentMins >= pIsha && nextPrayerIndex == 0) {
                     nextTimeMs += 86400000L; // Next Fajr is tomorrow
@@ -425,6 +444,7 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
             }
 
             if (!iqamaBody.isEmpty()) {
+                isFriday = calendar.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY;
                 int[] iqamaIds = { R.id.tv_fajr_iqama, -1, R.id.tv_dhuhr_iqama, R.id.tv_asr_iqama,
                         R.id.tv_maghrib_iqama, R.id.tv_isha_iqama };
 
@@ -442,7 +462,13 @@ public class PrayerCompactWidgetProvider extends AppWidgetProvider {
                         case "zuhr":
                         case "dhuhr":
                         case "dhur":
-                            targetIndex = 2;
+                            if (!isFriday)
+                                targetIndex = 2;
+                            break;
+                        case "jummah":
+                        case "jumuah":
+                            if (isFriday)
+                                targetIndex = 2;
                             break;
                         case "asr":
                             targetIndex = 3;
