@@ -70,7 +70,7 @@
             [asrTime]="getAzanTime('asr')"
             [maghribTime]="getAzanTime('maghrib')"
             [ishaTime]="getAzanTime('isha')" [iqamaFajr]="iqamaTimes.fajr"
-            [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="iqamaTimes.maghrib"
+            [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="getIqamaTime('maghrib')"
             [iqamaIsha]="iqamaTimes.isha"></app-prayer-clock>
         </div>
 
@@ -133,7 +133,7 @@
               [asrTime]="getAzanTime('asr')"
               [maghribTime]="getAzanTime('maghrib')"
               [ishaTime]="getAzanTime('isha')" [iqamaFajr]="iqamaTimes.fajr"
-              [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="iqamaTimes.maghrib"
+              [iqamaDhuhr]="iqamaTimes.dhuhr" [iqamaAsr]="iqamaTimes.asr" [iqamaMaghrib]="getIqamaTime('maghrib')"
               [iqamaIsha]="iqamaTimes.isha" style="display: none;"></app-prayer-clock>
           </div>
         </div>
