@@ -8,11 +8,13 @@ PODS:
     - Capacitor
   - CapacitorKeyboard (5.0.8):
     - Capacitor
+  - CapacitorPreferences (8.0.1):
+    - Capacitor
   - CapacitorPushNotifications (6.0.0):
     - Capacitor
   - CapacitorSplashScreen (6.0.0):
     - Capacitor
-  - CapacitorStatusBar (5.0.7):
+  - CapacitorStatusBar (6.0.3):
     - Capacitor
   - CordovaPlugins (5.7.3):
     - CapacitorCordova
@@ -23,6 +25,7 @@ DEPENDENCIES:
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
+  - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
@@ -39,6 +42,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
     :path: "../../node_modules/@capacitor/keyboard"
+  CapacitorPreferences:
+    :path: "../../node_modules/@capacitor/preferences"
   CapacitorPushNotifications:
     :path: "../../node_modules/@capacitor/push-notifications"
   CapacitorSplashScreen:
@@ -54,11 +59,12 @@ SPEC CHECKSUMS:
   CapacitorCordova: a377c52a28dbb3b895c0f71187f7b1777fee69db
   CapacitorHaptics: 85a1ecd1d3026089642518d789f0fb81fe93cf80
   CapacitorKeyboard: d878396bca6a0fefb313b1546c169648b5ae812a
+  CapacitorPreferences: cca2021f386efb75947c850334447d9ff22b14f1
   CapacitorPushNotifications: 8fd92b3f47e05646fbe78f6bf4d09d041e8ef91a
   CapacitorSplashScreen: 5a016b2f50a3b7aa15e12946c720017e46882d5f
-  CapacitorStatusBar: 37ca5200a1791340c519239521ec2519d384eacb
+  CapacitorStatusBar: 149cde8f1328ec3aa6cbdd872a55137ae3f98b16
   CordovaPlugins: 4df2ec799d8a185a6489a60f2a8cbc143bbb5035
 
-PODFILE CHECKSUM: a2eb8a80305e1370d3d426b7486dc21d81d3aa90
+PODFILE CHECKSUM: c32cf6e5458ef3222a9548e7f1f2926bd9274870
 
 COCOAPODS: 1.16.2
