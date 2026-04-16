@@ -67,19 +67,21 @@ export class IqamaService {
       headers: this.getHeaders(),
       params: { select: '*' }
     }).pipe(
-      // Retry up to 3 times with exponential backoff (1s, 2s, 4s)
       retryWithBackoff(3, 1000),
       map(rows => {
         const times: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '' };
         for (const row of rows) {
           const prayerKey = this.normalizePrayerName(row.prayer);
+          if (prayerKey === 'maghrib') {
+            continue; // NEVER fetch maghrib from DB, it must be calculated
+          }
           if (prayerKey && prayerKey in times) {
             (times as any)[prayerKey] = this.to12Hour(row.iqamah);
           }
         }
         this.iqamaTimes = times;
         this.saveToCache(times);
-        console.log('Iqama times fetched from Supabase:', times);
+        console.log('Iqama times fetched from Supabase (excluding Maghrib):', times);
         return times;
       }),
       catchError(err => {

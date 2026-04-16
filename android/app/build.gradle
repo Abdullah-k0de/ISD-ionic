@@ -10,8 +10,8 @@ android {
         applicationId "com.isd.DentonMasjid"
         minSdkVersion rootProject.ext.minSdkVersion  // IT WAS: rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion // IT WAS: rootProject.ext.targetSdkVersion
-        versionCode 25
-        versionName "3.7.1"
+        versionCode 30
+        versionName "3.8.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

@@ -1017,7 +1017,7 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
       fajr: this.iqamaFajr,
       dhuhr: this.iqamaDhuhr,
       asr: this.iqamaAsr,
-      maghrib: this.iqamaMaghrib,
+      maghrib: this.getIqamaPrayerTimeString('maghrib'), // Always calculate
       isha: this.iqamaIsha,
     };
     this.iqamaPrayers = this.iqamaClockOrder.map(name => {
@@ -1312,11 +1312,21 @@ export class PrayerClockComponent implements OnInit, OnDestroy, OnChanges {
 
   getIqamaPrayerTimeString(name: string): string {
     if (this.isFriday && name === 'dhuhr') return '1:45 PM';
+
+    if (name === 'maghrib') {
+      const azan = this.maghribTime;
+      const parsed = this.parseTimeString(azan);
+      if (parsed) {
+        parsed.setMinutes(parsed.getMinutes() + 10);
+        return parsed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+    }
+
     const map: Record<string, string> = {
       fajr: this.iqamaFajr,
       dhuhr: this.iqamaDhuhr,
       asr: this.iqamaAsr,
-      maghrib: this.iqamaMaghrib,
+      maghrib: '', // Fallback, we explicitly calculated above
       isha: this.iqamaIsha,
     };
     return map[name] || '';

@@ -217,6 +217,17 @@ export class Tab2Page implements OnInit, OnDestroy {
   getIqamaTime(name: string): string {
     if (name === 'sunrise') return '';
     if (this.isFriday && name === 'dhuhr') return '1:45 PM';
+    
+    // Explicitly calculate Maghrib iqama as 10 minutes after the Aladhan Azan time
+    if (name === 'maghrib') {
+      const azan = this.getAzanTime('maghrib');
+      const date = this.parseTimeToDate(azan);
+      if (date) {
+        date.setMinutes(date.getMinutes() + 10);
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+    }
+
     const map: Record<string, string> = {
       fajr: this.iqamaTimes.fajr,
       dhuhr: this.iqamaTimes.dhuhr,

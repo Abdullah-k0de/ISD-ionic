@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Box Widget — default 2x2, resizable
+    Key fix: NO layout_weight on prayer blocks. All wrap_content so the
+    content doesn't stretch to fill extra cells. gravity=center_vertical
+    pushes everything to the middle nicely when the widget is enlarged.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top"
+    android:background="#080808"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <!-- Header: logo + hijri + refresh -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/tv_hijri_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:textColor="#d4af37"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginStart="5dp" />
+
+        <TextView
+            android:id="@+id/btn_refresh"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:text="↻"
+            android:textColor="#d4af37"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:contentDescription="Refresh" />
+    </LinearLayout>
+
+    <!-- Centered Content Wrapper: Takes up remaining space and centers its children vertically -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <!-- Divider -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#44ffffff" />
+
+        <!-- Current Prayer (wrap_content — does NOT stretch) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_now_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOW "
+                android:textColor="#808080"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/tv_current_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dhuhr"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="1dp">
+
+            <TextView
+                android:id="@+id/tv_current_azan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1:30 PM"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" · "
+                android:textColor="#404040"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_current_iqama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2:00 PM"
+                android:textColor="#d4af37"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Thin separator -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="#22ffffff" />
+
+        <!-- Next Prayer (wrap_content — does NOT stretch) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_next_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEXT "
+                android:textColor="#808080"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/tv_next_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asr"
+                android:textColor="#d4af37"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="1dp">
+
+            <TextView
+                android:id="@+id/tv_next_azan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5:06 PM"
+                android:textColor="#d4af37"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" · "
+                android:textColor="#404040"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_next_iqama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5:30 PM"
+                android:textColor="#d4af37"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="6dp"
+            android:background="#22ffffff" />
+
+        <!-- Last updated -->
+        <TextView
+            android:id="@+id/tv_last_refreshed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4:19 PM"
+            android:textColor="#505050"
+            android:textSize="7sp"
+            android:gravity="end" />
+    </LinearLayout>
+
+</LinearLayout>

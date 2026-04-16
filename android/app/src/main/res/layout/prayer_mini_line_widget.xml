@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Strip Widget — default 4x2, resizable
+    Layout: vertical stack of 3 rows
+      Row 1: logo | hijri | refresh  (header)
+      Row 2: 2-column [NOW block | divider | NEXT block]  (main)
+      Row 3: last updated (footer)
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#080808"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <!-- Row 1: Header (logo | hijri | last updated | refresh) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/tv_hijri_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="21 Shawwāl 1446 AH"
+            android:textColor="#d4af37"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginStart="6dp" />
+
+        <!-- Last updated sits between hijri and refresh -->
+        <TextView
+            android:id="@+id/tv_last_refreshed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#505050"
+            android:textSize="7sp"
+            android:layout_marginEnd="4dp" />
+
+        <TextView
+            android:id="@+id/btn_refresh"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:text="↻"
+            android:textColor="#d4af37"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:contentDescription="Refresh" />
+    </LinearLayout>
+
+    <!-- Divider -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:background="#44ffffff" />
+
+    <!-- Row 2: Main — NOW | divider | NEXT (wrap_content — NO vertical weight) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="top">
+
+        <!-- NOW block -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_now_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOW"
+                android:textColor="#808080"
+                android:textSize="8sp"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/tv_current_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dhuhr"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_current_azan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1:30 PM"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" · "
+                    android:textColor="#404040"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tv_current_iqama"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2:00 PM"
+                    android:textColor="#d4af37"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Vertical divider: fixed height so it does not stretch -->
+        <FrameLayout
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="#33ffffff" />
+
+        <!-- NEXT block -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_next_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEXT"
+                android:textColor="#808080"
+                android:textSize="8sp"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/tv_next_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asr"
+                android:textColor="#d4af37"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_next_azan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5:06 PM"
+                    android:textColor="#d4af37"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" · "
+                    android:textColor="#404040"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tv_next_iqama"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5:30 PM"
+                    android:textColor="#d4af37"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
