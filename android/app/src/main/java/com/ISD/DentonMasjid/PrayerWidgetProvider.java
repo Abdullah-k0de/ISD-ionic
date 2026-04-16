@@ -223,6 +223,17 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                 }
                 String iqamaJsonString = iqamaBuilder.toString();
 
+                SharedPreferences prefs = context.getSharedPreferences("PrayerWidgetCache", Context.MODE_PRIVATE);
+                prefs.edit().putString("adhan", adhanJsonString).putString("iqama", iqamaJsonString).apply();
+                try {
+                    org.json.JSONObject adhanObj = new org.json.JSONObject(adhanJsonString);
+                    String fetchedDate = adhanObj.getJSONObject("data").getJSONObject("date").getString("readable");
+                    String timings = adhanObj.getJSONObject("data").getJSONObject("timings").toString();
+                    Log.d("ISDPrayer", "[Large Widget] Fetched network data for: " + fetchedDate + " | Timings: " + timings);
+                } catch (Exception e) {
+                    Log.d("ISDPrayer", "[Large Widget] Fetched fresh data from network & cached successfully");
+                }
+
                 // Success — updateWidgetWithData will set the precise prayer alarm
                 updateWidgetWithData(context, appWidgetManager, appWidgetIds, adhanJsonString, iqamaJsonString,
                         dateDisplay);
@@ -234,17 +245,33 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
             }
         }
 
-        // All retries exhausted — show error but chain is still alive via fallback
-        // alarm
+        // All retries exhausted — attempt cache fallback first
         Log.e("PrayerWidget", "All fetch attempts failed", lastException);
-        for (int appWidgetId : appWidgetIds) {
-            RemoteViews errorViews = new RemoteViews(context.getPackageName(), R.layout.prayer_clock_widget);
-            errorViews.setTextViewText(R.id.tv_georgian_date, "Tap ↻ to retry");
+        SharedPreferences prefs = context.getSharedPreferences("PrayerWidgetCache", Context.MODE_PRIVATE);
+        String cachedAdhan = prefs.getString("adhan", "");
+        String cachedIqama = prefs.getString("iqama", "");
+        if (!cachedAdhan.isEmpty()) {
             try {
-                errorViews.setChronometer(R.id.tv_countdown, 0, null, false);
-            } catch (Exception x) {
-                /* ignore */ }
-            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, errorViews);
+                org.json.JSONObject adhanObj = new org.json.JSONObject(cachedAdhan);
+                String cacheDate = adhanObj.getJSONObject("data").getJSONObject("date").getString("readable");
+                String timings = adhanObj.getJSONObject("data").getJSONObject("timings").toString();
+                Log.d("ISDPrayer", "[Large Widget] Network failed, using cache for: " + cacheDate + " | Timings: " + timings);
+            } catch (Exception e) {
+                Log.d("ISDPrayer", "[Large Widget] Network failed, safely rendering from offline cache");
+            }
+            SimpleDateFormat displayDateFormatter = new SimpleDateFormat("EEEE, MMM d", Locale.US);
+            String dateDisplay = displayDateFormatter.format(new Date());
+            updateWidgetWithData(context, appWidgetManager, appWidgetIds, cachedAdhan, cachedIqama, dateDisplay);
+        } else {
+            for (int appWidgetId : appWidgetIds) {
+                RemoteViews errorViews = new RemoteViews(context.getPackageName(), R.layout.prayer_clock_widget);
+                errorViews.setTextViewText(R.id.tv_georgian_date, "Tap ↻ to retry");
+                try {
+                    errorViews.setChronometer(R.id.tv_countdown, 0, null, false);
+                } catch (Exception x) {
+                    /* ignore */ }
+                appWidgetManager.partiallyUpdateAppWidget(appWidgetId, errorViews);
+            }
         }
     }
 
@@ -313,15 +340,6 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
             int nextPrayerIndex = 1; // Default
 
             if (!adhanBody.isEmpty()) {
-                JSONObject dateObj = new JSONObject(adhanBody).getJSONObject("data").getJSONObject("date");
-                JSONObject hijriObj = dateObj.getJSONObject("hijri");
-                String hijriDay = hijriObj.getString("day");
-                String hijriMonth = hijriObj.getJSONObject("month").getString("en");
-                String hijriYear = hijriObj.getString("year");
-
-                String combinedHijri = hijriDay + " " + hijriMonth + " " + hijriYear + " AH";
-                views.setTextViewText(R.id.tv_hijri_date, combinedHijri);
-
                 JSONObject timings = new JSONObject(adhanBody).getJSONObject("data").getJSONObject("timings");
                 String rawFajr = timings.getString("Fajr");
                 String rawSunrise = timings.getString("Sunrise");
@@ -336,6 +354,42 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                 int pAsr = timeToMinutes(rawAsr);
                 int pMaghrib = timeToMinutes(rawMaghrib);
                 int pIsha = timeToMinutes(rawIsha);
+
+                JSONObject dateObj = new JSONObject(adhanBody).getJSONObject("data").getJSONObject("date");
+                JSONObject hijriObj = dateObj.getJSONObject("hijri");
+                String hijriDay = hijriObj.getString("day");
+                String hijriMonth = hijriObj.getJSONObject("month").getString("en");
+                String hijriYear = hijriObj.getString("year");
+
+                if (currentMins >= pMaghrib) {
+                    try {
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        cal.add(java.util.Calendar.DATE, 1);
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                        String tomorrowDate = df.format(cal.getTime());
+                        URL tomorrowUrl = new URL("https://api.aladhan.com/v1/timings/" + tomorrowDate + "?latitude=33.201662&longitude=-97.144949&method=2");
+                        HttpURLConnection tConn = (HttpURLConnection) tomorrowUrl.openConnection();
+                        tConn.setConnectTimeout(5000);
+                        tConn.setReadTimeout(5000);
+                        if (tConn.getResponseCode() == 200) {
+                            java.io.BufferedReader r = new java.io.BufferedReader(new java.io.InputStreamReader(tConn.getInputStream()));
+                            StringBuilder tb = new StringBuilder();
+                            String line;
+                            while ((line = r.readLine()) != null) tb.append(line);
+                            r.close();
+                            JSONObject tData = new JSONObject(tb.toString()).getJSONObject("data");
+                            JSONObject tHijri = tData.getJSONObject("date").getJSONObject("hijri");
+                            hijriDay = tHijri.getString("day");
+                            hijriMonth = tHijri.getJSONObject("month").getString("en");
+                            hijriYear = tHijri.getString("year");
+                        }
+                    } catch (Exception e) {
+                        Log.e("PrayerWidget", "Failed to fetch tomorrow's hijri date", e);
+                    }
+                }
+
+                String combinedHijri = hijriDay + " " + hijriMonth + " " + hijriYear + " AH";
+                views.setTextViewText(R.id.tv_hijri_date, combinedHijri);
 
                 // Math for Last Third natively: Maghrib + (Night_Duration * 2/3)
                 int nightMins = (pFajr + 1440) - pMaghrib;

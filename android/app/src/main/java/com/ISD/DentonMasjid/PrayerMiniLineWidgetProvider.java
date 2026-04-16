@@ -118,6 +118,17 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
                     r.close();
                 }
 
+                SharedPreferences prefs = context.getSharedPreferences("PrayerWidgetCache", Context.MODE_PRIVATE);
+                prefs.edit().putString("adhan", ab.toString()).putString("iqama", sb.toString()).apply();
+                try {
+                    org.json.JSONObject adhanObj = new org.json.JSONObject(ab.toString());
+                    String fetchedDate = adhanObj.getJSONObject("data").getJSONObject("date").getString("readable");
+                    String timings = adhanObj.getJSONObject("data").getJSONObject("timings").toString();
+                    Log.d("ISDPrayer", "[Mini Line Widget] Fetched network data for: " + fetchedDate + " | Timings: " + timings);
+                } catch (Exception e) {
+                    Log.d("ISDPrayer", "[Mini Line Widget] Fetched fresh data from network & cached successfully");
+                }
+
                 render(context, mgr, ids, ab.toString(), sb.toString());
                 return;
             } catch (Exception e) {
@@ -126,11 +137,26 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
             }
         }
         Log.e("MiniLineWidget", "All attempts failed", lastEx);
-        for (int id : ids) {
-            RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.prayer_mini_line_widget);
-            applyTheme(context, v);
-            v.setTextViewText(R.id.tv_current_name, "Tap ↻");
-            mgr.partiallyUpdateAppWidget(id, v);
+        SharedPreferences prefs = context.getSharedPreferences("PrayerWidgetCache", Context.MODE_PRIVATE);
+        String cachedAdhan = prefs.getString("adhan", "");
+        String cachedIqama = prefs.getString("iqama", "");
+        if (!cachedAdhan.isEmpty()) {
+            try {
+                org.json.JSONObject adhanObj = new org.json.JSONObject(cachedAdhan);
+                String cacheDate = adhanObj.getJSONObject("data").getJSONObject("date").getString("readable");
+                String timings = adhanObj.getJSONObject("data").getJSONObject("timings").toString();
+                Log.d("ISDPrayer", "[Mini Line Widget] Network failed, using cache for: " + cacheDate + " | Timings: " + timings);
+            } catch (Exception e) {
+                Log.d("ISDPrayer", "[Mini Line Widget] Network failed, safely rendering from offline cache");
+            }
+            render(context, mgr, ids, cachedAdhan, cachedIqama);
+        } else {
+            for (int id : ids) {
+                RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.prayer_mini_line_widget);
+                applyTheme(context, v);
+                v.setTextViewText(R.id.tv_current_name, "Tap ↻");
+                mgr.partiallyUpdateAppWidget(id, v);
+            }
         }
     }
 
@@ -152,6 +178,41 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
                 int pFajr = toMins(rawFajr), pSunrise = toMins(rawSunrise), pDhuhr = toMins(rawDhuhr);
                 int pAsr = toMins(rawAsr), pMaghrib = toMins(rawMaghrib), pIsha = toMins(rawIsha);
                 int nowMins = toMins(new SimpleDateFormat("HH:mm", Locale.US).format(new Date()));
+
+                JSONObject hijri = data.getJSONObject("date").getJSONObject("hijri");
+                String hijriDay = hijri.getString("day");
+                String hijriMonth = hijri.getJSONObject("month").getString("en");
+                String hijriYear = hijri.getString("year");
+
+                if (nowMins >= pMaghrib) {
+                    try {
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        cal.add(java.util.Calendar.DATE, 1);
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                        String tomorrowDate = df.format(cal.getTime());
+                        URL tomorrowUrl = new URL("https://api.aladhan.com/v1/timings/" + tomorrowDate + "?latitude=33.201662&longitude=-97.144949&method=2");
+                        HttpURLConnection tConn = (HttpURLConnection) tomorrowUrl.openConnection();
+                        tConn.setConnectTimeout(5000);
+                        tConn.setReadTimeout(5000);
+                        if (tConn.getResponseCode() == 200) {
+                            java.io.BufferedReader r = new java.io.BufferedReader(new java.io.InputStreamReader(tConn.getInputStream()));
+                            StringBuilder tb = new StringBuilder();
+                            String line;
+                            while ((line = r.readLine()) != null) tb.append(line);
+                            r.close();
+                            JSONObject tData = new JSONObject(tb.toString()).getJSONObject("data");
+                            JSONObject tHijri = tData.getJSONObject("date").getJSONObject("hijri");
+                            hijriDay = tHijri.getString("day");
+                            hijriMonth = tHijri.getJSONObject("month").getString("en");
+                            hijriYear = tHijri.getString("year");
+                        }
+                    } catch (Exception e) {
+                        Log.e("MiniLineWidget", "Failed to get tomorrow's hijri date", e);
+                    }
+                }
+
+                String hijriStr = hijriDay + " " + hijriMonth + " " + hijriYear + " AH";
+                views.setTextViewText(R.id.tv_hijri_date, hijriStr);
 
                 java.util.Calendar calendar = java.util.Calendar.getInstance();
                 boolean isFriday = calendar.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY;

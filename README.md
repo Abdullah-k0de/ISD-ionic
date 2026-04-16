@@ -140,9 +140,3 @@ Standard scripts defined in `package.json`:
 ---
 
 *Built for the Islamic Society of Denton.*
-
-To Dos:
-
-* [ ] Fix the hijri dates in all the widgets.
-* [ ] Fix the magrib iqama time (NEVER FETCH FROM DB) (CACLULATE EVERYTIME from ALADHAN API)
-* [ ] Try to have refresh for the widgets all the time
