@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Prayer Times API",
+    "description": "Collection for testing Prayer Times API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Iqamah",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/prayer-times/iqamah",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "prayer-times",
+            "iqamah"
+          ]
+        },
+        "description": "Fetch current prayer times with iqamah times"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Schedule",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/prayer-times/schedule",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "prayer-times",
+            "schedule"
+          ]
+        },
+        "description": "Fetch iqamah schedule ordered by effective date"
+      },
+      "response": []
+    }
+  ]
+}
