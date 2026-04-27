@@ -19,6 +19,14 @@
 </ion-header>
 
 <ion-content >
+  <!-- Iqama Schedule Change Banner -->
+  <div class="iqama-banner" *ngIf="bannerText">
+    <div class="iqama-banner-track">
+      <span class="iqama-banner-text">{{ bannerText }}</span>
+      <span class="iqama-banner-text">{{ bannerText }}</span>
+    </div>
+  </div>
+
   <div class="hint-bubble" *ngIf="showClockHint" (click)="dismissHint()">
     <span>Switch to clock view ⏰</span>
     <div class="hint-arrow"></div>
@@ -143,17 +151,18 @@
       <div class="jummah-section">
         <div class="jummah-card" [class.active]="isFriday && (currentPrayerName === 'dhuhr' || nextPrayerName === 'dhuhr')">
           <div class="jummah-row">
-            <span class="jummah-label">Jummah (ISD)</span>
-            <span class="jummah-time">1:45 PM</span>
+            <span class="jummah-label">Jummah 1</span>
+            <span class="jummah-time">{{ iqamaTimes.jummah_1 || '—' }}</span>
+          </div>
+          <div class="jummah-divider"></div>
+          <div class="jummah-row">
+            <span class="jummah-label">Jummah 2</span>
+            <span class="jummah-time">{{ iqamaTimes.jummah_2 || '—' }}</span>
           </div>
           <div class="jummah-address">
             <a (click)="openMapsApp('1105 Greenlee St, Denton')">1105 Greenlee St, Denton</a>
           </div>
         </div>
-
-        <!-- <a class="monthly-link" href="https://masjidal.com/widget/monthly/?masjid_id=O8L7ppA5&jumuah_text=ISD%20Jummah">
-          MONTHLY CALENDAR
-        </a> -->
       </div>
     </div>
   </ng-container>

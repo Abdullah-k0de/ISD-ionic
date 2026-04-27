@@ -5,6 +5,69 @@ ion-content {
   --color: var(--theme-text);
 }
 
+// ---- Iqama Schedule Banner (Marquee) ----
+.iqama-banner {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--theme-accent-rgb), 0.12) 0%,
+    rgba(var(--theme-accent-rgb), 0.06) 50%,
+    rgba(var(--theme-accent-rgb), 0.12) 100%
+  );
+  border-bottom: 1px solid rgba(var(--theme-accent-rgb), 0.15);
+  padding: 0.6rem 0;
+  position: relative;
+  z-index: 10;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--theme-bg), transparent);
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--theme-bg), transparent);
+  }
+}
+
+.iqama-banner-track {
+  display: flex;
+  width: max-content;
+  animation: bannerScroll 22s linear infinite;
+}
+
+.iqama-banner-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--theme-accent);
+  white-space: nowrap;
+  padding-right: 5rem;
+}
+
+@keyframes bannerScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
 // ---- View Toggle Switch ----
 .view-toggle {
   display: flex;

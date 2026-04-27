@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
-import { IqamaService, IqamaTimes } from 'src/app/services/iqama.service';
+import { IqamaService, IqamaTimes, IqamaScheduleRow } from 'src/app/services/iqama.service';
 import { TimeSimulationService } from 'src/app/services/time-simulation.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { TimeSimulationService } from 'src/app/services/time-simulation.service'
 })
 export class Tab2Page implements OnInit, OnDestroy {
   hourOfDay: string = 'day';
-  iqamaTimes: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '' };
+  iqamaTimes: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: '' };
   private lastFetchedDate: number | null = null;
 
   showClock = false;
@@ -28,6 +28,10 @@ export class Tab2Page implements OnInit, OnDestroy {
   gregorianDate = '';
   isFriday = false;
   showDebugPanel = false; // Set to true to see simulation controls
+
+  // Iqama schedule banner
+  bannerText = '';
+  scheduledChanges: IqamaScheduleRow[] = [];
 
   prayerNames: Record<string, { en: string; ar: string }> = {
     fajr: { en: 'Fajr', ar: 'الفجر' },
@@ -55,6 +59,12 @@ export class Tab2Page implements OnInit, OnDestroy {
 
     this.iqamaService.fetchIqamaTimes().subscribe(times => {
       this.iqamaTimes = times;
+    });
+
+    // Fetch iqama schedule for banner
+    this.iqamaService.fetchIqamaSchedule().subscribe(rows => {
+      this.scheduledChanges = rows;
+      this.buildBannerText();
     });
 
     // Restore view preference
@@ -146,6 +156,10 @@ export class Tab2Page implements OnInit, OnDestroy {
         event.target.complete();
       }
     });
+    this.iqamaService.fetchIqamaSchedule().subscribe(rows => {
+      this.scheduledChanges = rows;
+      this.buildBannerText();
+    });
   }
 
   ionViewWillEnter() {
@@ -216,7 +230,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   /** Get iqama time for a given prayer */
   getIqamaTime(name: string): string {
     if (name === 'sunrise') return '';
-    if (this.isFriday && name === 'dhuhr') return '1:45 PM';
+    if (this.isFriday && name === 'dhuhr') return this.iqamaTimes.jummah_1 || '1:45 PM';
     
     // Explicitly calculate Maghrib iqama as 10 minutes after the Aladhan Azan time
     if (name === 'maghrib') {
@@ -341,5 +355,49 @@ export class Tab2Page implements OnInit, OnDestroy {
   onSimTimeChange(event: any): void {
     const val = event.target.value;
     if (val) this.timeService.setSimulatedTime(val);
+  }
+
+  /** Build the scrolling banner text from scheduled iqama changes */
+  private buildBannerText(): void {
+    if (!this.scheduledChanges || this.scheduledChanges.length === 0) {
+      this.bannerText = '';
+      return;
+    }
+
+    const messages = this.scheduledChanges.map(row => {
+      const prayerName = this.iqamaService.formatPrayerDisplayName(row.prayer);
+      const newTime = this.formatScheduleTime(row.iqamah);
+      const dateStr = this.formatScheduleDate(row.effective_date);
+      return `🕌 ${prayerName} iqamah will change to ${newTime} on ${dateStr}`;
+    });
+
+    // Join all messages with a separator
+    this.bannerText = messages.join('       ✦       ');
+  }
+
+  /** Convert 24h time ("14:45") to 12h ("2:45 PM") for banner display */
+  private formatScheduleTime(time24: string): string {
+    if (!time24) return time24;
+    const parts = time24.split(':');
+    if (parts.length < 2) return time24;
+    let hours = parseInt(parts[0], 10);
+    const minutes = parts[1];
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    if (hours === 0) hours = 12;
+    else if (hours > 12) hours -= 12;
+    return `${hours}:${minutes} ${ampm}`;
+  }
+
+  /** Format "YYYY-MM-DD" into a readable date like "Sunday, April 27" */
+  private formatScheduleDate(dateStr: string): string {
+    if (!dateStr) return dateStr;
+    // Parse as local date (not UTC) by using the parts directly
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 }

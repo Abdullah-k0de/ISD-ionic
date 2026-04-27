@@ -10,12 +10,21 @@ export interface PrayerTimeRow {
   iqamah: string;
 }
 
+export interface IqamaScheduleRow {
+  id: number;
+  prayer: string;
+  iqamah: string;
+  effective_date: string; // 'YYYY-MM-DD'
+}
+
 export interface IqamaTimes {
   fajr: string;
   dhuhr: string;
   asr: string;
   maghrib: string;
   isha: string;
+  jummah_1: string;
+  jummah_2: string;
 }
 
 const CACHE_KEY = 'iqama_times_cache';
@@ -26,7 +35,7 @@ const CACHE_KEY = 'iqama_times_cache';
 export class IqamaService {
 
   iqamaTimes: IqamaTimes = {
-    fajr: '', dhuhr: '', asr: '', maghrib: '', isha: ''
+    fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: ''
   };
 
   private apiUrl = `${environment.supabase.url}/rest/v1/prayer_times`;
@@ -42,7 +51,7 @@ export class IqamaService {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         const parsed = JSON.parse(cached) as IqamaTimes;
-        if (parsed.fajr || parsed.dhuhr || parsed.asr || parsed.maghrib || parsed.isha) {
+        if (parsed.fajr || parsed.dhuhr || parsed.asr || parsed.maghrib || parsed.isha || parsed.jummah_1 || parsed.jummah_2) {
           return parsed;
         }
       }
@@ -69,7 +78,7 @@ export class IqamaService {
     }).pipe(
       retryWithBackoff(3, 1000),
       map(rows => {
-        const times: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '' };
+        const times: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: '' };
         for (const row of rows) {
           const prayerKey = this.normalizePrayerName(row.prayer);
           if (prayerKey === 'maghrib') {
@@ -98,7 +107,7 @@ export class IqamaService {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         const parsed = JSON.parse(cached) as IqamaTimes;
-        if (parsed.fajr || parsed.dhuhr || parsed.asr || parsed.maghrib || parsed.isha) {
+        if (parsed.fajr || parsed.dhuhr || parsed.asr || parsed.maghrib || parsed.isha || parsed.jummah_1 || parsed.jummah_2) {
           this.iqamaTimes = parsed;
           console.log('Loaded iqama times from cache:', parsed);
         }
@@ -125,6 +134,8 @@ export class IqamaService {
     if (lower === 'asr') return 'asr';
     if (lower === 'maghrib') return 'maghrib';
     if (lower === 'isha') return 'isha';
+    if (lower === 'jummah_1') return 'jummah_1';
+    if (lower === 'jummah_2') return 'jummah_2';
     return lower;
   }
 
@@ -139,6 +150,48 @@ export class IqamaService {
     if (hours === 0) hours = 12;
     else if (hours > 12) hours -= 12;
     return `${hours}:${minutes} ${ampm}`;
+  }
+
+  /**
+   * Fetch upcoming iqama schedule changes from the iqamah_schedule table.
+   * Returns rows where effective_date >= today, ordered by effective_date ascending.
+   */
+  fetchIqamaSchedule(): Observable<IqamaScheduleRow[]> {
+    const today = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    const scheduleUrl = `${environment.supabase.url}/rest/v1/iqamah_schedule`;
+    return this.http.get<IqamaScheduleRow[]>(scheduleUrl, {
+      headers: this.getHeaders(),
+      params: {
+        select: '*',
+        effective_date: `gte.${today}`,
+        order: 'effective_date.asc'
+      }
+    }).pipe(
+      retryWithBackoff(3, 1000),
+      map(rows => {
+        console.log('Iqama schedule fetched from Supabase:', rows);
+        return rows;
+      }),
+      catchError(err => {
+        console.error('Failed to fetch iqama schedule:', err);
+        return of([]);
+      })
+    );
+  }
+
+  /** Format a prayer key into a display-friendly name */
+  formatPrayerDisplayName(prayer: string): string {
+    const map: Record<string, string> = {
+      fajr: 'Fajr',
+      dhuhr: 'Dhuhr',
+      zuhr: 'Dhuhr',
+      asr: 'Asr',
+      maghrib: 'Maghrib',
+      isha: 'Isha',
+      jummah_1: 'Jummah 1',
+      jummah_2: 'Jummah 2',
+    };
+    return map[prayer.toLowerCase().trim()] || prayer;
   }
 }
 
