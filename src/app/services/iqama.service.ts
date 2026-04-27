@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of, retry, delay, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -38,7 +38,7 @@ export class IqamaService {
     fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: ''
   };
 
-  private apiUrl = `${environment.supabase.url}/rest/v1/prayer_times`;
+  private apiUrl = `${environment.api.baseUrl}/api/prayer-times`;
 
   constructor(private http: HttpClient) {
     // Load cached times on startup
@@ -59,25 +59,15 @@ export class IqamaService {
     return null;
   }
 
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'apikey': environment.supabase.anonKey,
-      'Authorization': `Bearer ${environment.supabase.anonKey}`,
-      'Content-Type': 'application/json'
-    });
-  }
-
   /**
-   * Fetch iqama times from Supabase with retry (3 attempts, exponential backoff).
+   * Fetch iqama times from API with retry (3 attempts, exponential backoff).
    * Falls back to cached values if all retries fail.
    */
   fetchIqamaTimes(): Observable<IqamaTimes> {
-    return this.http.get<PrayerTimeRow[]>(this.apiUrl, {
-      headers: this.getHeaders(),
-      params: { select: '*' }
-    }).pipe(
+    return this.http.get<{ data: PrayerTimeRow[] }>(`${this.apiUrl}/iqamah`).pipe(
       retryWithBackoff(3, 1000),
-      map(rows => {
+      map(response => {
+        const rows = response.data;
         const times: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: '' };
         for (const row of rows) {
           const prayerKey = this.normalizePrayerName(row.prayer);
@@ -90,11 +80,11 @@ export class IqamaService {
         }
         this.iqamaTimes = times;
         this.saveToCache(times);
-        console.log('Iqama times fetched from Supabase (excluding Maghrib):', times);
+        console.log('Iqama times fetched from API (excluding Maghrib):', times);
         return times;
       }),
       catchError(err => {
-        console.error('Failed to fetch iqama times from Supabase after retries:', err);
+        console.error('Failed to fetch iqama times from API after retries:', err);
         // Return cached values
         return of(this.iqamaTimes);
       })
@@ -153,23 +143,15 @@ export class IqamaService {
   }
 
   /**
-   * Fetch upcoming iqama schedule changes from the iqamah_schedule table.
+   * Fetch upcoming iqama schedule changes from the API.
    * Returns rows where effective_date >= today, ordered by effective_date ascending.
    */
   fetchIqamaSchedule(): Observable<IqamaScheduleRow[]> {
-    const today = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
-    const scheduleUrl = `${environment.supabase.url}/rest/v1/iqamah_schedule`;
-    return this.http.get<IqamaScheduleRow[]>(scheduleUrl, {
-      headers: this.getHeaders(),
-      params: {
-        select: '*',
-        effective_date: `gte.${today}`,
-        order: 'effective_date.asc'
-      }
-    }).pipe(
+    return this.http.get<{ data: IqamaScheduleRow[] }>(`${this.apiUrl}/schedule`).pipe(
       retryWithBackoff(3, 1000),
-      map(rows => {
-        console.log('Iqama schedule fetched from Supabase:', rows);
+      map(response => {
+        const rows = response.data;
+        console.log('Iqama schedule fetched from API:', rows);
         return rows;
       }),
       catchError(err => {
@@ -204,7 +186,7 @@ function retryWithBackoff(maxRetries: number, initialDelay: number) {
         retryCount++;
         if (retryCount <= maxRetries) {
           const backoff = initialDelay * Math.pow(2, retryCount - 1);
-          console.log(`Supabase retry ${retryCount}/${maxRetries} in ${backoff}ms...`);
+          console.log(`API retry ${retryCount}/${maxRetries} in ${backoff}ms...`);
           return timer(backoff).pipe(
             mergeMap(() => source)
           );
