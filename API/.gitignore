@@ -4,3 +4,4 @@ __pycache__
 *.pyc
 .kiro
 .vscode
+venv

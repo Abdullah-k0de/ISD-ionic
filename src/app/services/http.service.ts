@@ -77,20 +77,45 @@ export class HttpService {
     makeAPICall(id_hadith);
   }
 
-  getNewAdhanTimes(){
+  getNewAdhanTimes(forceRefresh: boolean = false) {
     // Function to make API call and handle response
     const makeAdhanAPICall = () => {
         const today = this.timeService.getNow();
         const day = today.getDate();
         const month = today.getMonth() + 1;
         const year = today.getFullYear();
-        const date = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+        const dateStr = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+        const cacheKey = `adhans_cache_${dateStr}`;
+
+        if (!forceRefresh) {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            try {
+              this.adhans = JSON.parse(cached);
+              console.log("Loaded Adhans from cache for", dateStr);
+              return;
+            } catch (e) {
+              // Ignore and fetch
+            }
+          }
+        }
+
         const coordinates = "?latitude=33.201662695006874&longitude=-97.14494994434574&method=2";
-        console.log("Date being recieved is: " + date);
-        const apiUrl = `https://api.aladhan.com/v1/timings/${date}${coordinates}`;
+        console.log("Date being recieved is: " + dateStr);
+        const apiUrl = `https://api.aladhan.com/v1/timings/${dateStr}${coordinates}`;
         
         this.http.get<AdhanClass>(apiUrl).subscribe((res: AdhanClass) => {
             this.adhans = res;
+            try {
+              // Clean up old caches
+              for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('adhans_cache_') && key !== cacheKey) {
+                  localStorage.removeItem(key);
+                }
+              }
+              localStorage.setItem(cacheKey, JSON.stringify(res));
+            } catch (e) { }
             console.log(res);
             console.log("Satisfactory response received from Adhans.");          
           },

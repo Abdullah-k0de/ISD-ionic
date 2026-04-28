@@ -51,21 +51,13 @@ export class Tab2Page implements OnInit, OnDestroy {
     public timeService: TimeSimulationService
   ) {
     this.updateImageBasedOnTime();
-    this.httpService.getNewAdhanTimes();
 
     // Load cached iqama times immediately
     const cached = this.iqamaService.getCachedIqamaTimes();
     if (cached) this.iqamaTimes = cached;
 
-    this.iqamaService.fetchIqamaTimes().subscribe(times => {
-      this.iqamaTimes = times;
-    });
-
-    // Fetch iqama schedule for banner
-    this.iqamaService.fetchIqamaSchedule().subscribe(rows => {
-      this.scheduledChanges = rows;
-      this.buildBannerText();
-    });
+    // We no longer call fetchIqamaTimes or getNewAdhanTimes here. 
+    // They are handled by ionViewWillEnter() when the page becomes active.
 
     // Restore view preference
     const pref = localStorage.getItem('prayer-view-mode');
@@ -96,14 +88,24 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   private computeDates(): void {
     const today = this.timeService.getNow();
+    let hijriCalcDate = new Date(today.getTime());
+
+    // Visual increment: If it's currently after Maghrib, the Islamic date rolls over to tomorrow.
+    const maghribTimeStr = this.getAzanTime('maghrib');
+    if (maghribTimeStr) {
+      const maghribDate = this.parseTimeToDate(maghribTimeStr);
+      if (maghribDate && today > maghribDate) {
+        hijriCalcDate.setDate(hijriCalcDate.getDate() + 1);
+      }
+    }
 
     // Use instant local calculation (same as Clock) to ensure synchronization during simulation
     try {
-      const day = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric' }).format(today);
+      const day = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric' }).format(hijriCalcDate);
       const monthNum = parseInt(
-        new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { month: 'numeric' }).format(today), 10
+        new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { month: 'numeric' }).format(hijriCalcDate), 10
       );
-      const year = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { year: 'numeric' }).format(today);
+      const year = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { year: 'numeric' }).format(hijriCalcDate);
       const hijriMonths = [
         'Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Thani',
         'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', 'Shaban',
@@ -148,15 +150,16 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   handleRefresh(event: any) {
-    this.httpService.getNewAdhanTimes();
-    this.iqamaService.fetchIqamaTimes().subscribe(times => {
+    const isManualRefresh = event != null;
+    this.httpService.getNewAdhanTimes(isManualRefresh);
+    this.iqamaService.fetchIqamaTimes(isManualRefresh).subscribe(times => {
       this.iqamaTimes = times;
       this.updateImageBasedOnTime();
       if (event && event.target) {
         event.target.complete();
       }
     });
-    this.iqamaService.fetchIqamaSchedule().subscribe(rows => {
+    this.iqamaService.fetchIqamaSchedule(isManualRefresh).subscribe(rows => {
       this.scheduledChanges = rows;
       this.buildBannerText();
     });

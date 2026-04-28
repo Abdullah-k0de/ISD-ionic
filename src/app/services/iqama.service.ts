@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of, retry, delay, timer } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 export interface PrayerTimeRow {
@@ -38,6 +38,8 @@ export class IqamaService {
     fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: ''
   };
 
+  private combinedCache$: Observable<{ times: IqamaTimes, schedule: IqamaScheduleRow[] }> | null = null;
+
   private apiUrl = `${environment.api.baseUrl}/api/prayer-times`;
 
   constructor(private http: HttpClient) {
@@ -59,35 +61,72 @@ export class IqamaService {
     return null;
   }
 
+  private fetchCombinedData(forceRefresh: boolean): Observable<{ times: IqamaTimes, schedule: IqamaScheduleRow[] }> {
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    const cacheKey = `iqama_combined_daily_${dateStr}`;
+
+    if (!forceRefresh) {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          this.iqamaTimes = parsed.times;
+          return of(parsed);
+        } catch (e) {}
+      }
+    }
+
+    if (!this.combinedCache$ || forceRefresh) {
+      this.combinedCache$ = this.http.get<{ data: { iqamah: PrayerTimeRow[], schedule: IqamaScheduleRow[] } }>(`${this.apiUrl}/all`).pipe(
+        retryWithBackoff(3, 1000),
+        map(response => {
+          const rows = response.data.iqamah || [];
+          const times: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: '' };
+          for (const row of rows) {
+            const prayerKey = this.normalizePrayerName(row.prayer);
+            if (prayerKey === 'maghrib') {
+              continue; // NEVER fetch maghrib from DB, it must be calculated
+            }
+            if (prayerKey && prayerKey in times) {
+              (times as any)[prayerKey] = this.to12Hour(row.iqamah);
+            }
+          }
+          this.iqamaTimes = times;
+          this.saveToCache(times); // Keep legacy cache for getCachedIqamaTimes fallback
+
+          const schedule = response.data.schedule || [];
+          const combinedData = { times, schedule };
+
+          try {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+              const key = localStorage.key(i);
+              if (key && key.startsWith('iqama_combined_daily_') && key !== cacheKey) {
+                localStorage.removeItem(key);
+              }
+            }
+            localStorage.setItem(cacheKey, JSON.stringify(combinedData));
+          } catch (e) {}
+
+          console.log('Combined Iqama data fetched from API:', combinedData);
+          return combinedData;
+        }),
+        catchError(err => {
+          console.error('Failed to fetch combined iqama data from API after retries:', err);
+          return of({ times: this.iqamaTimes, schedule: [] });
+        }),
+        shareReplay(1)
+      );
+    }
+    return this.combinedCache$;
+  }
+
   /**
-   * Fetch iqama times from API with retry (3 attempts, exponential backoff).
-   * Falls back to cached values if all retries fail.
+   * Fetch iqama times using the combined API endpoint.
    */
-  fetchIqamaTimes(): Observable<IqamaTimes> {
-    return this.http.get<{ data: PrayerTimeRow[] }>(`${this.apiUrl}/iqamah`).pipe(
-      retryWithBackoff(3, 1000),
-      map(response => {
-        const rows = response.data;
-        const times: IqamaTimes = { fajr: '', dhuhr: '', asr: '', maghrib: '', isha: '', jummah_1: '', jummah_2: '' };
-        for (const row of rows) {
-          const prayerKey = this.normalizePrayerName(row.prayer);
-          if (prayerKey === 'maghrib') {
-            continue; // NEVER fetch maghrib from DB, it must be calculated
-          }
-          if (prayerKey && prayerKey in times) {
-            (times as any)[prayerKey] = this.to12Hour(row.iqamah);
-          }
-        }
-        this.iqamaTimes = times;
-        this.saveToCache(times);
-        console.log('Iqama times fetched from API (excluding Maghrib):', times);
-        return times;
-      }),
-      catchError(err => {
-        console.error('Failed to fetch iqama times from API after retries:', err);
-        // Return cached values
-        return of(this.iqamaTimes);
-      })
+  fetchIqamaTimes(forceRefresh: boolean = false): Observable<IqamaTimes> {
+    return this.fetchCombinedData(forceRefresh).pipe(
+      map(data => data.times)
     );
   }
 
@@ -99,7 +138,7 @@ export class IqamaService {
         const parsed = JSON.parse(cached) as IqamaTimes;
         if (parsed.fajr || parsed.dhuhr || parsed.asr || parsed.maghrib || parsed.isha || parsed.jummah_1 || parsed.jummah_2) {
           this.iqamaTimes = parsed;
-          console.log('Loaded iqama times from cache:', parsed);
+          console.log('Loaded iqama times from legacy cache:', parsed);
         }
       }
     } catch (e) {
@@ -143,23 +182,14 @@ export class IqamaService {
   }
 
   /**
-   * Fetch upcoming iqama schedule changes from the API.
-   * Returns rows where effective_date >= today, ordered by effective_date ascending.
+   * Fetch upcoming iqama schedule changes using the combined API endpoint.
    */
-  fetchIqamaSchedule(): Observable<IqamaScheduleRow[]> {
-    return this.http.get<{ data: IqamaScheduleRow[] }>(`${this.apiUrl}/schedule`).pipe(
-      retryWithBackoff(3, 1000),
-      map(response => {
-        const rows = response.data;
-        console.log('Iqama schedule fetched from API:', rows);
-        return rows;
-      }),
-      catchError(err => {
-        console.error('Failed to fetch iqama schedule:', err);
-        return of([]);
-      })
+  fetchIqamaSchedule(forceRefresh: boolean = false): Observable<IqamaScheduleRow[]> {
+    return this.fetchCombinedData(forceRefresh).pipe(
+      map(data => data.schedule)
     );
   }
+
 
   /** Format a prayer key into a display-friendly name */
   formatPrayerDisplayName(prayer: string): string {
