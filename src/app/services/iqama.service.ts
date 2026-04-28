@@ -39,6 +39,7 @@ export class IqamaService {
   };
 
   private combinedCache$: Observable<{ times: IqamaTimes, schedule: IqamaScheduleRow[] }> | null = null;
+  private isFetching = false;
 
   private apiUrl = `${environment.api.baseUrl}/api/prayer-times`;
 
@@ -77,7 +78,8 @@ export class IqamaService {
       }
     }
 
-    if (!this.combinedCache$ || forceRefresh) {
+    if (!this.combinedCache$ || (forceRefresh && !this.isFetching)) {
+      this.isFetching = true;
       this.combinedCache$ = this.http.get<{ data: { iqamah: PrayerTimeRow[], schedule: IqamaScheduleRow[] } }>(`${this.apiUrl}/all`).pipe(
         retryWithBackoff(3, 1000),
         map(response => {
@@ -109,10 +111,12 @@ export class IqamaService {
           } catch (e) {}
 
           console.log('Combined Iqama data fetched from API:', combinedData);
+          this.isFetching = false;
           return combinedData;
         }),
         catchError(err => {
           console.error('Failed to fetch combined iqama data from API after retries:', err);
+          this.isFetching = false;
           return of({ times: this.iqamaTimes, schedule: [] });
         }),
         shareReplay(1)
