@@ -243,14 +243,25 @@ public class PrayerMiniLineWidgetProvider extends AppWidgetProvider {
                 }
 
                 String curIqama = "", nextIqama = "";
+                
+                int maghribIqamaMins = pMaghrib + 10;
+                String maghribIqama24 = String.format(Locale.US, "%02d:%02d", maghribIqamaMins / 60, maghribIqamaMins % 60);
+                String maghribIqama = fmt(maghribIqama24);
+                
+                String curKey = prayers[curIdx][2];
+                String nxtKey = prayers[nextIdx][2];
+                
+                if (curKey.equals("maghrib")) curIqama = maghribIqama;
+                if (nxtKey.equals("maghrib")) nextIqama = maghribIqama;
+
                 if (!iqamaBody.isEmpty()) {
                     JSONArray arr = new JSONArray(iqamaBody);
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = arr.getJSONObject(i);
                         String pKey = obj.getString("prayer").toLowerCase();
+                        if (pKey.equals("maghrib")) continue;
+                        
                         String iqamaT = fmt(obj.getString("iqamah"));
-                        String curKey = prayers[curIdx][2];
-                        String nxtKey = prayers[nextIdx][2];
                         if (pKey.equals(curKey) || (pKey.equals("zuhr") && curKey.equals("dhuhr"))
                                 || (pKey.equals("dhur") && curKey.equals("dhuhr"))
                                 || (pKey.equals("jumuah") && curKey.equals("jummah")))

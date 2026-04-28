@@ -229,7 +229,8 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                     org.json.JSONObject adhanObj = new org.json.JSONObject(adhanJsonString);
                     String fetchedDate = adhanObj.getJSONObject("data").getJSONObject("date").getString("readable");
                     String timings = adhanObj.getJSONObject("data").getJSONObject("timings").toString();
-                    Log.d("ISDPrayer", "[Large Widget] Fetched network data for: " + fetchedDate + " | Timings: " + timings);
+                    Log.d("ISDPrayer",
+                            "[Large Widget] Fetched network data for: " + fetchedDate + " | Timings: " + timings);
                 } catch (Exception e) {
                     Log.d("ISDPrayer", "[Large Widget] Fetched fresh data from network & cached successfully");
                 }
@@ -255,7 +256,8 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                 org.json.JSONObject adhanObj = new org.json.JSONObject(cachedAdhan);
                 String cacheDate = adhanObj.getJSONObject("data").getJSONObject("date").getString("readable");
                 String timings = adhanObj.getJSONObject("data").getJSONObject("timings").toString();
-                Log.d("ISDPrayer", "[Large Widget] Network failed, using cache for: " + cacheDate + " | Timings: " + timings);
+                Log.d("ISDPrayer",
+                        "[Large Widget] Network failed, using cache for: " + cacheDate + " | Timings: " + timings);
             } catch (Exception e) {
                 Log.d("ISDPrayer", "[Large Widget] Network failed, safely rendering from offline cache");
             }
@@ -367,15 +369,18 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                         cal.add(java.util.Calendar.DATE, 1);
                         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
                         String tomorrowDate = df.format(cal.getTime());
-                        URL tomorrowUrl = new URL("https://api.aladhan.com/v1/timings/" + tomorrowDate + "?latitude=33.201662&longitude=-97.144949&method=2");
+                        URL tomorrowUrl = new URL("https://api.aladhan.com/v1/timings/" + tomorrowDate
+                                + "?latitude=33.201662&longitude=-97.144949&method=2");
                         HttpURLConnection tConn = (HttpURLConnection) tomorrowUrl.openConnection();
                         tConn.setConnectTimeout(5000);
                         tConn.setReadTimeout(5000);
                         if (tConn.getResponseCode() == 200) {
-                            java.io.BufferedReader r = new java.io.BufferedReader(new java.io.InputStreamReader(tConn.getInputStream()));
+                            java.io.BufferedReader r = new java.io.BufferedReader(
+                                    new java.io.InputStreamReader(tConn.getInputStream()));
                             StringBuilder tb = new StringBuilder();
                             String line;
-                            while ((line = r.readLine()) != null) tb.append(line);
+                            while ((line = r.readLine()) != null)
+                                tb.append(line);
                             r.close();
                             JSONObject tData = new JSONObject(tb.toString()).getJSONObject("data");
                             JSONObject tHijri = tData.getJSONObject("date").getJSONObject("hijri");
@@ -535,6 +540,17 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                         views.setTextViewText(azanIds[i], allAzans[i]);
                     }
                 }
+
+                int maghribIqamaMins = pMaghrib + 10;
+                String maghribIqama24 = String.format(Locale.US, "%02d:%02d", maghribIqamaMins / 60, maghribIqamaMins % 60);
+                String maghribIqama = formatTime(maghribIqama24);
+                if (iqamaIds[4] != -1) {
+                    if (4 == nextPrayerIndex) {
+                        views.setTextViewText(iqamaIds[4], makeBold(maghribIqama));
+                    } else {
+                        views.setTextViewText(iqamaIds[4], maghribIqama);
+                    }
+                }
             }
 
             if (!iqamaBody.isEmpty()) {
@@ -566,9 +582,6 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                             break;
                         case "asr":
                             targetIndex = 3;
-                            break;
-                        case "maghrib":
-                            targetIndex = 4;
                             break;
                         case "isha":
                             targetIndex = 5;
